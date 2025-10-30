@@ -1,16 +1,15 @@
-package es.deusto.sd.authenticus.Clases;
+package es.deusto.sd.authenticus.entity;
 
 public class Usuario {
-    private int IDCaso;
+    private int IDUsuario;
     private String email;
     private String password;
     private String nombre;
     private int tel;
 
-
     
-    public void setIDCaso(int iDCaso) {
-        IDCaso = iDCaso;
+    public void setIDUsuario(int iDUsuario) {
+        IDUsuario = iDUsuario;
     }
     public void setEmail(String email) {
         this.email = email;
@@ -24,8 +23,8 @@ public class Usuario {
     public void setTel(int tel) {
         this.tel = tel;
     }
-    public int getIDCaso() {
-        return IDCaso;
+    public int getIDUsuario() {
+        return IDUsuario;
     }
     public String getEmail() {
         return email;

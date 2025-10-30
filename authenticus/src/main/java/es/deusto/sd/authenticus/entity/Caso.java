@@ -1,4 +1,4 @@
-package es.deusto.sd.authenticus.Clases;
+package es.deusto.sd.authenticus.entity;
 
 public class Caso {
     public enum TipoAnalisis{

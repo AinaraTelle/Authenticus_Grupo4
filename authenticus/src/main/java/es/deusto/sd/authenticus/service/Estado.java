@@ -1,14 +1,16 @@
-package es.deusto.sd.authenticus.Clases;
+package es.deusto.sd.authenticus.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import es.deusto.sd.authenticus.entity.Caso;
+import es.deusto.sd.authenticus.entity.Usuario;
+
 public class Estado {
-    ArrayList<Usuario> listUsersLogIn;
-    ArrayList<Usuario> listUsersLogOut;
+    ArrayList<Usuario> listUsersLogIn = new ArrayList<Usuario>();
+    ArrayList<Usuario> listUsersLogOut = new ArrayList<Usuario>();
 
-    ArrayList< HashMap< Usuario,String>> listMap_UserToken;
-    ArrayList< HashMap< Usuario,ArrayList<Caso>>> listMap_UserCases;
-
+    ArrayList< HashMap< Usuario,String>> listMap_UserToken= new ArrayList< HashMap< Usuario,String>>();
+    ArrayList< HashMap< Usuario,ArrayList<Caso>>> listMap_UserCases= new ArrayList< HashMap< Usuario,ArrayList<Caso>>>();
 
     public ArrayList<Usuario> getListUsersLogIn() {
         return listUsersLogIn;
