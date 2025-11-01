@@ -1,39 +1,39 @@
 package es.deusto.sd.authenticus.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-@Schema(description = "Data Transfer Object representing a Usuario")
+@Schema(description = "Data Transfer Object representing a User")
 public class UserDTO{
-    @Schema(description = "Unique identifier of the Usuario", example = "1")
-    private int IDUsuario;
-    @Schema(description = "name of the Usuario", example = "Jose")
+    @Schema(description = "Unique identifier of the User", example = "1")
+    private int IDUser;
+    @Schema(description = "name of the User", example = "Jose")
     private String nombre;
-    @Schema(description = "email of the Usuario", example = "jose02@gmail.com")
+    @Schema(description = "email of the User", example = "jose02@gmail.com")
     private String email;
-    @Schema(description = "passowrd of the Usuario", example = "contraseña")
+    @Schema(description = "passowrd of the User", example = "contraseña")
     private String password;
-    @Schema(description = "phone number of the Usuario", example = "613458245")
+    @Schema(description = "phone number of the User", example = "613458245")
     private int tel;
 
     public UserDTO(){
     }
 
     public UserDTO(String nombre, String email, String password, int tel) {
+        this.nombre = nombre;
         this.email = email;
         this.password = password;
-        this.nombre = nombre;
         this.tel = tel;
     }
 
-    public UserDTO(int iDUsuario, String nombre, String email, String password, int tel) {
-        IDUsuario = iDUsuario;
+    public UserDTO(int iDUser, String nombre, String email, String password, int tel) {
+        this.IDUser = iDUser;
         this.email = email;
         this.password = password;
         this.nombre = nombre;
         this.tel = tel;
     }
     
-    public int getIDUsuario() {
-        return IDUsuario;
+    public int getIDUser() {
+        return IDUser;
     }
 
     public String getEmail() {
@@ -52,8 +52,8 @@ public class UserDTO{
         return tel;
     }
 
-    public void setIDUsuario(int iDUsuario) {
-        IDUsuario = iDUsuario;
+    public void setIDUser(int iDUser) {
+        IDUser = iDUser;
     }
 
     public void setEmail(String email) {
@@ -70,6 +70,12 @@ public class UserDTO{
 
     public void setTel(int tel) {
         this.tel = tel;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO [IDUser=" + IDUser + ", nombre=" + nombre + ", email=" + email + ", password=" + password
+                + ", tel=" + tel + "]";
     }
 
     

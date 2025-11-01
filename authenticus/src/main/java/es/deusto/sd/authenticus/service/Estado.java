@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import es.deusto.sd.authenticus.entity.Caso;
 import es.deusto.sd.authenticus.entity.User;
 import es.deusto.sd.authenticus.dto.UserDTO;
-import java.util.UUID;
+// import java.util.UUID;
 
 @Service
 public class Estado {
@@ -23,10 +23,10 @@ public class Estado {
 
     
 // GET TODOS LOS UserS
-    public ArrayList<UserDTO> getAllUsers(){
+    public ArrayList<UserDTO> getAllUsersLogOut(){
         ArrayList<UserDTO> listUsersDTOs = new ArrayList<UserDTO>();
         
-        for(User User1: listUsersLogIn){
+        for(User User1: this.getListUsersLogOut()){
             listUsersDTOs.add(convertToDTO(User1));
         }
         return listUsersDTOs;
@@ -36,6 +36,12 @@ public class Estado {
 
     private UserDTO convertToDTO(User User) {
         return new UserDTO(User.getIDUsuario(), 
+        User.getNombre(), User.getEmail(),
+        User.getPassword(),User.getTel());
+    }
+
+    public User convertToNormal(UserDTO User) {
+        return new User(User.getIDUser(), 
         User.getNombre(), User.getEmail(),
         User.getPassword(),User.getTel());
     }
@@ -62,11 +68,8 @@ public class Estado {
         userDTO.getNombre(),userDTO.getEmail(), 
         userDTO.getPassword(), userDTO.getTel());
 
-        this.getListUsersLogIn().add(user);
-        
-        UUID uuid = UUID.randomUUID();
-        String token = uuid.toString();
-        this.getMap_UserToken().put(user, token);
+        this.getListUsersLogOut().add(user);
+               
 
         return convertToDTO(user);
     }
