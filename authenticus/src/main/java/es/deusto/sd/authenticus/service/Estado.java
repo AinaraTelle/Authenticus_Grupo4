@@ -22,7 +22,7 @@ public class Estado {
     private final AtomicInteger idGenerator = new AtomicInteger(0);
 
     
-// GET TODOS LOS UserS
+// Get los Users de logout
     public ArrayList<UserDTO> getAllUsersLogOut(){
         ArrayList<UserDTO> listUsersDTOs = new ArrayList<UserDTO>();
         
@@ -36,12 +36,6 @@ public class Estado {
 
     private UserDTO convertToDTO(User User) {
         return new UserDTO(User.getIDUsuario(), 
-        User.getNombre(), User.getEmail(),
-        User.getPassword(),User.getTel());
-    }
-
-    public User convertToNormal(UserDTO User) {
-        return new User(User.getIDUser(), 
         User.getNombre(), User.getEmail(),
         User.getPassword(),User.getTel());
     }
@@ -69,7 +63,6 @@ public class Estado {
         userDTO.getPassword(), userDTO.getTel());
 
         this.getListUsersLogOut().add(user);
-               
 
         return convertToDTO(user);
     }

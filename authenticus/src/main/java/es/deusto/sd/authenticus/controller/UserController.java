@@ -2,7 +2,6 @@ package es.deusto.sd.authenticus.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import es.deusto.sd.authenticus.service.*;
 import es.deusto.sd.authenticus.dto.*;
-import es.deusto.sd.authenticus.service.Estado;
-import es.deusto.sd.authenticus.entity.*;
+import es.deusto.sd.authenticus.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 // import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,11 +26,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @RequestMapping("/usuarios")
 @Tag(name = "Usuarios", description = "Operaciones sobre usuarios")
 
-public class UserController {
+public class UserController { //maneja las peticiones HTTP de los usuarios
 
     private final Estado estado;
-    public UserController(Estado estado){
+    private final UserService userService;
+
+    public UserController(Estado estado,UserService userService){
         this.estado=estado;
+        this.userService = userService;
     }
 
     @Operation(
@@ -53,9 +54,8 @@ public class UserController {
     )
     @ApiResponse(responseCode = "201", description = "Usuario creado correctamente")
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> createUser(
-        // @Parameter(description = "Objeto User a ser creado", required = true)
-        @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+
         UserDTO newUser = estado.createUser(userDTO);
         System.out.println("\n---------------------------------");
         System.out.println(newUser.toString());
@@ -63,49 +63,28 @@ public class UserController {
     }
 
     @Operation(
-        summary = "Hace logIn de un Usuario"
+        summary = "Hace login de un Usuario"
     )
-    @ApiResponse(responseCode = "201", description = "Usuario logeado correctamente")
+    @ApiResponse(responseCode = "201", description = "Usuario loggeado correctamente")
     @PostMapping("/login")
     public ResponseEntity<LoginRequestDTO> userLogIn(
-        @RequestBody LoginRequestDTO userLogIn) {
+        @RequestBody LoginRequestDTO userLogin) {
+            boolean valido=false;
 
-        String emailUser = userLogIn.getUsernameOrEmail();
-        String passwordUser= userLogIn.getPassword();
-        int valido=0;
-        for(User user1: estado.getListUsersLogOut()){
-            String emailVerif=user1.getEmail();
-            String passwordVerif=user1.getPassword();
+            valido=userService.verificacionEmailPassword(userLogin);
 
-            if(emailUser.equals(emailVerif) &&
-            passwordVerif.equals(passwordUser)){
-                valido=1;
+            if (valido==false){
+                return new ResponseEntity<>(userLogin, HttpStatus.NOT_FOUND);
+            }else{
+
+            User userLoginEncontrado=userService.busquedaUsuarioValido(userLogin);
+            userService.generadorAsignacionToken(userLoginEncontrado);
+            userService.actualizacionListas(userLoginEncontrado);
+
+
+            return new ResponseEntity<>(userLogin, HttpStatus.OK);
             }
         }
-        if (valido==0){ //NO VÁLIFO
-            return new ResponseEntity<>(userLogIn, HttpStatus.NOT_FOUND);
-        }
-
-        UUID uuid = UUID.randomUUID();
-        String token = uuid.toString();
-
-        User usuarioLogIn = null;
-        for(User user1: estado.getListUsersLogOut()){
-            String emailVerif=user1.getEmail();
-            String passwordVerif=user1.getPassword();
-
-            if(emailUser.equals(emailVerif) &&
-            passwordVerif.equals(passwordUser)){
-                usuarioLogIn=user1;
-
-            }
-        }
-
-        estado.getMap_UserToken().put(usuarioLogIn, token);
-        estado.getListUsersLogIn().add(usuarioLogIn);
-        estado.getListUsersLogOut().remove(usuarioLogIn);
-        
-        return new ResponseEntity<>(userLogIn, HttpStatus.OK);
-    }
+       
 
 }
