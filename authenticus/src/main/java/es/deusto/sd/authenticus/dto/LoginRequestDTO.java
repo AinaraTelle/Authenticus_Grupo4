@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class LoginRequestDTO {
 
     @Schema(description  = "El email es obligatorio")
-    private String userEmail; // O solo 'username' o 'email'
+    private String userEmail;
 
     @Schema(description = "La contraseña es obligatoria")
     private String password;

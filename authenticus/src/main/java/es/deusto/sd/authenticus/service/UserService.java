@@ -54,7 +54,7 @@ public class UserService {
         User usuarioLogin = null;
         for(User user1: estado.getListUsersLogOut()){
 
-            if(user1.getEmail().equals(userLogin.getPassword()) &&
+            if(user1.getEmail().equals(userLogin.getEmail()) &&
             user1.getPassword().equals(userLogin.getPassword())){
                 usuarioLogin=user1;
             }
