@@ -21,12 +21,8 @@ public class Estado {
 
     private final AtomicInteger idGenerator = new AtomicInteger(0);
     
-    private final UserService userService;
 
     
-    public Estado(UserService userService) {
-        this.userService = userService;
-    }
 
 
 
@@ -70,13 +66,17 @@ public class Estado {
         userDTO.getNombre(),userDTO.getEmail(), 
         userDTO.getPassword(), userDTO.getTel());
 
-        userService.añadirUsuarioNuevoALogout(user);
+       this.añadirUsuarioNuevoALogout(user);
 
         return convertToDTO(user);
     }
 
     public AtomicInteger getIdGenerator() {
         return idGenerator;
+    }
+
+    public void añadirUsuarioNuevoALogout(User user){
+        this.getListUsersLogOut().add(user);
     }
 
 }

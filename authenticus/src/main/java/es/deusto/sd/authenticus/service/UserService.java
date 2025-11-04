@@ -63,7 +63,4 @@ public class UserService {
 
     }
 
-    public void añadirUsuarioNuevoALogout(User user){
-        estado.getListUsersLogOut().add(user);
-    }
 }
