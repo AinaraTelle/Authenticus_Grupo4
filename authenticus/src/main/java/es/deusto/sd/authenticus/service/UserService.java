@@ -38,7 +38,7 @@ public class UserService {
         }
     }
 
-    public void generadorAsignacionToken(User usuarioLogIn){
+    public void generacionAsignacionToken(User usuarioLogIn){
         UUID uuid = UUID.randomUUID();
         String token = uuid.toString();
         estado.getMap_UserToken().put(usuarioLogIn, token);
@@ -62,9 +62,8 @@ public class UserService {
         return usuarioLogin;
 
     }
-    // generadorAsignacionToken(usuarioLogIn);
-    //     actualizacionListas(usuarioLogIn);
-        
-    //     return new ResponseEntity<>(userLogIn, HttpStatus.OK);
 
+    public void añadirUsuarioNuevoALogout(User user){
+        estado.getListUsersLogOut().add(user);
+    }
 }

@@ -78,7 +78,7 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
             }else{
 
             User userLoginEncontrado=userService.busquedaUsuarioValido(userLogin);
-            userService.generadorAsignacionToken(userLoginEncontrado);
+            userService.generacionAsignacionToken(userLoginEncontrado);
             userService.actualizacionListas(userLoginEncontrado);
 
 

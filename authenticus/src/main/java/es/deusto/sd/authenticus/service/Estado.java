@@ -20,9 +20,17 @@ public class Estado {
     private final HashMap< User,ArrayList<Caso>> map_UserCases= new HashMap< User,ArrayList<Caso>>();
 
     private final AtomicInteger idGenerator = new AtomicInteger(0);
+    
+    private final UserService userService;
 
     
-// Get los Users de logout
+    public Estado(UserService userService) {
+        this.userService = userService;
+    }
+
+
+
+    // Get los Users de logout
     public ArrayList<UserDTO> getAllUsersLogOut(){
         ArrayList<UserDTO> listUsersDTOs = new ArrayList<UserDTO>();
         
@@ -62,7 +70,7 @@ public class Estado {
         userDTO.getNombre(),userDTO.getEmail(), 
         userDTO.getPassword(), userDTO.getTel());
 
-        this.getListUsersLogOut().add(user);
+        userService.añadirUsuarioNuevoALogout(user);
 
         return convertToDTO(user);
     }
