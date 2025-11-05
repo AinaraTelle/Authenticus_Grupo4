@@ -50,7 +50,7 @@ public class CaseController{
             return new ResponseEntity<>(casos, HttpStatus.OK);
         } catch (RuntimeException e) {
             // Por ejemplo, token inválido
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 

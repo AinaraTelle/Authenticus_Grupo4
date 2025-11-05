@@ -15,7 +15,6 @@ import es.deusto.sd.authenticus.dto.LoginRequestDTO;
 import es.deusto.sd.authenticus.dto.LoginResponseDTO;
 import es.deusto.sd.authenticus.dto.UserDTO;
 import es.deusto.sd.authenticus.entity.User;
-import es.deusto.sd.authenticus.service.Estado;
 import es.deusto.sd.authenticus.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,11 +26,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 public class UserController { //maneja las peticiones HTTP de los usuarios
 
-    private final Estado estado;
+    // private final Estado estado;
     private final UserService userService;
 
-    public UserController(Estado estado,UserService userService){
-        this.estado=estado;
+    public UserController(UserService userService){
         this.userService = userService;
     }
 
@@ -42,7 +40,7 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @GetMapping
     public ResponseEntity <List<UserDTO>> getAllUsers(){
-        ArrayList<UserDTO> usuarios =estado.getAllUsersLogOut();
+        ArrayList<UserDTO> usuarios =userService.getAllUsersLogOut();
         return new ResponseEntity<>(usuarios,HttpStatus.OK);
     }
 
@@ -55,10 +53,14 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     @PostMapping("/register")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
 
-        UserDTO newUser = estado.createUser(userDTO);
-        System.out.println("\n---------------------------------");
-        System.out.println(newUser.toString());
-        return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+        UserDTO newUser = userService.createUser(userDTO);
+        if(newUser!=null){
+            System.out.println("\n---------------------------------");
+            System.out.println(newUser.toString());
+            return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+        }else{
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     @Operation(
@@ -73,7 +75,7 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
             valido=userService.verificacionEmailPassword(userLogin);
 
             if (valido==false){
-                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>( HttpStatus.NOT_FOUND);
             }else{
 
             User userLoginEncontrado=userService.busquedaUsuarioValido(userLogin);
