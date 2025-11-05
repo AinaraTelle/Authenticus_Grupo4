@@ -2,10 +2,10 @@ package es.deusto.sd.authenticus.service;
 
 import java.util.UUID;
 
-
-import es.deusto.sd.authenticus.entity.*;
 import org.springframework.stereotype.Service;
+
 import es.deusto.sd.authenticus.dto.LoginRequestDTO;
+import es.deusto.sd.authenticus.entity.User;
 
 @Service
 public class UserService {
@@ -61,6 +61,19 @@ public class UserService {
         }
         return usuarioLogin;
 
+    }
+
+    public User getUserByToken(String token) {
+        for (User user : estado.getMap_UserToken().keySet()) {
+            if (estado.getMap_UserToken().get(user).equals(token)) {
+                return user;
+            }
+        }
+        return null; 
+    }
+
+    public String getTokenByUser(User user) {
+        return estado.getMap_UserToken().get(user);
     }
 
 }

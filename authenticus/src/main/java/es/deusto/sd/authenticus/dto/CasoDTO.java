@@ -1,19 +1,23 @@
-package es.deusto.sd.authenticus.entity;
-
+package es.deusto.sd.authenticus.dto;
 import java.time.LocalDateTime;
 
-public class Caso {
-    public enum TipoAnalisis{
-        ALTERAC_CONT, VERACID_CONT, ALTERAC_VERACID_CONT
-    }
+import es.deusto.sd.authenticus.entity.Caso;
+import io.swagger.v3.oas.annotations.media.Schema;
+@Schema(description = "Data Transfer Object representing a Case")
 
-
+public class CasoDTO {
+    @Schema(description = "Unique identifier of the Case", example = "1")
     private int IDCaso;
+    @Schema(description = "name of the Case", example = "Caso 1")
     private String titulo;
+    @Schema(description = "type of case", example = "ALTERAC_CONT")
     private Caso.TipoAnalisis tipoAnalisis;
+    @Schema(description = "creation date of case", example = "2019-04-23T15:00:00")//IMPORTANTE: RESPETAR EL FORMATO DE LA FECHA 
     private LocalDateTime fechaCreacion;
 
-    public Caso(int IdCaso, String titulo, Caso.TipoAnalisis tipoAnalisis,LocalDateTime fechaCreacion){
+    public CasoDTO(){
+    }
+    public CasoDTO(int IdCaso, String titulo, Caso.TipoAnalisis tipoAnalisis,LocalDateTime fechaCreacion){
         IDCaso=IdCaso;
         this.titulo= titulo;
         this.tipoAnalisis=tipoAnalisis;
@@ -47,9 +51,4 @@ public class Caso {
     public LocalDateTime getFechaCreacion(){
         return fechaCreacion;
     }
-
-    
-
-    
 }
-

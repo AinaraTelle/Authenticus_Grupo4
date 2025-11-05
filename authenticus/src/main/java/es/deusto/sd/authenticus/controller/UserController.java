@@ -5,20 +5,19 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-// import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-// import org.springframework.web.bind.annotation.PathVariable;
-// import org.springframework.web.bind.annotation.PostMapping;
-// import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import es.deusto.sd.authenticus.service.*;
-import es.deusto.sd.authenticus.dto.*;
+
+import es.deusto.sd.authenticus.dto.LoginRequestDTO;
+import es.deusto.sd.authenticus.dto.LoginResponseDTO;
+import es.deusto.sd.authenticus.dto.UserDTO;
 import es.deusto.sd.authenticus.entity.User;
+import es.deusto.sd.authenticus.service.Estado;
+import es.deusto.sd.authenticus.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-// import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -67,22 +66,24 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     )
     @ApiResponse(responseCode = "201", description = "Usuario loggeado correctamente")
     @PostMapping("/login")
-    public ResponseEntity<LoginRequestDTO> userLogIn(
+    public ResponseEntity<LoginResponseDTO> userLogIn(
         @RequestBody LoginRequestDTO userLogin) {
             boolean valido=false;
 
             valido=userService.verificacionEmailPassword(userLogin);
 
             if (valido==false){
-                return new ResponseEntity<>(userLogin, HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }else{
 
             User userLoginEncontrado=userService.busquedaUsuarioValido(userLogin);
             userService.generacionAsignacionToken(userLoginEncontrado);
             userService.actualizacionListas(userLoginEncontrado);
+            String token = userService.getTokenByUser(userLoginEncontrado); 
+            LoginResponseDTO response = new LoginResponseDTO(userLoginEncontrado.getEmail(), token);
 
 
-            return new ResponseEntity<>(userLogin, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
             }
         }
        
