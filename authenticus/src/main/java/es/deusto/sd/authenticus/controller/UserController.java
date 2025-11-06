@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -88,6 +89,55 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
             return new ResponseEntity<>(response, HttpStatus.OK);
             }
         }
-       
+    
+
+        /*ELIMINAR USUARIO */
+        @Operation(
+            summary = "Elimina un usuario y sus casos de investigacion",
+            description = "Elimina completamente la informacion del usuario y todos los casos asociados"
+        )
+        @ApiResponse(responseCode = "200", description = "Usuario eliminado correctamente")
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+        @DeleteMapping("/remove")
+        public ResponseEntity<String> removeUser(@RequestBody UserDTO userDTO) {
+            boolean eliminado = userService.removeUsuarioYCasos(userDTO);
+
+            if (!eliminado) {
+                return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+            }
+
+            return new ResponseEntity<>("Usuario y sus casos eliminados correctamente", HttpStatus.OK);
+        }
+
+        /*@DeleteMapping("/remove")
+        public ResponseEntity<String> removeUser(@RequestBody UserDTO userDTO) {
+        User usuarioAEliminar = null;
+
+            // Buscar el usuario tanto en logIn como logOut
+            for (User user : estado.getListUsersLogIn()) {
+                if (user.getEmail().equals(userDTO.getEmail())) {
+                    usuarioAEliminar = user;
+                    break;
+                }
+            }
+            if (usuarioAEliminar == null) {
+                for (User user : estado.getListUsersLogOut()) {
+                    if (user.getEmail().equals(userDTO.getEmail())) {
+                        usuarioAEliminar = user;
+                        break;
+                    }
+                }
+            }
+
+            if (usuarioAEliminar == null) {
+                return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+            }
+
+            // Llamar al método del servicio para eliminar
+            estado.removeUsuarioYCasos(usuarioAEliminar);
+
+            return new ResponseEntity<>("Usuario y sus casos eliminados correctamente", HttpStatus.OK);
+        }*/
+        
 
 }

@@ -38,4 +38,17 @@ public class Estado {
     public AtomicInteger getIdGenerator() {
         return idGenerator;
     } 
+
+     public void removeUsuarioYCasos(User usuario) {
+        // 1. Eliminar los casos asociados
+        map_UserCases.remove(usuario);
+
+        // 2. Eliminar el token si existe
+        map_UserToken.remove(usuario);
+
+        // 3. Eliminar de las listas de logIn y logOut
+        listUsersLogIn.remove(usuario);
+        listUsersLogOut.remove(usuario);
+    }
+
 }

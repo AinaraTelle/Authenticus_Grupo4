@@ -180,4 +180,32 @@ public class UserService {
         return estado.getMap_UserToken().get(user);
     }
 
+
+    /*ELIMINAR USUARIO */
+    public boolean removeUsuarioYCasos(UserDTO userDTO) {
+        User usuarioAEliminar = null;
+
+        for (User user : estado.getListUsersLogIn()) {
+            if (user.getEmail().equals(userDTO.getEmail())) {
+                usuarioAEliminar = user;
+                break;
+            }
+        }
+        if (usuarioAEliminar == null) {
+            for (User user : estado.getListUsersLogOut()) {
+                if (user.getEmail().equals(userDTO.getEmail())) {
+                    usuarioAEliminar = user;
+                    break;
+                }
+            }
+        }
+
+        if (usuarioAEliminar == null) {
+            return false;
+        }
+
+        estado.removeUsuarioYCasos(usuarioAEliminar);
+        return true;
+    }
+
 }
