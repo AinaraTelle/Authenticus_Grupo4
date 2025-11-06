@@ -109,35 +109,6 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
             return new ResponseEntity<>("Usuario y sus casos eliminados correctamente", HttpStatus.OK);
         }
 
-        /*@DeleteMapping("/remove")
-        public ResponseEntity<String> removeUser(@RequestBody UserDTO userDTO) {
-        User usuarioAEliminar = null;
-
-            // Buscar el usuario tanto en logIn como logOut
-            for (User user : estado.getListUsersLogIn()) {
-                if (user.getEmail().equals(userDTO.getEmail())) {
-                    usuarioAEliminar = user;
-                    break;
-                }
-            }
-            if (usuarioAEliminar == null) {
-                for (User user : estado.getListUsersLogOut()) {
-                    if (user.getEmail().equals(userDTO.getEmail())) {
-                        usuarioAEliminar = user;
-                        break;
-                    }
-                }
-            }
-
-            if (usuarioAEliminar == null) {
-                return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
-            }
-
-            // Llamar al método del servicio para eliminar
-            estado.removeUsuarioYCasos(usuarioAEliminar);
-
-            return new ResponseEntity<>("Usuario y sus casos eliminados correctamente", HttpStatus.OK);
-        }*/
-        
+               
 
 }
