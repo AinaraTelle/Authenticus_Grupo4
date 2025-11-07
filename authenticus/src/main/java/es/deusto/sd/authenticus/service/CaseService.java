@@ -1,12 +1,13 @@
 package es.deusto.sd.authenticus.service;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import es.deusto.sd.authenticus.dto.CasoDTO;
 import es.deusto.sd.authenticus.entity.Caso;
 import es.deusto.sd.authenticus.entity.User;
-
+import java.time.LocalDateTime;
 @Service
 public class CaseService {
     private final Estado estado;
@@ -51,6 +52,31 @@ public class CaseService {
             casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion()));
         }
     
+        return casosDTO;
+    }
+
+    public ArrayList<CasoDTO> obtenerCasosDeUsuarioEntreFechas(String token, LocalDateTime FechaInicio, LocalDateTime FechaFin){
+        if(token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        User usuario = userService.getUserByToken(token);
+        if (usuario == null) {
+            throw new RuntimeException("Usuario no autenticado o token inválido.");
+        }
+    
+        
+        ArrayList<Caso> casosDelUsuario = estado.getMap_UserCases().getOrDefault(usuario, new ArrayList<>());
+        List<Caso> filtrados = casosDelUsuario.stream()
+        .filter(c -> c.getFechaCreacion() != null)
+        .filter(c -> !c.getFechaCreacion().isBefore(FechaInicio)) 
+        .filter(c -> !c.getFechaCreacion().isAfter(FechaFin))     
+        .toList();
+        ArrayList<CasoDTO> casosDTO= new ArrayList<>();
+        for (Caso caso : filtrados) {
+            casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion()));
+        }
+    
+        
         return casosDTO;
     }
 
