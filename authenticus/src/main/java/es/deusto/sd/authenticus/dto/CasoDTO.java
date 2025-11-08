@@ -1,5 +1,6 @@
 package es.deusto.sd.authenticus.dto;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import es.deusto.sd.authenticus.entity.Caso;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,6 +16,10 @@ public class CasoDTO {
     @Schema(description = "creation date of case", example = "2019-04-23T15:00:00")//IMPORTANTE: RESPETAR EL FORMATO DE LA FECHA 
     private LocalDateTime fechaCreacion;
 
+    //para lo de los archivos
+    @Schema(description = "List of attached files")
+    private ArrayList<String> archivos = new ArrayList<>();
+
     public CasoDTO(){
     }
     public CasoDTO(int IdCaso, String titulo, Caso.TipoAnalisis tipoAnalisis,LocalDateTime fechaCreacion){
@@ -22,6 +27,9 @@ public class CasoDTO {
         this.titulo= titulo;
         this.tipoAnalisis=tipoAnalisis;
         this.fechaCreacion=fechaCreacion;
+
+        //para lo de los archivos
+        this.archivos = archivos;
     }
 
     
@@ -50,5 +58,14 @@ public class CasoDTO {
 
     public LocalDateTime getFechaCreacion(){
         return fechaCreacion;
+    }
+
+    //para lo de los archivos
+    public ArrayList<String> getArchivos() {
+        return archivos;
+    }
+
+    public void setArchivos(ArrayList<String> archivos) {
+        this.archivos = archivos;
     }
 }

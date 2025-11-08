@@ -80,4 +80,44 @@ public class CaseService {
         return casosDTO;
     }
 
+
+    //  ANADIR ARCHIVOS
+
+    public void addFilesToCase(String token, int idCaso, ArrayList<String> nuevosArchivos)
+        throws IllegalAccessException, IllegalArgumentException {
+
+        // Quitar prefijo "Bearer " si existe
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        // Obtener el usuario autenticado
+        User usuario = userService.getUserByToken(token);
+        if (usuario == null) {
+            throw new IllegalAccessException("Usuario no autenticado o token inválido.");
+        }
+
+        // Obtener los casos del usuario
+        ArrayList<Caso> casosDelUsuario = estado.getMap_UserCases().getOrDefault(usuario, new ArrayList<>());
+
+        // Buscar el caso por ID
+        Caso casoEncontrado = null;
+        for (Caso c : casosDelUsuario) {
+            if (c.getIDCaso() == idCaso) {
+                casoEncontrado = c;
+                break;
+            }
+        }
+
+        // Si no existe el caso, error
+        if (casoEncontrado == null) {
+            throw new IllegalArgumentException("Caso no encontrado para este usuario.");
+        }
+
+        // Añadir archivos
+        casoEncontrado.getArchivos().addAll(nuevosArchivos);
+    }
+
+
+
 }

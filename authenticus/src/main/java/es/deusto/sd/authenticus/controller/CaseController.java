@@ -76,5 +76,30 @@ public class CaseController{
         }
     }
 
+    /* ANADIR ARCHIVOS */
+    @Operation(
+    summary = "Añadir archivos adicionales a un caso del usuario autenticado"
+    )
+    @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
+    @ApiResponse(responseCode = "401", description = "Token inválido o no autorizado")
+    @ApiResponse(responseCode = "404", description = "Caso no encontrado")
+    @PostMapping("/add-files")
+    public ResponseEntity<String> addFilesToCase(
+            @RequestHeader("Authorization") String token,
+            @RequestParam("idCaso") int idCaso,
+            @RequestBody ArrayList<String> nuevosArchivos) {
+
+        try {
+            caseService.addFilesToCase(token, idCaso, nuevosArchivos);
+            return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
+
+        } catch (IllegalAccessException e) {
+            return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
+
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 }
