@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import es.deusto.sd.authenticus.dto.CasoDTO;
+import es.deusto.sd.authenticus.entity.Archivo;
 import es.deusto.sd.authenticus.entity.Caso;
 import es.deusto.sd.authenticus.entity.User;
 import java.time.LocalDateTime;
@@ -27,10 +28,19 @@ public class CaseService {
             throw new RuntimeException("Usuario no autenticado o token inválido.");
         }
         Caso caso= new Caso(casoDTO.getIDCaso(), casoDTO.getTitulo(), casoDTO.getTipoAnalisis(), casoDTO.getFechaCreacion());
+        
+        //ANADIR ARCHIVOS
+        if (casoDTO.getArchivos() != null) {
+            for (String ruta : casoDTO.getArchivos()) {
+                caso.addArchivo(new Archivo(ruta, ruta));
+            }
+        }
+        
         ArrayList<Caso> casosDelUsuario = estado.getMap_UserCases().getOrDefault(usuario, new ArrayList<>());
         casosDelUsuario.add(caso);
         estado.getMap_UserCases().put(usuario, casosDelUsuario);
-        return new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion());
+        
+        return new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion(),caso.getArchivos().stream().map(Archivo::getRuta).toList());
     }
 
     public ArrayList<CasoDTO> obtenerCasosDeUsuario(String token) {
@@ -49,7 +59,7 @@ public class CaseService {
         
         ArrayList<CasoDTO> casosDTO = new ArrayList<>();
         for (Caso caso : casosDelUsuario) {
-            casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion()));
+            casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion(), caso.getArchivos().stream().map(Archivo::getRuta).toList()));
         }
     
         return casosDTO;
@@ -73,7 +83,7 @@ public class CaseService {
         .toList();
         ArrayList<CasoDTO> casosDTO= new ArrayList<>();
         for (Caso caso : filtrados) {
-            casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion()));
+            casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion(), caso.getArchivos().stream().map(Archivo::getRuta).toList()));
         }
     
         
@@ -86,21 +96,17 @@ public class CaseService {
     public void addFilesToCase(String token, int idCaso, ArrayList<String> nuevosArchivos)
         throws IllegalAccessException, IllegalArgumentException {
 
-        // Quitar prefijo "Bearer " si existe
         if (token.startsWith("Bearer ")) {
             token = token.substring(7);
         }
 
-        // Obtener el usuario autenticado
         User usuario = userService.getUserByToken(token);
         if (usuario == null) {
             throw new IllegalAccessException("Usuario no autenticado o token inválido.");
         }
 
-        // Obtener los casos del usuario
         ArrayList<Caso> casosDelUsuario = estado.getMap_UserCases().getOrDefault(usuario, new ArrayList<>());
 
-        // Buscar el caso por ID
         Caso casoEncontrado = null;
         for (Caso c : casosDelUsuario) {
             if (c.getIDCaso() == idCaso) {
@@ -109,13 +115,14 @@ public class CaseService {
             }
         }
 
-        // Si no existe el caso, error
         if (casoEncontrado == null) {
             throw new IllegalArgumentException("Caso no encontrado para este usuario.");
         }
 
         // Añadir archivos
-        casoEncontrado.getArchivos().addAll(nuevosArchivos);
+        for (String ruta : nuevosArchivos) {
+            casoEncontrado.addArchivo(new Archivo(ruta, ruta));
+        }
     }
 
 

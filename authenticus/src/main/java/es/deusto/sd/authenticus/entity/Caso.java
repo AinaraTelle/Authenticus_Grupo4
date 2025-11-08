@@ -2,6 +2,7 @@ package es.deusto.sd.authenticus.entity;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Caso {
     public enum TipoAnalisis{
@@ -15,7 +16,8 @@ public class Caso {
     private LocalDateTime fechaCreacion;
 
     //para lo de anadir archivos
-    private ArrayList<String> archivos = new ArrayList<>();
+    //private ArrayList<String> archivos = new ArrayList<>();
+    private List<Archivo> archivos = new ArrayList<>();
 
     public Caso(int IdCaso, String titulo, Caso.TipoAnalisis tipoAnalisis,LocalDateTime fechaCreacion){
         IDCaso=IdCaso;
@@ -53,12 +55,18 @@ public class Caso {
     }
 
     //para lo de los archivos
-    public ArrayList<String> getArchivos() {
+    /*public ArrayList<String> getArchivos() {
         return archivos;
     }
 
     public void setArchivos(ArrayList<String> archivos) {
         this.archivos = archivos;
+    }*/
+    public List<Archivo> getArchivos() { return archivos; }
+    public void setArchivos(List<Archivo> archivos) { this.archivos = archivos; }
+
+    public void addArchivo(Archivo archivo) {
+        this.archivos.add(archivo);
     }
 
     
