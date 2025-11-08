@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import es.deusto.sd.authenticus.dto.CasoDTO;
 import es.deusto.sd.authenticus.service.CaseService;
@@ -97,6 +99,21 @@ public class CaseController{
             return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
 
         } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    //Eliminar casos
+    @Operation(summary = "Elimina un caso de un usuario")
+    @ApiResponse(responseCode = "200", description = "Caso eliminado correctamente")
+    @ApiResponse(responseCode = "404", description = "Caso no encontrado")
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<String> eliminarCaso(@RequestHeader("Authorization") String token,@PathVariable int id) {
+        boolean exito = caseService.eliminarCaso(token, id);
+        if(exito){
+            return new ResponseEntity<>("Caso eliminado correctamente", HttpStatus.OK);
+        } else {
             return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
         }
     }

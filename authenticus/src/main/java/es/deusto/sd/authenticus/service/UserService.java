@@ -208,4 +208,23 @@ public class UserService {
         return true;
     }
 
+    //logout
+    public boolean logoutUser(String tokenE){
+        User usuarioE= getUserByToken(tokenE);
+
+
+        if(usuarioE!= null){
+            estado.getMap_UserToken().remove(usuarioE);
+            estado.getListUsersLogIn().remove(usuarioE);
+
+
+            estado.getListUsersLogOut().add(usuarioE);
+            return true;
+        }
+
+
+        return false;
+    }
+
+
 }

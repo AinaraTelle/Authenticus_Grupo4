@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.deusto.sd.authenticus.dto.LoginRequestDTO;
 import es.deusto.sd.authenticus.dto.LoginResponseDTO;
+import es.deusto.sd.authenticus.dto.LogoutRequestDTO;
 import es.deusto.sd.authenticus.dto.UserDTO;
 import es.deusto.sd.authenticus.entity.User;
 import es.deusto.sd.authenticus.service.UserService;
@@ -107,6 +108,31 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
             }
 
             return new ResponseEntity<>("Usuario y sus casos eliminados correctamente", HttpStatus.OK);
+        }
+
+        //logout
+        @Operation(
+            summary = "Hace logout de un Usuario"
+        )
+        @ApiResponse(responseCode = "200", description = "Usuario desloggeado correctamente")
+        @ApiResponse(responseCode = "404", description = "Usuario no eliminado")
+        @PostMapping("/logout")
+
+
+        public ResponseEntity<String> userLogout(@RequestBody LogoutRequestDTO logoutRequest){
+            String tokenE= logoutRequest.getToken();
+
+
+            boolean logoutE = userService.logoutUser(tokenE);
+
+
+            if(logoutE){
+                return new ResponseEntity<>("Usuario desloggeado correctamente", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Token no válido", HttpStatus.NOT_FOUND);
+            }
+
+
         }
 
                

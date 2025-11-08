@@ -125,6 +125,39 @@ public class CaseService {
         }
     }
 
+    //Eliminar caso
+    public boolean eliminarCaso(String token, int idCaso) { 
+        if(token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        User usuario = userService.getUserByToken(token);
+        if(usuario == null) {
+            throw new RuntimeException("Usuario no autenticado o token inválido.");
+        }
+
+
+        ArrayList<Caso> casosDelUsuario = estado.getMap_UserCases().getOrDefault(usuario, new ArrayList<>());
+        Caso casoAEliminar = null;
+        for(Caso c : casosDelUsuario) {
+            if(c.getIDCaso() == idCaso) {
+                casoAEliminar = c;
+                break;
+            }
+        }
+
+
+        if(casoAEliminar != null) {
+            casosDelUsuario.remove(casoAEliminar);
+            estado.getMap_UserCases().put(usuario, casosDelUsuario);
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+
+
 
 
 }
