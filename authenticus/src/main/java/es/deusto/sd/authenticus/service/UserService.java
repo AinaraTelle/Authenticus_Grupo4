@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import es.deusto.sd.authenticus.dto.LoginRequestDTO;
 import es.deusto.sd.authenticus.dto.UserDTO;
+import es.deusto.sd.authenticus.dto.RegisterRequestDTO;
 import es.deusto.sd.authenticus.entity.User;
 
 @Service
@@ -20,7 +21,7 @@ public class UserService {
         this.estado=estado;
     }
     
-    public UserDTO createUser(UserDTO userDTO) {    
+    public UserDTO createUser(RegisterRequestDTO userDTO) {    
         
         boolean passwordValida=validacionPassword(userDTO.getPassword());
 
@@ -182,18 +183,18 @@ public class UserService {
 
 
     /*ELIMINAR USUARIO */
-    public boolean removeUsuarioYCasos(UserDTO userDTO) {
+    public boolean removeUsuarioYCasos(String userEmailDTO) {
         User usuarioAEliminar = null;
 
         for (User user : estado.getListUsersLogIn()) {
-            if (user.getEmail().equals(userDTO.getEmail())) {
+            if (user.getEmail().equals(userEmailDTO)) {
                 usuarioAEliminar = user;
                 break;
             }
         }
         if (usuarioAEliminar == null) {
             for (User user : estado.getListUsersLogOut()) {
-                if (user.getEmail().equals(userDTO.getEmail())) {
+                if (user.getEmail().equals(userEmailDTO)) {
                     usuarioAEliminar = user;
                     break;
                 }

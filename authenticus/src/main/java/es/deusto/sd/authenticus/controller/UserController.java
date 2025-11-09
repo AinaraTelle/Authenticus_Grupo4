@@ -7,15 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.deusto.sd.authenticus.dto.LoginRequestDTO;
-import es.deusto.sd.authenticus.dto.LoginResponseDTO;
-import es.deusto.sd.authenticus.dto.LogoutRequestDTO;
-import es.deusto.sd.authenticus.dto.UserDTO;
+import es.deusto.sd.authenticus.dto.*;
 import es.deusto.sd.authenticus.entity.User;
 import es.deusto.sd.authenticus.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,7 +51,7 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     )
     @ApiResponse(responseCode = "201", description = "Usuario creado correctamente")
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody RegisterRequestDTO userDTO) {
 
         UserDTO newUser = userService.createUser(userDTO);
         if(newUser!=null){
@@ -99,9 +97,9 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
         )
         @ApiResponse(responseCode = "200", description = "Usuario eliminado correctamente")
         @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
-        @DeleteMapping("/remove")
-        public ResponseEntity<String> removeUser(@RequestBody UserDTO userDTO) {
-            boolean eliminado = userService.removeUsuarioYCasos(userDTO);
+        @DeleteMapping("/remove/{email}")
+        public ResponseEntity<String> removeUser(@PathVariable("email") String userEmailDTO) {
+            boolean eliminado = userService.removeUsuarioYCasos(userEmailDTO);
 
             if (!eliminado) {
                 return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);

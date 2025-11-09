@@ -14,9 +14,6 @@ public class Caso {
     private String titulo;
     private Caso.TipoAnalisis tipoAnalisis;
     private LocalDateTime fechaCreacion;
-
-    //para lo de anadir archivos
-    //private ArrayList<String> archivos = new ArrayList<>();
     private List<Archivo> archivos = new ArrayList<>();
 
     public Caso(int IdCaso, String titulo, Caso.TipoAnalisis tipoAnalisis,LocalDateTime fechaCreacion){
@@ -54,16 +51,12 @@ public class Caso {
         return fechaCreacion;
     }
 
-    //para lo de los archivos
-    /*public ArrayList<String> getArchivos() {
-        return archivos;
+    public List<Archivo> getArchivos() { 
+        return archivos; 
     }
-
-    public void setArchivos(ArrayList<String> archivos) {
-        this.archivos = archivos;
-    }*/
-    public List<Archivo> getArchivos() { return archivos; }
-    public void setArchivos(List<Archivo> archivos) { this.archivos = archivos; }
+    public void setArchivos(List<Archivo> archivos) { 
+        this.archivos = archivos; 
+    }
 
     public void addArchivo(Archivo archivo) {
         this.archivos.add(archivo);

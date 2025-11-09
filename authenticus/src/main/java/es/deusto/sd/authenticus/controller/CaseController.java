@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import es.deusto.sd.authenticus.dto.CasoDTO;
+import es.deusto.sd.authenticus.dto.*;
+import es.deusto.sd.authenticus.entity.Archivo;
 import es.deusto.sd.authenticus.service.CaseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -40,7 +42,7 @@ public class CaseController{
     @PostMapping("/crear")
     public ResponseEntity<CasoDTO> crearCaso(
         @RequestHeader("Authorization") String token,
-        @RequestBody CasoDTO casoDTO) {
+        @RequestBody CreateCasoDTO casoDTO) {
             CasoDTO casoCreado = caseService.crearCaso(token, casoDTO);
             return new ResponseEntity<>(casoCreado, HttpStatus.CREATED);
     }
@@ -49,8 +51,9 @@ public class CaseController{
     )
     @ApiResponse(responseCode = "200", description = "OK")
     @GetMapping("/mis-casos")
-    public ResponseEntity<ArrayList<CasoDTO>> obtenerMisCasos(@RequestHeader("Authorization") String token,
-                                                            @RequestParam(defaultValue = "5") int limite) {
+    public ResponseEntity<ArrayList<CasoDTO>> obtenerMisCasos(
+        @RequestHeader("Authorization") String token,
+        @RequestParam(defaultValue = "5") int limite) {
         try {
             ArrayList<CasoDTO> casos =new ArrayList<>(caseService.obtenerCasosDeUsuario(token).stream().limit(limite).toList());
             
@@ -65,9 +68,10 @@ public class CaseController{
     )
     @ApiResponse(responseCode = "200", description = "OK")
     @GetMapping("/mis-casos-fechas")
-    public ResponseEntity<ArrayList<CasoDTO>> obtenerMisCasos(@RequestHeader("Authorization") String token,
-                                                            @RequestParam("inicio") LocalDateTime fechaInicio,
-                                                            @RequestParam("fin") LocalDateTime fechaFin) {
+    public ResponseEntity<ArrayList<CasoDTO>> obtenerMisCasos(
+        @RequestHeader("Authorization") String token,
+        @RequestParam("inicio") LocalDateTime fechaInicio,
+        @RequestParam("fin") LocalDateTime fechaFin) {
         try {
            ArrayList<CasoDTO>casosporfecha=caseService.obtenerCasosDeUsuarioEntreFechas(token, fechaInicio, fechaFin);
             
@@ -85,11 +89,11 @@ public class CaseController{
     @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
     @ApiResponse(responseCode = "401", description = "Token inválido o no autorizado")
     @ApiResponse(responseCode = "404", description = "Caso no encontrado")
-    @PostMapping("/add-files")
+    @PutMapping("/add-files")
     public ResponseEntity<String> addFilesToCase(
             @RequestHeader("Authorization") String token,
             @RequestParam("idCaso") int idCaso,
-            @RequestBody ArrayList<String> nuevosArchivos) {
+            @RequestBody ArrayList<Archivo> nuevosArchivos) {
 
         try {
             caseService.addFilesToCase(token, idCaso, nuevosArchivos);
@@ -108,9 +112,9 @@ public class CaseController{
     @Operation(summary = "Elimina un caso de un usuario")
     @ApiResponse(responseCode = "200", description = "Caso eliminado correctamente")
     @ApiResponse(responseCode = "404", description = "Caso no encontrado")
-    @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<String> eliminarCaso(@RequestHeader("Authorization") String token,@PathVariable int id) {
-        boolean exito = caseService.eliminarCaso(token, id);
+    @DeleteMapping("/eliminar/{idCaso}")
+    public ResponseEntity<String> eliminarCaso(@RequestHeader("Authorization") String token,@PathVariable int idCaso) {
+        boolean exito = caseService.eliminarCaso(token, idCaso);
         if(exito){
             return new ResponseEntity<>("Caso eliminado correctamente", HttpStatus.OK);
         } else {
@@ -118,5 +122,22 @@ public class CaseController{
         }
     }
 
+    @Operation(
+    summary = "Mostrar Resultados de Caso"
+    )
+    @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
+    @GetMapping("/resultados/{idCaso}")
+    public ResponseEntity<ResultadosDTO> mostrarResultados(
+        @RequestParam("idUsuario") int idUsuario,
+        @RequestParam("idCaso") int idCaso) {
+        try {
+            ResultadosDTO reul = caseService.mostrarResultados(idUsuario,idCaso);
+            return new ResponseEntity<>(reul, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            // Por ejemplo, token inválido
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    
+    }
 
 }
