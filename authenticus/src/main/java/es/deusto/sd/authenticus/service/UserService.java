@@ -205,7 +205,11 @@ public class UserService {
             return false;
         }
 
-        estado.removeUsuarioYCasos(usuarioAEliminar);
+        //estado.removeUsuarioYCasos(usuarioAEliminar);
+        estado.getListUsersLogIn().remove(usuarioAEliminar);
+        estado.getListUsersLogOut().remove(usuarioAEliminar);
+        estado.getMap_UserToken().remove(usuarioAEliminar);
+        estado.getMap_UserCases().remove(usuarioAEliminar);
         return true;
     }
 
