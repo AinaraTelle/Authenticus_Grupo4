@@ -33,21 +33,23 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
         this.userService = userService;
     }
 
+    //* GET: Usuarios registrados */
     @Operation(
-        summary = "Get Todos los usuarios",
+        summary = "Devuelve todos los usuarios registrados",
         description = "Te da la info de todos lo usuaios"
     )
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @GetMapping
     public ResponseEntity <List<UserDTO>> getAllUsers(){
-        ArrayList<UserDTO> usuarios =userService.getAllUsersLogOut();
+        ArrayList<UserDTO> usuarios =userService.getAllUsersRegistrados();
         return new ResponseEntity<>(usuarios,HttpStatus.OK);
     }
 
 
+    //* POST: Crea usuario */
     @Operation(
-        summary = "Crea un nuevo Usuario",
-        description = "Crea un unevo usuario con la información dada"
+        summary = "Crea un nuevo usuario",
+        description = "Crea un unevo usuario con la información proporcionada"
     )
     @ApiResponse(responseCode = "201", description = "Usuario creado correctamente")
     @PostMapping("/register")
@@ -55,16 +57,16 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
 
         UserDTO newUser = userService.createUser(userDTO);
         if(newUser!=null){
-            System.out.println("\n---------------------------------");
-            System.out.println(newUser.toString());
             return new ResponseEntity<>(newUser, HttpStatus.CREATED);
         }else{
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
+
+    //* POST: login */
     @Operation(
-        summary = "Hace login de un Usuario"
+        summary = "Hace login de un usuario"
     )
     @ApiResponse(responseCode = "201", description = "Usuario loggeado correctamente")
     @PostMapping("/login")
@@ -84,55 +86,46 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
             String token = userService.getTokenByUser(userLoginEncontrado); 
             LoginResponseDTO response = new LoginResponseDTO(userLoginEncontrado.getEmail(), token);
 
-
             return new ResponseEntity<>(response, HttpStatus.OK);
             }
         }
     
 
-        /*ELIMINAR USUARIO */
-        @Operation(
-            summary = "Elimina un usuario y sus casos de investigacion",
-            description = "Elimina completamente la informacion del usuario y todos los casos asociados"
-        )
-        @ApiResponse(responseCode = "200", description = "Usuario eliminado correctamente")
-        @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
-        @DeleteMapping("/remove/{email}")
-        public ResponseEntity<String> removeUser(@PathVariable("email") String userEmailDTO) {
-            boolean eliminado = userService.removeUsuarioYCasos(userEmailDTO);
+    //* DELETE: Usuario */
+    @Operation(
+        summary = "Elimina un usuario y sus casos de investigacion",
+        description = "Elimina completamente la informacion del usuario y todos los casos asociados"
+    )
+    @ApiResponse(responseCode = "200", description = "Usuario eliminado correctamente")
+    @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    @DeleteMapping("/remove/{email}")
+    public ResponseEntity<String> removeUser(@PathVariable("email") String userEmailDTO) {
+        boolean eliminado = userService.removeUsuarioYCasos(userEmailDTO);
 
-            if (!eliminado) {
-                return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
-            }
-
-            return new ResponseEntity<>("Usuario y sus casos eliminados correctamente", HttpStatus.OK);
+        if (!eliminado) {
+            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
         }
 
-        //logout
-        @Operation(
-            summary = "Hace logout de un Usuario"
-        )
-        @ApiResponse(responseCode = "200", description = "Usuario desloggeado correctamente")
-        @ApiResponse(responseCode = "404", description = "Usuario no eliminado")
-        @PostMapping("/logout")
+        return new ResponseEntity<>("Usuario y sus casos eliminados correctamente", HttpStatus.OK);
+    }
 
 
-        public ResponseEntity<String> userLogout(@RequestBody LogoutRequestDTO logoutRequest){
-            String tokenE= logoutRequest.getToken();
+    //* POST: logout */
+    @Operation(
+        summary = "Hace logout de un usuario. A diferencia de la demás funciones, aquí, se debe indicar al token del usuario en el body."
+    )
+    @ApiResponse(responseCode = "200", description = "Usuario desloggeado correctamente")
+    @ApiResponse(responseCode = "404", description = "Usuario no eliminado")
+    @PostMapping("/logout")
+    public ResponseEntity<String> userLogout(@RequestBody LogoutRequestDTO logoutRequest){
+        String tokenE= logoutRequest.getToken();
 
+        boolean logoutE = userService.logoutUser(tokenE);
 
-            boolean logoutE = userService.logoutUser(tokenE);
-
-
-            if(logoutE){
-                return new ResponseEntity<>("Usuario desloggeado correctamente", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Token no válido", HttpStatus.NOT_FOUND);
-            }
-
-
+        if(logoutE){
+            return new ResponseEntity<>("Usuario desloggeado correctamente", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Token no válido", HttpStatus.NOT_FOUND);
         }
-
-               
-
+    }
 }

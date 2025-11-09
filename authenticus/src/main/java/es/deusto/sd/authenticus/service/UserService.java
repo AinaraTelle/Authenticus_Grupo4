@@ -35,7 +35,7 @@ public class UserService {
             if(esUsuarioNuevo==false){
                 return null;
             }
-            estado.getListUsersLogOut().add(user);//añadirUsuarioNuevoALogout
+            estado.getListUsersRegistrados().add(user);//añadirUsuarioNuevoARegistrados
 
             return convertToDTO(user);
         }else{
@@ -87,7 +87,7 @@ public class UserService {
 
     boolean verificacionExistenciaUsuario(User miUser){
         boolean esUsuarioNuevo=true;
-        ArrayList<User> usuarios=estado.getListUsersLogOut();
+        ArrayList<User> usuarios=estado.getListUsersRegistrados();
         for(User us1: usuarios){
             
             String s1=us1.getEmail().trim();
@@ -100,23 +100,16 @@ public class UserService {
         return esUsuarioNuevo;
     }
 
-
-
-
-
-
-
-
     private UserDTO convertToDTO(User User) {
         return new UserDTO(User.getIDUsuario(), 
         User.getNombre(), User.getEmail(),
         User.getPassword(),User.getTel());
     }
 
-    public ArrayList<UserDTO> getAllUsersLogOut(){
+    public ArrayList<UserDTO> getAllUsersRegistrados(){
         ArrayList<UserDTO> listUsersDTOs = new ArrayList<UserDTO>();
         
-        for(User User1: estado.getListUsersLogOut()){
+        for(User User1: estado.getListUsersRegistrados()){
             listUsersDTOs.add(convertToDTO(User1));
         }
         return listUsersDTOs;
@@ -126,7 +119,7 @@ public class UserService {
         String miEmailUser = userLogIn.getEmail();
         String miPasswordUser= userLogIn.getPassword();
         Boolean valido=false;
-        for(User user1: estado.getListUsersLogOut()){
+        for(User user1: estado.getListUsersRegistrados()){
 
             String emailVerif=user1.getEmail();
             String passwordVerif=user1.getPassword();
@@ -151,13 +144,13 @@ public class UserService {
 
     public void actualizacionListas(User usuarioLogIn){
         estado.getListUsersLogIn().add(usuarioLogIn);
-        estado.getListUsersLogOut().remove(usuarioLogIn);
+        estado.getListUsersRegistrados().remove(usuarioLogIn);
 
     }
 
     public User busquedaUsuarioValido(LoginRequestDTO userLogin){
         User usuarioLogin = null;
-        for(User user1: estado.getListUsersLogOut()){
+        for(User user1: estado.getListUsersRegistrados()){
 
             if(user1.getEmail().equals(userLogin.getEmail()) &&
             user1.getPassword().equals(userLogin.getPassword())){
@@ -181,23 +174,14 @@ public class UserService {
         return estado.getMap_UserToken().get(user);
     }
 
-
     /*ELIMINAR USUARIO */
     public boolean removeUsuarioYCasos(String userEmailDTO) {
         User usuarioAEliminar = null;
 
-        for (User user : estado.getListUsersLogIn()) {
+        for (User user : estado.getListUsersRegistrados()) {
             if (user.getEmail().equals(userEmailDTO)) {
                 usuarioAEliminar = user;
                 break;
-            }
-        }
-        if (usuarioAEliminar == null) {
-            for (User user : estado.getListUsersLogOut()) {
-                if (user.getEmail().equals(userEmailDTO)) {
-                    usuarioAEliminar = user;
-                    break;
-                }
             }
         }
 
@@ -205,11 +189,11 @@ public class UserService {
             return false;
         }
 
-        //estado.removeUsuarioYCasos(usuarioAEliminar);
         estado.getListUsersLogIn().remove(usuarioAEliminar);
-        estado.getListUsersLogOut().remove(usuarioAEliminar);
+        estado.getListUsersRegistrados().remove(usuarioAEliminar);
         estado.getMap_UserToken().remove(usuarioAEliminar);
         estado.getMap_UserCases().remove(usuarioAEliminar);
+
         return true;
     }
 
@@ -217,16 +201,12 @@ public class UserService {
     public boolean logoutUser(String tokenE){
         User usuarioE= getUserByToken(tokenE);
 
-
         if(usuarioE!= null){
             estado.getMap_UserToken().remove(usuarioE);
             estado.getListUsersLogIn().remove(usuarioE);
 
-
-            estado.getListUsersLogOut().add(usuarioE);
             return true;
         }
-
 
         return false;
     }

@@ -12,7 +12,7 @@ import es.deusto.sd.authenticus.entity.User;
 @Service
 public class Estado {
     private final ArrayList<User> listUsersLogIn = new ArrayList<User>();
-    private final ArrayList<User> listUsersLogOut = new ArrayList<User>();
+    private final ArrayList<User> listUsersRegistrados = new ArrayList<User>();
 
     private final HashMap< User,String> map_UserToken= new HashMap< User,String>();
     private final HashMap< User,ArrayList<Caso>> map_UserCases= new HashMap< User,ArrayList<Caso>>();
@@ -23,8 +23,8 @@ public class Estado {
         return listUsersLogIn;
     }
 
-    public ArrayList<User> getListUsersLogOut() {
-        return listUsersLogOut;
+    public ArrayList<User> getListUsersRegistrados() {
+        return listUsersRegistrados;
     }
 
     public HashMap<User, String> getMap_UserToken() {
@@ -39,13 +39,5 @@ public class Estado {
         return idGenerator;
     } 
 
-    /*public void removeUsuarioYCasos(User usuario) {
-        map_UserCases.remove(usuario);
-
-        map_UserToken.remove(usuario);
-
-        listUsersLogIn.remove(usuario);
-        listUsersLogOut.remove(usuario);
-    }*/
 
 }

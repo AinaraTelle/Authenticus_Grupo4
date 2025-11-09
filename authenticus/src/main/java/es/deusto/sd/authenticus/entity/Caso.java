@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Caso {
     public enum TipoAnalisis{
-        ALTERAC_CONT, VERACID_CONT, ALTERAC_VERACID_CONT
+        ALTERAC_CONT, VERACID_CONT
     }
 
 

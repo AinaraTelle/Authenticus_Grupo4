@@ -35,8 +35,11 @@ public class CaseController{
     public CaseController(CaseService caseService){
         this.caseService=caseService;
     }
+
+    //* POST: Crear caso */
     @Operation(
-        summary = "Crea un caso al usuario seleccionado mediante el token del mismo que se añada al header"
+        summary = "Crea un caso a un usuario. Para ello, se debe hacer los siguiente: en PostMan, acceder a 'Authorization'."+
+        " Ahí, pulsando 'Bearer token', añadir el token del usuario proporcionado en login"
     )
     @ApiResponse(responseCode = "201", description = "Caso creado correctamente")
     @PostMapping("/crear")
@@ -46,8 +49,11 @@ public class CaseController{
             CasoDTO casoCreado = caseService.crearCaso(token, casoDTO);
             return new ResponseEntity<>(casoCreado, HttpStatus.CREATED);
     }
+
+
+    //* GET: Buscar caso por limite*/
     @Operation(
-        summary = "Función que se encarga de buscar casos creados por el usuario, por default esta en 5 aunque en Postman se puede pasar por parametro la cantidad que quiera el usuario"
+        summary = "Buscar casos asignados a un usuario. Por defecto se buscarán 5 casos, aunque, este valor se puede cambiar proporcinando este parámetro: en key la palabra 'limit', y, en su valor la cantidad de archivos que queramos observar"
     )
     @ApiResponse(responseCode = "200", description = "OK")
     @GetMapping("/mis-casos")
@@ -63,8 +69,11 @@ public class CaseController{
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
+
+
+    //* GET: Buscar caso por fechas*/
     @Operation(
-        summary = "Busca casos pasando por parametro dos fechas entre los que estaran los casos que salgan en el output"
+        summary = "Busca casos que solo están entre las 2 fechas que pasamos por parámetro. Acceder a documentación para ver cómo indicar las fechas"
     )
     @ApiResponse(responseCode = "200", description = "OK")
     @GetMapping("/mis-casos-fechas")
@@ -74,17 +83,18 @@ public class CaseController{
         @RequestParam("fin") LocalDateTime fechaFin) {
         try {
            ArrayList<CasoDTO>casosporfecha=caseService.obtenerCasosDeUsuarioEntreFechas(token, fechaInicio, fechaFin);
-            
             return new ResponseEntity<>(casosporfecha, HttpStatus.OK);
+            
         } catch (RuntimeException e) {
             // Por ejemplo, token inválido
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
-    /* ANADIR ARCHIVOS */
+    
+    //* PUT: Añadir archivos */
     @Operation(
-    summary = "Añadir archivos adicionales a un caso del usuario autenticado"
+    summary = "Añade archivos adicionales a un caso del usuario autenticado"
     )
     @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
     @ApiResponse(responseCode = "401", description = "Token inválido o no autorizado")
@@ -94,7 +104,6 @@ public class CaseController{
             @RequestHeader("Authorization") String token,
             @RequestParam("idCaso") int idCaso,
             @RequestBody ArrayList<Archivo> nuevosArchivos) {
-
         try {
             caseService.addFilesToCase(token, idCaso, nuevosArchivos);
             return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
@@ -107,9 +116,8 @@ public class CaseController{
         }
     }
 
-
-    //Eliminar casos
-    @Operation(summary = "Elimina un caso de un usuario")
+    //* DELETE: Eliminar casos */
+    @Operation(summary = "Elimina un caso de un usuario. Para ello, se debe proporcionar el token del usario y el id del caso que se quiera eliminar")
     @ApiResponse(responseCode = "200", description = "Caso eliminado correctamente")
     @ApiResponse(responseCode = "404", description = "Caso no encontrado")
     @DeleteMapping("/eliminar/{idCaso}")
@@ -122,11 +130,13 @@ public class CaseController{
         }
     }
 
+    
+        //* GET: Mostrar resultados*/
     @Operation(
-    summary = "Mostrar Resultados de Caso"
+    summary = "Muestra los resultados de un caso"
     )
     @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
-    @GetMapping("/resultados/{idCaso}")
+    @GetMapping("/resultados")
     public ResponseEntity<ResultadosDTO> mostrarResultados(
         @RequestParam("idUsuario") int idUsuario,
         @RequestParam("idCaso") int idCaso) {
@@ -137,7 +147,5 @@ public class CaseController{
             // Por ejemplo, token inválido
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-    
     }
-    
 }
