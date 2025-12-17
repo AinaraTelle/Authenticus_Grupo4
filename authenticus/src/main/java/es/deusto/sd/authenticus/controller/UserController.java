@@ -26,13 +26,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 public class UserController { //maneja las peticiones HTTP de los usuarios
 
-    // private final Estado estado;
     private final UserService userService;
 
     public UserController(UserService userService){
         this.userService = userService;
     }
 
+    
     //* GET: Usuarios registrados */
     @Operation(
         summary = "Devuelve todos los usuarios registrados",
@@ -81,8 +81,9 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
             }else{
 
             User userLoginEncontrado=userService.busquedaUsuarioValido(userLogin);
+            
             userService.generacionAsignacionToken(userLoginEncontrado);
-            userService.actualizacionListas(userLoginEncontrado);
+            userService.ponerLoginATrue(userLoginEncontrado);
             String token = userService.getTokenByUser(userLoginEncontrado); 
             LoginResponseDTO response = new LoginResponseDTO(userLoginEncontrado.getEmail(), token);
 

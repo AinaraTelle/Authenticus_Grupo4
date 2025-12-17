@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Data Transfer Object representing a User")
 public class UserDTO{
     @Schema(description = "Unique identifier of the User", example = "1")
-    private int IDUser;
+    private Long IDUser;
     @Schema(description = "name of the User", example = "Jose")
     private String nombre;
     @Schema(description = "email of the User", example = "jose02@gmail.com")
@@ -24,7 +24,7 @@ public class UserDTO{
         this.tel = tel;
     }
 
-    public UserDTO(int iDUser, String nombre, String email, String password, int tel) {
+    public UserDTO(Long iDUser, String nombre, String email, String password, int tel) {
         this.IDUser = iDUser;
         this.email = email;
         this.password = password;
@@ -32,7 +32,7 @@ public class UserDTO{
         this.tel = tel;
     }
     
-    public int getIDUser() {
+    public Long getIDUser() {
         return IDUser;
     }
 
@@ -52,7 +52,7 @@ public class UserDTO{
         return tel;
     }
 
-    public void setIDUser(int iDUser) {
+    public void setIDUser(Long iDUser) {
         IDUser = iDUser;
     }
 

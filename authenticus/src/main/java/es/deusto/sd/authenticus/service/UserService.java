@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Objects;
 
+import java.util.concurrent.atomic.AtomicLong;
+
+import es.deusto.sd.authenticus.dao.UserRepository;
 import es.deusto.sd.authenticus.dto.LoginRequestDTO;
 import es.deusto.sd.authenticus.dto.UserDTO;
 import es.deusto.sd.authenticus.dto.RegisterRequestDTO;
@@ -14,11 +17,11 @@ import es.deusto.sd.authenticus.entity.User;
 
 @Service
 public class UserService {
-    private final Estado estado;
-    private final AtomicInteger idGenerator = new AtomicInteger(0);
+    private final UserRepository userRepository;
+    private final AtomicLong idGenerator = new AtomicLong(0);
 
-    public UserService(Estado estado){
-        this.estado=estado;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
     
     public UserDTO createUser(RegisterRequestDTO userDTO) {    
@@ -35,8 +38,9 @@ public class UserService {
             if(esUsuarioNuevo==false){
                 return null;
             }
-            estado.getListUsersRegistrados().add(user);//añadirUsuarioNuevoARegistrados
-
+            // estado.getListUsersRegistrados().add(user);//añadirUsuarioNuevoARegistrados
+            user.setIDUsuario(null);
+            userRepository.save(user);
             return convertToDTO(user);
         }else{
             return null;
@@ -87,8 +91,7 @@ public class UserService {
 
     boolean verificacionExistenciaUsuario(User miUser){
         boolean esUsuarioNuevo=true;
-        ArrayList<User> usuarios=estado.getListUsersRegistrados();
-        for(User us1: usuarios){
+        for(User us1: userRepository.findAll()){
             
             String s1=us1.getEmail().trim();
             String s2=miUser.getEmail().trim();
@@ -109,7 +112,7 @@ public class UserService {
     public ArrayList<UserDTO> getAllUsersRegistrados(){
         ArrayList<UserDTO> listUsersDTOs = new ArrayList<UserDTO>();
         
-        for(User User1: estado.getListUsersRegistrados()){
+        for(User User1: userRepository.findAll()){
             listUsersDTOs.add(convertToDTO(User1));
         }
         return listUsersDTOs;
@@ -119,7 +122,7 @@ public class UserService {
         String miEmailUser = userLogIn.getEmail();
         String miPasswordUser= userLogIn.getPassword();
         Boolean valido=false;
-        for(User user1: estado.getListUsersRegistrados()){
+        for(User user1: userRepository.findAll()){
 
             String emailVerif=user1.getEmail();
             String passwordVerif=user1.getPassword();
@@ -139,18 +142,18 @@ public class UserService {
     public void generacionAsignacionToken(User usuarioLogIn){
         UUID uuid = UUID.randomUUID();
         String token = uuid.toString();
-        estado.getMap_UserToken().put(usuarioLogIn, token);
+        userRepository.findById(usuarioLogIn.getIDUsuario()).orElseThrow(() -> new RuntimeException("No encontrado"))
+        .setToken(token);
     }
 
-    public void actualizacionListas(User usuarioLogIn){
-        estado.getListUsersLogIn().add(usuarioLogIn);
-        estado.getListUsersRegistrados().remove(usuarioLogIn);
-
+    public void ponerLoginATrue(User usuarioLogIn){
+        userRepository.findById(usuarioLogIn.getIDUsuario()).orElseThrow(() -> new RuntimeException("No encontrado"))
+        .setLogin(true);
     }
 
     public User busquedaUsuarioValido(LoginRequestDTO userLogin){
         User usuarioLogin = null;
-        for(User user1: estado.getListUsersRegistrados()){
+        for(User user1: userRepository.findAll()){
 
             if(user1.getEmail().equals(userLogin.getEmail()) &&
             user1.getPassword().equals(userLogin.getPassword())){
@@ -162,23 +165,26 @@ public class UserService {
     }
 
     public User getUserByToken(String token) {
-        for (User user : estado.getMap_UserToken().keySet()) {
-            if (estado.getMap_UserToken().get(user).equals(token)) {
-                return user;
+
+        for (User us1 : userRepository.findAll()) {
+            if(token == us1.getToken()){
+                return us1;
             }
         }
         return null; 
     }
 
     public String getTokenByUser(User user) {
-        return estado.getMap_UserToken().get(user);
+        return userRepository.findById(user.getIDUsuario()).
+        orElseThrow(() -> new RuntimeException("No encontrado")).getToken();
+        
     }
 
     /*ELIMINAR USUARIO */
     public boolean removeUsuarioYCasos(String userEmailDTO) {
         User usuarioAEliminar = null;
 
-        for (User user : estado.getListUsersRegistrados()) {
+        for (User user : userRepository.findAll()) {
             if (user.getEmail().equals(userEmailDTO)) {
                 usuarioAEliminar = user;
                 break;
@@ -189,10 +195,9 @@ public class UserService {
             return false;
         }
 
-        estado.getListUsersLogIn().remove(usuarioAEliminar);
-        estado.getListUsersRegistrados().remove(usuarioAEliminar);
-        estado.getMap_UserToken().remove(usuarioAEliminar);
-        estado.getMap_UserCases().remove(usuarioAEliminar);
+        userRepository.deleteById(usuarioAEliminar.getIDUsuario());
+        //ELIMINAR SUS CASOS
+        // ...
 
         return true;
     }
@@ -202,8 +207,10 @@ public class UserService {
         User usuarioE= getUserByToken(tokenE);
 
         if(usuarioE!= null){
-            estado.getMap_UserToken().remove(usuarioE);
-            estado.getListUsersLogIn().remove(usuarioE);
+            userRepository.findById(usuarioE.getIDUsuario()).
+            orElseThrow(() -> new RuntimeException("No encontrado")).setLogin(false);
+            userRepository.findById(usuarioE.getIDUsuario()).
+            orElseThrow(() -> new RuntimeException("No encontrado")).setToken(null);
 
             return true;
         }
