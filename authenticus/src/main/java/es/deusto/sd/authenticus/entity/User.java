@@ -18,6 +18,9 @@ public class User {
     private Boolean login = false;
     private String token = null;
 
+    
+    public User(){
+    }
     public User(Long iDUsuario, String nombre, String email, String password, int tel) {
         IDUsuario = iDUsuario;
         this.nombre = nombre;

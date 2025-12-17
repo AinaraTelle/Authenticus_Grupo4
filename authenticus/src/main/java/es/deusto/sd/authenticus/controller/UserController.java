@@ -72,20 +72,19 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> userLogIn(
         @RequestBody LoginRequestDTO userLogin) {
-            boolean valido=false;
 
-            valido=userService.verificacionEmailPassword(userLogin);
+            User userLoginEncontrado=userService.busquedaEmailPassword(userLogin);
 
-            if (valido==false){
+            if (userLoginEncontrado==null){
                 return new ResponseEntity<>( HttpStatus.NOT_FOUND);
             }else{
 
-            User userLoginEncontrado=userService.busquedaUsuarioValido(userLogin);
             
             userService.generacionAsignacionToken(userLoginEncontrado);
             userService.ponerLoginATrue(userLoginEncontrado);
-            String token = userService.getTokenByUser(userLoginEncontrado); 
-            LoginResponseDTO response = new LoginResponseDTO(userLoginEncontrado.getEmail(), token);
+
+            LoginResponseDTO response = 
+            new LoginResponseDTO(userLoginEncontrado.getEmail(), userLoginEncontrado.getToken());
 
             return new ResponseEntity<>(response, HttpStatus.OK);
             }

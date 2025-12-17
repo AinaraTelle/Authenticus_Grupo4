@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import java.util.Objects;
-
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import es.deusto.sd.authenticus.dao.UserRepository;
@@ -34,11 +34,15 @@ public class UserService {
             userDTO.getNombre(),userDTO.getEmail(), 
             userDTO.getPassword(), userDTO.getTel());
 
-            boolean esUsuarioNuevo = verificacionExistenciaUsuario(user);
-            if(esUsuarioNuevo==false){
-                return null;
+           if (userRepository.existsByEmailIgnoreCase(userDTO.getEmail())) {
+                return null; // O lanza una excepción personalizada
             }
-            // estado.getListUsersRegistrados().add(user);//añadirUsuarioNuevoARegistrados
+
+            // boolean esUsuarioNuevo = verificacionExistenciaUsuario(user);
+            // if(esUsuarioNuevo==false){
+            //     return null;
+            // }
+
             user.setIDUsuario(null);
             userRepository.save(user);
             return convertToDTO(user);
@@ -89,18 +93,13 @@ public class UserService {
     }
 
 
-    boolean verificacionExistenciaUsuario(User miUser){
-        boolean esUsuarioNuevo=true;
-        for(User us1: userRepository.findAll()){
-            
-            String s1=us1.getEmail().trim();
-            String s2=miUser.getEmail().trim();
-            if(s1.equalsIgnoreCase(s2)){
-                esUsuarioNuevo=false;
-            }
+    public User busquedaEmailPassword(LoginRequestDTO miUser){
+        Optional<User> user = userRepository.findByEmailAndPassword(miUser.getEmail(),miUser.getPassword());
+        if (user.isPresent()) {
+            return user.get();
+        } else {
+            return null; 
         }
-
-        return esUsuarioNuevo;
     }
 
     private UserDTO convertToDTO(User User) {
@@ -117,51 +116,23 @@ public class UserService {
         }
         return listUsersDTOs;
     }
-    public boolean verificacionEmailPassword(LoginRequestDTO userLogIn){
- 
-        String miEmailUser = userLogIn.getEmail();
-        String miPasswordUser= userLogIn.getPassword();
-        Boolean valido=false;
-        for(User user1: userRepository.findAll()){
-
-            String emailVerif=user1.getEmail();
-            String passwordVerif=user1.getPassword();
-
-            if(miEmailUser.equals(emailVerif) &&
-            miPasswordUser.equals(passwordVerif)){
-                valido=true;
-            }
-        }
-        if (valido==false){ //NO VÁLIDO
-            return valido;
-        }else {
-            return true;
-        }
-    }
 
     public void generacionAsignacionToken(User usuarioLogIn){
         UUID uuid = UUID.randomUUID();
         String token = uuid.toString();
-        userRepository.findById(usuarioLogIn.getIDUsuario()).orElseThrow(() -> new RuntimeException("No encontrado"))
-        .setToken(token);
+        User userDB = userRepository.findById(usuarioLogIn.getIDUsuario()).
+        orElseThrow(() -> new RuntimeException("No encontrado"));
+        userDB.setToken(token);
+        usuarioLogIn.setToken(token);
+        userRepository.save(userDB);
     }
 
     public void ponerLoginATrue(User usuarioLogIn){
-        userRepository.findById(usuarioLogIn.getIDUsuario()).orElseThrow(() -> new RuntimeException("No encontrado"))
-        .setLogin(true);
-    }
-
-    public User busquedaUsuarioValido(LoginRequestDTO userLogin){
-        User usuarioLogin = null;
-        for(User user1: userRepository.findAll()){
-
-            if(user1.getEmail().equals(userLogin.getEmail()) &&
-            user1.getPassword().equals(userLogin.getPassword())){
-                usuarioLogin=user1;
-            }
-        }
-        return usuarioLogin;
-
+        User userDB = userRepository.findById(usuarioLogIn.getIDUsuario()).
+        orElseThrow(() -> new RuntimeException("No encontrado"));
+        userDB.setLogin(true);
+        usuarioLogIn.setLogin(true);
+        userRepository.save(userDB);
     }
 
     public User getUserByToken(String token) {
