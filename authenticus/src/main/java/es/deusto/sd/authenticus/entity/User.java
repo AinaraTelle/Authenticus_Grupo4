@@ -10,12 +10,13 @@ import jakarta.persistence.Table;
 public class User {
     
     @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long IDUsuario = null;
+    private Long IDUsuario;
     private String nombre;
     private String email;
     private String password;
     private int tel;
 
+    
     
     public User(){
     }
