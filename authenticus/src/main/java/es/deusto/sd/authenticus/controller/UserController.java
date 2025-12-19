@@ -121,7 +121,7 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
 
         boolean logoutE = userService.logoutUser(tokenE);
 
-        if(logoutE){
+        if(logoutE==true){
             return new ResponseEntity<>("Usuario desloggeado correctamente", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Token no válido", HttpStatus.NOT_FOUND);

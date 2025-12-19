@@ -168,7 +168,7 @@ public class UserService {
 
         Optional<UserToken> usuarioE= userTokenRepository.findByToken(tokenE);
 
-        if(usuarioE!= null){
+        if(usuarioE.isPresent()){
             userTokenRepository.deleteByToken(tokenE);
 
             return true;
