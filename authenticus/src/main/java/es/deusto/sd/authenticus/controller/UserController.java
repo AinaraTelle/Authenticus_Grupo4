@@ -110,21 +110,21 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
 
 
     //* POST: logout */
-    // @Operation(
-    //     summary = "Hace logout de un usuario. A diferencia de la demás funciones, aquí, se debe indicar al token del usuario en el body."
-    // )
-    // @ApiResponse(responseCode = "200", description = "Usuario desloggeado correctamente")
-    // @ApiResponse(responseCode = "404", description = "Usuario no eliminado")
-    // @PostMapping("/logout")
-    // public ResponseEntity<String> userLogout(@RequestBody LogoutRequestDTO logoutRequest){
-    //     String tokenE= logoutRequest.getToken();
+    @Operation(
+        summary = "Hace logout de un usuario. A diferencia de la demás funciones, aquí, se debe indicar al token del usuario en el body."
+    )
+    @ApiResponse(responseCode = "200", description = "Usuario desloggeado correctamente")
+    @ApiResponse(responseCode = "404", description = "Usuario no eliminado")
+    @PostMapping("/logout")
+    public ResponseEntity<String> userLogout(@RequestBody LogoutRequestDTO logoutRequest){
+        String tokenE= logoutRequest.getToken();
 
-    //     boolean logoutE = userService.logoutUser(tokenE);
+        boolean logoutE = userService.logoutUser(tokenE);
 
-    //     if(logoutE){
-    //         return new ResponseEntity<>("Usuario desloggeado correctamente", HttpStatus.OK);
-    //     } else {
-    //         return new ResponseEntity<>("Token no válido", HttpStatus.NOT_FOUND);
-    //     }
-    // }
+        if(logoutE){
+            return new ResponseEntity<>("Usuario desloggeado correctamente", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Token no válido", HttpStatus.NOT_FOUND);
+        }
+    }
 }

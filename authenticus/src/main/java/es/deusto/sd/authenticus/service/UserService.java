@@ -124,16 +124,16 @@ public class UserService {
         UUID uuid = UUID.randomUUID();
         String token = uuid.toString();
         
-        User userManaged = userRepository.findById(usuarioLogIn.getIDUsuario())
+        User userEncontrado = userRepository.findById(usuarioLogIn.getIDUsuario())
         .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        UserToken userToken = userTokenRepository.findById(userManaged.getIDUsuario())
+        UserToken userTokenDB = userTokenRepository.findById(userEncontrado.getIDUsuario())
             .orElse(new UserToken());
 
-        userToken.setUser(userManaged); 
-        userToken.setToken(token);
+        userTokenDB.setUser(userEncontrado); 
+        userTokenDB.setToken(token);
 
-        return userTokenRepository.save(userToken);
+        return userTokenRepository.save(userTokenDB);
     }
 
     public String getTokenByUser(User user) {
@@ -163,21 +163,19 @@ public class UserService {
         return true;
     }
 
-    //logout
-    // public boolean logoutUser(String tokenE){
-    //     User usuarioE= getUserByToken(tokenE);
+    @Transactional
+    public boolean logoutUser(String tokenE){
 
-    //     if(usuarioE!= null){
-    //         userRepository.findById(usuarioE.getIDUsuario()).
-    //         orElseThrow(() -> new RuntimeException("No encontrado")).setLogin(false);
-    //         userRepository.findById(usuarioE.getIDUsuario()).
-    //         orElseThrow(() -> new RuntimeException("No encontrado")).setToken(null);
+        Optional<UserToken> usuarioE= userTokenRepository.findByToken(tokenE);
 
-    //         return true;
-    //     }
+        if(usuarioE!= null){
+            userTokenRepository.deleteByToken(tokenE);
 
-    //     return false;
-    // }
+            return true;
+        }
+
+        return false;
+    }
 
 
 }

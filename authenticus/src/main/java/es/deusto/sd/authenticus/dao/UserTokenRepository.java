@@ -12,4 +12,5 @@ import es.deusto.sd.authenticus.entity.UserToken;
 @Repository
 public interface UserTokenRepository extends JpaRepository<UserToken, Long> {
     Optional<UserToken> findByToken(String token);
+    void deleteByToken(String token);
 }
