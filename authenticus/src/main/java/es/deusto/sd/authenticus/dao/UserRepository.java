@@ -10,4 +10,5 @@ import es.deusto.sd.authenticus.entity.User;
 public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmailIgnoreCase(String email);
     Optional<User> findByEmailAndPassword(String userEmail, String password);
+    Optional<User> findByEmail(String userEmail);
 }

@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.springframework.stereotype.Service;
 import es.deusto.sd.authenticus.dao.*;
 import es.deusto.sd.authenticus.dto.*;
@@ -14,15 +16,17 @@ import java.time.LocalDateTime;
 @Service
 public class CaseService {
     private final CasoRepository casoRepository;
-    private final AtomicInteger idGenerator = new AtomicInteger(0);
+    private final AtomicLong idGenerator = new AtomicLong(0);
 
     private final UserTokenRepository userTokenRepository;
     private final UserRepository userRepository;
+    private final ArchivoRepository archivoRepository;
 
-    public CaseService(CasoRepository casoRepository, UserTokenRepository userTokenRepository,UserRepository userRepository) {
+    public CaseService(ArchivoRepository archivoRepository,CasoRepository casoRepository, UserTokenRepository userTokenRepository,UserRepository userRepository) {
         this.casoRepository=casoRepository;
         this.userTokenRepository=userTokenRepository;
         this.userRepository=userRepository;
+        this.archivoRepository=archivoRepository;
     }
       
     @Transactional
@@ -46,6 +50,8 @@ public class CaseService {
         if (casoDTO.getArchivos() != null) {
             for (Archivo arch1 : casoDTO.getArchivos()) {
                 caso.addArchivo(arch1);
+                archivoRepository.save(arch1);
+                // arch1.setIDArchivo(idGenerator.incrementAndGet());
             }
         }
         

@@ -139,20 +139,14 @@ public class UserService {
     }
 
     public boolean removeUsuarioYCasos(String userEmailDTO) {
-        User usuarioAEliminar = null;
 
-        for (User user : userRepository.findAll()) {
-            if (user.getEmail().equals(userEmailDTO)) {
-                usuarioAEliminar = user;
-                break;
-            }
-        }
+        Optional<User> usuarioAEliminar = userRepository.findByEmail(userEmailDTO);
 
-        if (usuarioAEliminar == null) {
+        if (!usuarioAEliminar.isPresent()) {
             return false;
         }
 
-        userRepository.deleteById(usuarioAEliminar.getIDUsuario());
+        userRepository.deleteById(usuarioAEliminar.get().getIDUsuario());
         //ELIMINAR SUS CASOS
         // ...
 

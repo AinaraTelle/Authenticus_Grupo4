@@ -49,4 +49,9 @@ public class Archivo {
     public void setCaso(Caso caso){
         this.caso = caso;
     }
+
+    public void setIDArchivo(Long iDArchivo) {
+        IDArchivo = iDArchivo;
+    }
+    
 }

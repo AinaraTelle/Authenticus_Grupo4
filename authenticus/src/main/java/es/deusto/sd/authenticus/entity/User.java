@@ -20,7 +20,7 @@ public class User {
     private String email;
     private String password;
     private int tel;
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Caso> casos = new ArrayList<>();
 
     
