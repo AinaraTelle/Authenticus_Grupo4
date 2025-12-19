@@ -15,8 +15,6 @@ public class User {
     private String email;
     private String password;
     private int tel;
-    private Boolean login = false;
-    private String token = null;
 
     
     public User(){
@@ -69,21 +67,4 @@ public class User {
         this.tel = tel;
     }
 
-    public boolean isLogin() {
-        return login;
-    }
-
-    public void setLogin(boolean login) {
-        this.login = login;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    
 }

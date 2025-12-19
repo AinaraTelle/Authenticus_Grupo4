@@ -5,24 +5,30 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-import es.deusto.sd.authenticus.dao.UserRepository;
+import es.deusto.sd.authenticus.dao.*;
 import es.deusto.sd.authenticus.dto.LoginRequestDTO;
 import es.deusto.sd.authenticus.dto.UserDTO;
 import es.deusto.sd.authenticus.dto.RegisterRequestDTO;
 import es.deusto.sd.authenticus.entity.User;
+import es.deusto.sd.authenticus.entity.UserToken;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final UserTokenRepository userTokenRepository;
+
     private final AtomicLong idGenerator = new AtomicLong(0);
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, 
+        UserTokenRepository userTokenRepository) {
         this.userRepository = userRepository;
+        this.userTokenRepository = userTokenRepository;
     }
+
     
     public UserDTO createUser(RegisterRequestDTO userDTO) {    
         
@@ -37,11 +43,6 @@ public class UserService {
            if (userRepository.existsByEmailIgnoreCase(userDTO.getEmail())) {
                 return null; // O lanza una excepción personalizada
             }
-
-            // boolean esUsuarioNuevo = verificacionExistenciaUsuario(user);
-            // if(esUsuarioNuevo==false){
-            //     return null;
-            // }
 
             user.setIDUsuario(null);
             userRepository.save(user);
@@ -92,9 +93,10 @@ public class UserService {
         return valido;
     }
 
-
     public User busquedaEmailPassword(LoginRequestDTO miUser){
-        Optional<User> user = userRepository.findByEmailAndPassword(miUser.getEmail(),miUser.getPassword());
+        String email=miUser.getEmail();
+        String password = miUser.getPassword();
+        Optional<User> user = userRepository.findByEmailAndPassword(email,password);
         if (user.isPresent()) {
             return user.get();
         } else {
@@ -117,41 +119,29 @@ public class UserService {
         return listUsersDTOs;
     }
 
-    public void generacionAsignacionToken(User usuarioLogIn){
+    @Transactional
+    public UserToken  generacionAsignacionToken(User usuarioLogIn){
         UUID uuid = UUID.randomUUID();
         String token = uuid.toString();
-        User userDB = userRepository.findById(usuarioLogIn.getIDUsuario()).
-        orElseThrow(() -> new RuntimeException("No encontrado"));
-        userDB.setToken(token);
-        usuarioLogIn.setToken(token);
-        userRepository.save(userDB);
-    }
+        
+        User userManaged = userRepository.findById(usuarioLogIn.getIDUsuario())
+        .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-    public void ponerLoginATrue(User usuarioLogIn){
-        User userDB = userRepository.findById(usuarioLogIn.getIDUsuario()).
-        orElseThrow(() -> new RuntimeException("No encontrado"));
-        userDB.setLogin(true);
-        usuarioLogIn.setLogin(true);
-        userRepository.save(userDB);
-    }
+        UserToken userToken = userTokenRepository.findById(userManaged.getIDUsuario())
+            .orElse(new UserToken());
 
-    public User getUserByToken(String token) {
+        userToken.setUser(userManaged); 
+        userToken.setToken(token);
 
-        for (User us1 : userRepository.findAll()) {
-            if(token == us1.getToken()){
-                return us1;
-            }
-        }
-        return null; 
+        return userTokenRepository.save(userToken);
     }
 
     public String getTokenByUser(User user) {
-        return userRepository.findById(user.getIDUsuario()).
+        return userTokenRepository.findById(user.getIDUsuario()).
         orElseThrow(() -> new RuntimeException("No encontrado")).getToken();
         
     }
 
-    /*ELIMINAR USUARIO */
     public boolean removeUsuarioYCasos(String userEmailDTO) {
         User usuarioAEliminar = null;
 
@@ -174,20 +164,20 @@ public class UserService {
     }
 
     //logout
-    public boolean logoutUser(String tokenE){
-        User usuarioE= getUserByToken(tokenE);
+    // public boolean logoutUser(String tokenE){
+    //     User usuarioE= getUserByToken(tokenE);
 
-        if(usuarioE!= null){
-            userRepository.findById(usuarioE.getIDUsuario()).
-            orElseThrow(() -> new RuntimeException("No encontrado")).setLogin(false);
-            userRepository.findById(usuarioE.getIDUsuario()).
-            orElseThrow(() -> new RuntimeException("No encontrado")).setToken(null);
+    //     if(usuarioE!= null){
+    //         userRepository.findById(usuarioE.getIDUsuario()).
+    //         orElseThrow(() -> new RuntimeException("No encontrado")).setLogin(false);
+    //         userRepository.findById(usuarioE.getIDUsuario()).
+    //         orElseThrow(() -> new RuntimeException("No encontrado")).setToken(null);
 
-            return true;
-        }
+    //         return true;
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
 
 }

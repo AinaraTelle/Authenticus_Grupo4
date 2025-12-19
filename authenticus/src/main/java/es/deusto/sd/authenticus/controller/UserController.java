@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import es.deusto.sd.authenticus.dto.*;
 import es.deusto.sd.authenticus.entity.User;
+import es.deusto.sd.authenticus.entity.UserToken;
 import es.deusto.sd.authenticus.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -46,7 +47,7 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     }
 
 
-    //* POST: Crea usuario */
+    //* POST: Registra usuario nuevo */
     @Operation(
         summary = "Crea un nuevo usuario",
         description = "Crea un unevo usuario con la información proporcionada"
@@ -74,17 +75,15 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
         @RequestBody LoginRequestDTO userLogin) {
 
             User userLoginEncontrado=userService.busquedaEmailPassword(userLogin);
-
+            
             if (userLoginEncontrado==null){
                 return new ResponseEntity<>( HttpStatus.NOT_FOUND);
             }else{
 
-            
-            userService.generacionAsignacionToken(userLoginEncontrado);
-            userService.ponerLoginATrue(userLoginEncontrado);
+            UserToken userToken= userService.generacionAsignacionToken(userLoginEncontrado);
 
             LoginResponseDTO response = 
-            new LoginResponseDTO(userLoginEncontrado.getEmail(), userLoginEncontrado.getToken());
+            new LoginResponseDTO(userLoginEncontrado.getEmail(), userToken.getToken());
 
             return new ResponseEntity<>(response, HttpStatus.OK);
             }
@@ -111,21 +110,21 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
 
 
     //* POST: logout */
-    @Operation(
-        summary = "Hace logout de un usuario. A diferencia de la demás funciones, aquí, se debe indicar al token del usuario en el body."
-    )
-    @ApiResponse(responseCode = "200", description = "Usuario desloggeado correctamente")
-    @ApiResponse(responseCode = "404", description = "Usuario no eliminado")
-    @PostMapping("/logout")
-    public ResponseEntity<String> userLogout(@RequestBody LogoutRequestDTO logoutRequest){
-        String tokenE= logoutRequest.getToken();
+    // @Operation(
+    //     summary = "Hace logout de un usuario. A diferencia de la demás funciones, aquí, se debe indicar al token del usuario en el body."
+    // )
+    // @ApiResponse(responseCode = "200", description = "Usuario desloggeado correctamente")
+    // @ApiResponse(responseCode = "404", description = "Usuario no eliminado")
+    // @PostMapping("/logout")
+    // public ResponseEntity<String> userLogout(@RequestBody LogoutRequestDTO logoutRequest){
+    //     String tokenE= logoutRequest.getToken();
 
-        boolean logoutE = userService.logoutUser(tokenE);
+    //     boolean logoutE = userService.logoutUser(tokenE);
 
-        if(logoutE){
-            return new ResponseEntity<>("Usuario desloggeado correctamente", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Token no válido", HttpStatus.NOT_FOUND);
-        }
-    }
+    //     if(logoutE){
+    //         return new ResponseEntity<>("Usuario desloggeado correctamente", HttpStatus.OK);
+    //     } else {
+    //         return new ResponseEntity<>("Token no válido", HttpStatus.NOT_FOUND);
+    //     }
+    // }
 }
