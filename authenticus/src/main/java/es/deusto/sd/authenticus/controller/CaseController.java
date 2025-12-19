@@ -1,54 +1,51 @@
-// package es.deusto.sd.authenticus.controller;
-
-// import java.time.LocalDateTime;
-// import java.util.ArrayList;
-
-// import org.springframework.http.HttpStatus;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.web.bind.annotation.GetMapping;
-// import org.springframework.web.bind.annotation.PostMapping;
-// import org.springframework.web.bind.annotation.RequestBody;
-// import org.springframework.web.bind.annotation.RequestHeader;
-// import org.springframework.web.bind.annotation.RequestMapping;
-// import org.springframework.web.bind.annotation.DeleteMapping;
-// import org.springframework.web.bind.annotation.PutMapping;
-// import org.springframework.web.bind.annotation.RequestParam;
-// import org.springframework.web.bind.annotation.RestController;
-// import org.springframework.web.bind.annotation.PathVariable;
-
-// import es.deusto.sd.authenticus.dto.*;
-// import es.deusto.sd.authenticus.entity.Archivo;
-// import es.deusto.sd.authenticus.service.CaseService;
-// import io.swagger.v3.oas.annotations.Operation;
-// import io.swagger.v3.oas.annotations.responses.ApiResponse;
-// import io.swagger.v3.oas.annotations.tags.Tag;
+package es.deusto.sd.authenticus.controller;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
+import es.deusto.sd.authenticus.dto.*;
+import es.deusto.sd.authenticus.service.CaseService;
+import es.deusto.sd.authenticus.entity.Archivo;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 
 
-// @RestController
-// @RequestMapping("/casos")
-// @Tag(name="Casos", description="Operaciones sobre casos")
+@RestController
+@RequestMapping("/casos")
+@Tag(name="Casos", description="Operaciones sobre casos")
 
-// public class CaseController{
-//     private final CaseService caseService;
+public class CaseController{
+    private final CaseService caseService;
     
-//     public CaseController(CaseService caseService){
-//         this.caseService=caseService;
-//     }
+    public CaseController(CaseService caseService){
+        this.caseService=caseService;
+    }
 
-//     //* POST: Crear caso */
-//     @Operation(
-//         summary = "Crea un caso a un usuario. Para ello, se debe hacer los siguiente: en PostMan, acceder a 'Authorization'."+
-//         " Ahí, pulsando 'Bearer token', añadir el token del usuario proporcionado en login"
-//     )
-//     @ApiResponse(responseCode = "201", description = "Caso creado correctamente")
-//     @PostMapping("/crear")
-//     public ResponseEntity<CasoDTO> crearCaso(
-//         @RequestHeader("Authorization") String token,
-//         @RequestBody CreateCasoDTO casoDTO) {
-//             CasoDTO casoCreado = caseService.crearCaso(token, casoDTO);
-//             return new ResponseEntity<>(casoCreado, HttpStatus.CREATED);
-//     }
+    //* POST: Crear caso */
+    @Operation(
+        summary = "Crea un caso a un usuario. Para ello, se debe hacer los siguiente: en PostMan, acceder a 'Authorization'."+
+        " Ahí, pulsando 'Bearer token', añadir el token del usuario proporcionado en login"
+    )
+    @ApiResponse(responseCode = "201", description = "Caso creado correctamente")
+    @PostMapping("/crear")
+    public ResponseEntity<CasoDTO> crearCaso(
+        @RequestHeader("Authorization") String token,
+        @RequestBody CreateCasoDTO casoDTO) {
+            CasoDTO casoCreado = caseService.crearCaso(token, casoDTO);
+            return new ResponseEntity<>(casoCreado, HttpStatus.CREATED);
+    }
 
 
 //     //* GET: Buscar caso por limite*/
@@ -148,4 +145,4 @@
 //             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 //         }
 //     }
-// }
+}

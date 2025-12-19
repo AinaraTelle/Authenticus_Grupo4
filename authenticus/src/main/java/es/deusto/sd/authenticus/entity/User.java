@@ -1,8 +1,13 @@
 package es.deusto.sd.authenticus.entity;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,6 +20,8 @@ public class User {
     private String email;
     private String password;
     private int tel;
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Caso> casos = new ArrayList<>();
 
     
     
@@ -66,6 +73,12 @@ public class User {
 
     public void setTel(int tel) {
         this.tel = tel;
+    }
+    public List<Caso> getCasos() {
+        return casos;
+    }
+    public void setCasos(List<Caso> casos) {
+        this.casos = casos;
     }
 
 }

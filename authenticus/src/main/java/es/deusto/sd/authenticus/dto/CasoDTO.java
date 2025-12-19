@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class CasoDTO {
     @Schema(description = "Unique identifier of the Case", example = "1")
-    private int IDCaso;
+    private Long IDCaso;
     @Schema(description = "name of the Case", example = "Caso 1")
     private String titulo;
     @Schema(description = "type of case", example = "ALTERAC_CONT")
@@ -22,7 +22,7 @@ public class CasoDTO {
 
     public CasoDTO(){
     }
-    public CasoDTO(int IdCaso, String titulo, Caso.TipoAnalisis tipoAnalisis,LocalDateTime fechaCreacion,List<Archivo> archivos){
+    public CasoDTO(Long IdCaso, String titulo, Caso.TipoAnalisis tipoAnalisis,LocalDateTime fechaCreacion,List<Archivo> archivos){
         IDCaso=IdCaso;
         this.titulo= titulo;
         this.tipoAnalisis=tipoAnalisis;
@@ -31,7 +31,7 @@ public class CasoDTO {
     }
 
     
-    public int getIDCaso() {
+    public Long getIDCaso() {
         return IDCaso;
     }
     public String getTitulo() {
@@ -40,7 +40,7 @@ public class CasoDTO {
     public Caso.TipoAnalisis getTipoAnalisis() {
         return tipoAnalisis;
     }
-    public void setIDCaso(int iDCaso) {
+    public void setIDCaso(Long iDCaso) {
         IDCaso = iDCaso;
     }
     public void setTitulo(String titulo) {

@@ -42,20 +42,13 @@ public class Caso {
 
     }
 
-
-    public Caso(/*int IdCaso,*/ String titulo, Caso.TipoAnalisis tipoAnalisis,LocalDateTime fechaCreacion, User usuario){
-        //IDCaso=IdCaso;
+    public Caso(String titulo, Caso.TipoAnalisis tipoAnalisis,LocalDateTime fechaCreacion, User usuario){
         this.titulo= titulo;
         this.tipoAnalisis=tipoAnalisis;
         this.fechaCreacion=fechaCreacion;
-
         this.usuario = usuario;
     }
-
     
-    /*public int getIDCaso() {
-        return IDCaso;
-    }*/
 
     public Long getId() {
         return IDCaso;

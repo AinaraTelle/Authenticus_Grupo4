@@ -28,10 +28,8 @@ public class UserService {
         this.userRepository = userRepository;
         this.userTokenRepository = userTokenRepository;
     }
-
     
     public UserDTO createUser(RegisterRequestDTO userDTO) {    
-        
         boolean passwordValida=validacionPassword(userDTO.getPassword());
 
         if(passwordValida==true){
@@ -86,8 +84,7 @@ public class UserService {
                 tieneSimbolo=true;
             }
         }
-        if(tieneMayus==true &&tieneMinus==true && tieneNumero==true
-        && tieneSimbolo==true && tiene8letras==true){
+        if(tieneMayus==true &&tieneMinus==true && tieneNumero==true && tieneSimbolo==true && tiene8letras==true){
             valido=true;
         }
         return valido;
@@ -105,9 +102,8 @@ public class UserService {
     }
 
     private UserDTO convertToDTO(User User) {
-        return new UserDTO(User.getIDUsuario(), 
-        User.getNombre(), User.getEmail(),
-        User.getPassword(),User.getTel());
+        return new UserDTO(User.getIDUsuario(), User.getNombre(), 
+        User.getEmail(), User.getPassword(),User.getTel());
     }
 
     public ArrayList<UserDTO> getAllUsersRegistrados(){
@@ -120,7 +116,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserToken  generacionAsignacionToken(User usuarioLogIn){
+    public UserToken generacionAsignacionToken(User usuarioLogIn){
         UUID uuid = UUID.randomUUID();
         String token = uuid.toString();
         

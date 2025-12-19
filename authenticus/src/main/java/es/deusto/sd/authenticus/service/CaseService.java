@@ -1,47 +1,58 @@
-// package es.deusto.sd.authenticus.service;
-// import java.util.ArrayList;
-// import java.util.List;
-// import java.util.concurrent.atomic.AtomicInteger;
+package es.deusto.sd.authenticus.service;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.springframework.stereotype.Service;
+import es.deusto.sd.authenticus.dao.*;
+import es.deusto.sd.authenticus.dto.*;
+import es.deusto.sd.authenticus.entity.*;
+import jakarta.transaction.Transactional;
 
-// import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 
-// import es.deusto.sd.authenticus.dto.*;
-// import es.deusto.sd.authenticus.entity.*;
-// import java.time.LocalDateTime;
-//@Service
-// public class CaseService {
-//     private final Estado estado;
-//     private UserService userService;// Para utilizar la función de convertir un token en user
-//     private final AtomicInteger idGenerator = new AtomicInteger(0);
+@Service
+public class CaseService {
+    private final CasoRepository casoRepository;
+    private final AtomicInteger idGenerator = new AtomicInteger(0);
 
-//     public CaseService(Estado estado, UserService userService) {
-//         this.estado = estado;
-//         this.userService=userService;
-//     }
+    private final UserTokenRepository userTokenRepository;
+    private final UserRepository userRepository;
 
-//     public CasoDTO crearCaso(String token, CreateCasoDTO casoDTO){
-//         if(token.startsWith("Bearer ")) {
-//             token = token.substring(7);
-//         }
-//         User usuario=userService.getUserByToken(token);
-//         if(usuario==null){
-//             throw new RuntimeException("Usuario no autenticado o token inválido.");
-//         }
-//         Caso caso= new Caso(idGenerator.incrementAndGet(), casoDTO.getTitulo(), casoDTO.getTipoAnalisis(), casoDTO.getFechaCreacion());
+    public CaseService(CasoRepository casoRepository, UserTokenRepository userTokenRepository,UserRepository userRepository) {
+        this.casoRepository=casoRepository;
+        this.userTokenRepository=userTokenRepository;
+        this.userRepository=userRepository;
+    }
+      
+    @Transactional
+    public CasoDTO crearCaso(String token, CreateCasoDTO casoDTO){
+        if(token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        Optional<UserToken> userToken = userTokenRepository.findByToken(token);
+        if(!userToken.isPresent()){
+            throw new RuntimeException("Usuario no autenticado o token inválido.");
+        }
+
+        Optional<User> userO = userRepository.findById(userToken.get().getId());
+        User user = userO.get();
+        Caso caso= new Caso(casoDTO.getTitulo(),casoDTO.getTipoAnalisis(), casoDTO.getFechaCreacion(),user);
         
-//         //ANADIR ARCHIVOS
-//         if (casoDTO.getArchivos() != null) {
-//             for (Archivo arch1 : casoDTO.getArchivos()) {
-//                 caso.addArchivo(arch1);
-//             }
-//         }
+        casoRepository.save(caso);
         
-//         ArrayList<Caso> casosDelUsuario = estado.getMap_UserCases().getOrDefault(usuario, new ArrayList<>());
-//         casosDelUsuario.add(caso);
-//         estado.getMap_UserCases().put(usuario, casosDelUsuario);
+        //ANADIR ARCHIVOS
+        if (casoDTO.getArchivos() != null) {
+            for (Archivo arch1 : casoDTO.getArchivos()) {
+                caso.addArchivo(arch1);
+            }
+        }
         
-//         return new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion(),caso.getArchivos());
-//     }
+        user.getCasos().add(caso);
+        
+        return new CasoDTO(caso.getId(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion(),caso.getArchivos());
+    }
 
 //     public ArrayList<CasoDTO> obtenerCasosDeUsuario(String token) {
 //         if(token.startsWith("Bearer ")) {
@@ -183,4 +194,4 @@
 //         return casoEncontrado;
 //     }
 
-// }
+}
