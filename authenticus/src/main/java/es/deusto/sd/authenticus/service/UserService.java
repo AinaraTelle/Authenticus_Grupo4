@@ -14,6 +14,9 @@ import es.deusto.sd.authenticus.dto.UserDTO;
 import es.deusto.sd.authenticus.dto.RegisterRequestDTO;
 import es.deusto.sd.authenticus.entity.User;
 import es.deusto.sd.authenticus.entity.UserToken;
+import es.deusto.sd.authenticus.socket.ClienteSocket;
+import io.jsonwebtoken.io.IOException;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -22,11 +25,20 @@ public class UserService {
     private final UserTokenRepository userTokenRepository;
 
     private final AtomicLong idGenerator = new AtomicLong(0);
+    private ClienteSocket socketCliente; //Atributo del socket
 
     public UserService(UserRepository userRepository, 
         UserTokenRepository userTokenRepository) {
         this.userRepository = userRepository;
         this.userTokenRepository = userTokenRepository;
+    }
+    @PostConstruct
+    public void init() throws Exception { // aqui se inicializa
+        try {
+            ClienteSocket socketCliente = new ClienteSocket("localhost", 5000);
+        } catch (IOException e) {
+            System.err.println("No se pudo conectar al servidor de sockets: " + e.getMessage());
+        }
     }
     
     public UserDTO createUser(RegisterRequestDTO userDTO) {    
@@ -44,7 +56,11 @@ public class UserService {
 
             user.setIDUsuario(null);
             userRepository.save(user);
+            if(socketCliente!=null){
+                socketCliente.sendMessage("Usuario registrado: ID=" + user.getIDUsuario());
+            }
             return convertToDTO(user);
+            
         }else{
             return null;
         }
@@ -95,6 +111,9 @@ public class UserService {
         String password = miUser.getPassword();
         Optional<User> user = userRepository.findByEmailAndPassword(email,password);
         if (user.isPresent()) {
+            if(socketCliente!=null){
+                socketCliente.sendMessage("Usuario autenticado: ID=" + user.get().getIDUsuario());
+            }
             return user.get();
         } else {
             return null; 
@@ -156,7 +175,9 @@ public class UserService {
         userRepository.deleteById(id);
         //ELIMINAR SUS CASOS
         // ...
-
+        if(socketCliente!=null){
+            socketCliente.sendMessage("El borrado del usuario seleccionado se ha completado");
+        }
         return true;
     }
 
@@ -167,6 +188,9 @@ public class UserService {
 
         if(usuarioE.isPresent()){
             userTokenRepository.deleteByToken(tokenE);
+            if(socketCliente!=null){
+                socketCliente.sendMessage("El usuario con ID=" +usuarioE.get().getId() + " ha cerrado sesion" );
+            }
 
             return true;
         }

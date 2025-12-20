@@ -32,6 +32,32 @@ public class ClienteSocket {
 			System.err.println("  IO error: " + e.getMessage());
 		}
     }
+    public String sendMessage(String message) {
+        try {
+            out.writeUTF(message);//Pasa el mensaje a la "puerta" de envio de mensajes del socket
+            System.out.println(" Mensaje enviado: " + message);
+
+            String response = in.readUTF();
+            System.out.println(" Respuesta recibida: " + response);
+
+            return response;
+
+        } catch (IOException e) {
+            System.err.println(" Error enviando mensaje: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public void close() {
+        try {
+            if (in != null) in.close(); //Si detecta que in no esta null lo cierra, al igual con el resto
+            if (out != null) out.close();
+            if (socket != null) socket.close();
+            System.out.println(" Conexión cerrada correctamente");
+        } catch (IOException e) {
+            System.err.println(" Error cerrando conexión: " + e.getMessage());
+        }
+    }
 
     
 }

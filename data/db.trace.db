@@ -1,0 +1,8 @@
+2025-12-20 18:04:37.654641+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM USERS USER_TOKENS [*]USERS"
+Syntax error in SQL statement "SELECT * FROM USERS USER_TOKENS [*]USERS"; SQL statement:
+SELECT * FROM USERS USER_TOKENS USERS [42000-232]
+2025-12-20 18:04:43.891799+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM USERS USER_TOKENS [*]USERS USER_TOKENS USERS"
+Syntax error in SQL statement "SELECT * FROM USERS USER_TOKENS [*]USERS USER_TOKENS USERS"; SQL statement:
+SELECT * FROM USERS USER_TOKENS USERS USER_TOKENS USERS [42000-232]
