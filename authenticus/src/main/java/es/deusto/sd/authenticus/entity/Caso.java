@@ -50,54 +50,50 @@ public class Caso {
     }
     
 
-    public Long getId() {
+    
+
+    public Long getIDCaso() {
         return IDCaso;
+    }
+
+    public void setIDCaso(Long iDCaso) {
+        IDCaso = iDCaso;
     }
 
     public String getTitulo() {
         return titulo;
     }
-    
-    /*public Caso.TipoAnalisis getTipoAnalisis() {
-        return tipoAnalisis;
-    }*/
-
-    public TipoAnalisis getTipoAnalisis() {
-        return tipoAnalisis;
-    }
-
-    /*public void setIDCaso(int iDCaso) {
-        IDCaso = iDCaso;
-    }*/
-
-    public LocalDateTime getFechaCreacion(){
-        return fechaCreacion;
-    }
-
-    public List<Archivo> getArchivos() { 
-        return archivos; 
-    }
-
-    public User getUsuario() {
-        return usuario;
-    }
-
-
 
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
 
-    /*public void setTipoAnalisis(Caso.TipoAnalisis tipoAnalisis) {
-        this.tipoAnalisis = tipoAnalisis;
-    }*/
+    public TipoAnalisis getTipoAnalisis() {
+        return tipoAnalisis;
+    }
 
     public void setTipoAnalisis(TipoAnalisis tipoAnalisis) {
         this.tipoAnalisis = tipoAnalisis;
     }
 
-    public void setFechaCreacion(LocalDateTime fechaCreacion){
-        this.fechaCreacion= fechaCreacion;
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public List<Archivo> getArchivos() {
+        return archivos;
+    }
+
+    public void setArchivos(List<Archivo> archivos) {
+        this.archivos = archivos;
+    }
+
+    public User getUsuario() {
+        return usuario;
     }
 
     public void setUsuario(User usuario) {
@@ -113,17 +109,5 @@ public class Caso {
         archivos.remove(archivo);
         archivo.setCaso(null);
     }
-
-    
-    /*public void setArchivos(List<Archivo> archivos) { 
-        this.archivos = archivos;
-
-    }
-
-    public void addArchivo(Archivo archivo) {
-        this.archivos.add(archivo);
-    }*/
-
-    
 }
 

@@ -42,7 +42,7 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     @ApiResponse(responseCode = "200", description = "Successful operation")
     @GetMapping
     public ResponseEntity <List<UserDTO>> getAllUsers(){
-        ArrayList<UserDTO> usuarios =userService.getAllUsersRegistrados();
+        List<UserDTO> usuarios =userService.getAllUsersRegistrados();
         return new ResponseEntity<>(usuarios,HttpStatus.OK);
     }
 

@@ -106,13 +106,15 @@ public class UserService {
         User.getEmail(), User.getPassword(),User.getTel());
     }
 
-    public ArrayList<UserDTO> getAllUsersRegistrados(){
-        ArrayList<UserDTO> listUsersDTOs = new ArrayList<UserDTO>();
+    public List<UserDTO> getAllUsersRegistrados(){
+        List<User> listUsers = userRepository.findAll();
         
-        for(User User1: userRepository.findAll()){
-            listUsersDTOs.add(convertToDTO(User1));
+        List<UserDTO> listUsersDTO = new ArrayList<UserDTO>() ;
+
+        for(User User1: listUsers){
+            listUsersDTO.add(convertToDTO(User1));
         }
-        return listUsersDTOs;
+        return listUsersDTO;
     }
 
     @Transactional
@@ -137,7 +139,8 @@ public class UserService {
         orElseThrow(() -> new RuntimeException("No encontrado")).getToken();
         
     }
-
+    
+    @Transactional
     public boolean removeUsuarioYCasos(String userEmailDTO) {
 
         Optional<User> usuarioAEliminar = userRepository.findByEmail(userEmailDTO);
@@ -145,8 +148,12 @@ public class UserService {
         if (!usuarioAEliminar.isPresent()) {
             return false;
         }
-
-        userRepository.deleteById(usuarioAEliminar.get().getIDUsuario());
+        Long id = usuarioAEliminar.get().getIDUsuario();
+       // 1. Borramos el token primero para liberar la restricción
+        userTokenRepository.deleteById(id); 
+        
+        // 2. Ahora que el usuario no tiene "hijos" que lo aten, lo podemos borrar
+        userRepository.deleteById(id);
         //ELIMINAR SUS CASOS
         // ...
 

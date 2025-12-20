@@ -57,30 +57,31 @@ public class CaseService {
         
         user.getCasos().add(caso);
         
-        return new CasoDTO(caso.getId(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion(),caso.getArchivos());
+        return new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion(),caso.getArchivos());
     }
 
-//     public ArrayList<CasoDTO> obtenerCasosDeUsuario(String token) {
-//         if(token.startsWith("Bearer ")) {
-//             token = token.substring(7);
-//         }
-//         User usuario = userService.getUserByToken(token);
+    public ArrayList<CasoDTO> obtenerCasosDeUsuario(String token) {
+        if(token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        Optional<UserToken> userToken = userTokenRepository.findByToken(token);
     
-//         if (usuario == null) {
-//             throw new RuntimeException("Usuario no autenticado o token inválido.");
-//         }
-    
+        if (!userToken.isPresent()) {
+            throw new RuntimeException("Usuario no autenticado o token inválido.");
+        }
+        User user =userRepository.findById(userToken.get().getId()).get();
         
-//         ArrayList<Caso> casosDelUsuario = estado.getMap_UserCases().getOrDefault(usuario, new ArrayList<>());
-    
+        List<Caso> casosDelUsuario = casoRepository.findByUsuario(user);
+
+        ArrayList<CasoDTO> casosDTO = new ArrayList<CasoDTO>();
         
-//         ArrayList<CasoDTO> casosDTO = new ArrayList<>();
-//         for (Caso caso : casosDelUsuario) {
-//             casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion(), caso.getArchivos()));
-//         }
+        for (Caso caso : casosDelUsuario) {
+            casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),
+            caso.getFechaCreacion(), caso.getArchivos()));
+        }
     
-//         return casosDTO;
-//     }
+        return casosDTO;
+    }
 
 //     public ArrayList<CasoDTO> obtenerCasosDeUsuarioEntreFechas(String token, LocalDateTime FechaInicio, LocalDateTime FechaFin){
 //         if(token.startsWith("Bearer ")) {
