@@ -1,6 +1,8 @@
 package es.deusto.sd.authenticus.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,11 +56,11 @@ public class CaseController{
     )
     @ApiResponse(responseCode = "200", description = "OK")
     @GetMapping("/mis-casos")
-    public ResponseEntity<ArrayList<CasoDTO>> obtenerMisCasos(
+    public ResponseEntity<List<CasoDTO>> obtenerMisCasos(
         @RequestHeader("Authorization") String token,
         @RequestParam(defaultValue = "5") int limite) {
         try {
-            ArrayList<CasoDTO> casos =new ArrayList<>(caseService.obtenerCasosDeUsuario(token).stream().limit(limite).toList());
+            List<CasoDTO> casos =caseService.obtenerCasosDeUsuario(token).stream().limit(limite).toList();
             
             return new ResponseEntity<>(casos, HttpStatus.OK);
         } catch (RuntimeException e) {

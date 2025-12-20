@@ -60,6 +60,7 @@ public class CaseService {
         return new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion(),caso.getArchivos());
     }
 
+    @Transactional
     public ArrayList<CasoDTO> obtenerCasosDeUsuario(String token) {
         if(token.startsWith("Bearer ")) {
             token = token.substring(7);
@@ -72,7 +73,6 @@ public class CaseService {
         User user =userRepository.findById(userToken.get().getId()).get();
         
         List<Caso> casosDelUsuario = casoRepository.findByUsuario(user);
-
         ArrayList<CasoDTO> casosDTO = new ArrayList<CasoDTO>();
         
         for (Caso caso : casosDelUsuario) {
