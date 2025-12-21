@@ -208,7 +208,7 @@ public class UserService {
                 socketCliente.sendMessage("El usuario con ID=" +usuarioE.get().getId() + " ha cerrado sesion" );
             }
             if(socketCliente!=null){
-                socketCliente.sendMessage("LOGIN#");
+                socketCliente.sendMessage("LOGOUT#");
             }
             return true;
         }
