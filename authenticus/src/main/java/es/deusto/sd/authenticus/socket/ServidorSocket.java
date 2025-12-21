@@ -60,7 +60,7 @@ public class ServidorSocket  {
 
                             if (partes[1].equals("OK")) {
                                 out.writeUTF("OK#Login correcto");
-                            } else {
+                            } else if (partes[1].equals("NO")) {
                                 out.writeUTF("ERROR#Credenciales incorrectas");
                             }
                         }

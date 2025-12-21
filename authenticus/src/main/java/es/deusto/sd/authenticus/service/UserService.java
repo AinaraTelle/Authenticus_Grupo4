@@ -130,7 +130,7 @@ public class UserService {
             return user.get();
         } else {
             if(socketCliente!=null){
-                socketCliente.sendMessage("LOGIN#");
+                socketCliente.sendMessage("LOGIN#NO#ERROR#ERROR");
             }
             return null; 
         }
