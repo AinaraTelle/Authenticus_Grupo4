@@ -49,8 +49,10 @@ public class CaseService {
         //ANADIR ARCHIVOS
         if (casoDTO.getArchivos() != null) {
             for (Archivo arch1 : casoDTO.getArchivos()) {
-                caso.getArchivos().add(arch1);
+                arch1.setCaso(caso);
                 archivoRepository.save(arch1);
+                caso.getArchivos().add(arch1);
+                
                 // arch1.setIDArchivo(idGenerator.incrementAndGet());
             }
         }
@@ -135,7 +137,11 @@ public class CaseService {
         }
 
         for (Archivo arch1 : nuevosArchivos) {
+            arch1.setCaso(casoEncontrado.get());
+            archivoRepository.save(arch1);
             casoEncontrado.get().getArchivos().add(arch1);
+            
+
         }
     }
 
