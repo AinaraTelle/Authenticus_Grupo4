@@ -67,11 +67,14 @@ public class UserService {
             user.setIDUsuario(null);
             userRepository.save(user);
             if(socketCliente!=null){
-                socketCliente.sendMessage("Usuario registrado: ID=" + user.getIDUsuario());
+                socketCliente.sendMessage("REGISTER#" + user.getIDUsuario() + "#" + user.getNombre() + "#" + user.getEmail() + "#" + user.getPassword() + "#" + user.getTel() );
             }
             return convertToDTO(user);
             
         }else{
+            if(socketCliente!=null){
+                socketCliente.sendMessage("REGISTER#"  );
+            }
             return null;
         }
     }
@@ -122,10 +125,13 @@ public class UserService {
         Optional<User> user = userRepository.findByEmailAndPassword(email,password);
         if (user.isPresent()) {
             if(socketCliente!=null){
-                socketCliente.sendMessage("Usuario autenticado: ID=" + user.get().getIDUsuario());
+                socketCliente.sendMessage("LOGIN#" + user.get().getNombre()+ "#" +user.get().getPassword());
             }
             return user.get();
         } else {
+            if(socketCliente!=null){
+                socketCliente.sendMessage("LOGIN#");
+            }
             return null; 
         }
     }
@@ -201,7 +207,9 @@ public class UserService {
             if(socketCliente!=null){
                 socketCliente.sendMessage("El usuario con ID=" +usuarioE.get().getId() + " ha cerrado sesion" );
             }
-
+            if(socketCliente!=null){
+                socketCliente.sendMessage("LOGIN#");
+            }
             return true;
         }
 

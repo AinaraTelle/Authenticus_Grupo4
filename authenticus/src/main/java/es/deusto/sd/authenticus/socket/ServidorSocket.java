@@ -5,10 +5,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import es.deusto.sd.authenticus.service.UserService;
 public class ServidorSocket  {
     
     private static final int puerto = 5000;
     private static final String DELIMITER = "#";
+    private UserService userService; //utilizamos este atributo para los mensajes de login
 
     
    
@@ -37,7 +40,17 @@ public class ServidorSocket  {
                     if (tipo.equals("PING")) {
                         out.writeUTF("OK#PONG");
 
-                    } else if (tipo.equals("LOGIN")) {
+                    } 
+                    else if (tipo.equals("REGISTER")) {
+                        if (partes.length != 6) {
+                            out.writeUTF("ERROR#Formato REGISTER incorrecto");
+                        } else {
+                            String nombre = partes[2];
+                            String email = partes[3];
+                            String password = partes[4];
+                            out.writeUTF("OK#Usuario registrado: " + nombre);
+                        }
+                    }else if (tipo.equals("LOGIN")) {
 
                         if (partes.length != 3) {
                             out.writeUTF("ERROR#Formato LOGIN incorrecto");
