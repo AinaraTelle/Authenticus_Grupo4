@@ -68,8 +68,8 @@ public class ServidorSocket  {
                     } else if (tipo.equals("LOGOUT")) {
                         out.writeUTF("OK#Logout correcto");
 
-                    } else {
-                        out.writeUTF("ERROR#Comando desconocido");
+                    } else if (tipo.equals("REMOVE")) {
+                        out.writeUTF("OK#Usuario borrado");
                     }
                 }
             } catch (IOException e) {

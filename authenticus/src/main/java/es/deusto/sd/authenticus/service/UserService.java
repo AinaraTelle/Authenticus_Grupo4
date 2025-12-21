@@ -192,7 +192,7 @@ public class UserService {
         //ELIMINAR SUS CASOS
         // ...
         if(socketCliente!=null){
-            socketCliente.sendMessage("El borrado del usuario seleccionado se ha completado");
+            socketCliente.sendMessage("REMOVE");
         }
         return true;
     }
@@ -205,10 +205,10 @@ public class UserService {
         if(usuarioE.isPresent()){
             userTokenRepository.deleteByToken(tokenE);
             if(socketCliente!=null){
-                socketCliente.sendMessage("El usuario con ID=" +usuarioE.get().getId() + " ha cerrado sesion" );
+                socketCliente.sendMessage("LOGOUT#" + usuarioE.get().getUser().getNombre() );
             }
             if(socketCliente!=null){
-                socketCliente.sendMessage("LOGOUT#");
+                socketCliente.sendMessage("LOGOUT");
             }
             return true;
         }
