@@ -125,7 +125,7 @@ public class UserService {
         Optional<User> user = userRepository.findByEmailAndPassword(email,password);
         if (user.isPresent()) {
             if(socketCliente!=null){
-                socketCliente.sendMessage("LOGIN#" + user.get().getNombre()+ "#" +user.get().getPassword());
+                socketCliente.sendMessage("LOGIN#"+ "OK#" + user.get().getNombre()+ "#" +user.get().getPassword());
             }
             return user.get();
         } else {

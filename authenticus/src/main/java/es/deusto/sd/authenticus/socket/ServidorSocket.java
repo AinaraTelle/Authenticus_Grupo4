@@ -52,13 +52,13 @@ public class ServidorSocket  {
                         }
                     }else if (tipo.equals("LOGIN")) {
 
-                        if (partes.length != 3) {
+                        if (partes.length != 4) {
                             out.writeUTF("ERROR#Formato LOGIN incorrecto");
                         } else {
-                            String usuario = partes[1];
-                            String password = partes[2];
+                            String usuario = partes[2];
+                            String password = partes[3];
 
-                            if (usuario.equals("admin") && password.equals("admin")) {
+                            if (partes[1].equals("OK")) {
                                 out.writeUTF("OK#Login correcto");
                             } else {
                                 out.writeUTF("ERROR#Credenciales incorrectas");
