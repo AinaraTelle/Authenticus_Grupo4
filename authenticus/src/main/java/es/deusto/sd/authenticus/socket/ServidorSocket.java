@@ -5,12 +5,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-public class ServidorSocket {
+public class ServidorSocket  {
     
     private static final int puerto = 5000;
     private static final String DELIMITER = "#";
 
+    
+   
     public ServidorSocket()throws IOException{
         ServerSocket serverSocket=new ServerSocket(puerto);
         System.out.println("Server en el socket 5000");//abre puerto 5000 y se queda esperandoa cliente
@@ -64,15 +65,17 @@ public class ServidorSocket {
                 cliente.close();
             }
         }
-
-
     }
+}
 
 
-public static void main(String[] args) {
+    
+
+
+/*public static void main(String[] args) {
     try {
         new ServidorSocket(); // ejecuta el constructor que inicia el servidor
     } catch (IOException e) {
         System.err.println("Error iniciando servidor: " + e.getMessage());
     }
-}}
+}}*/

@@ -34,11 +34,21 @@ public class UserService {
     }
     @PostConstruct
     public void init() throws Exception { // aqui se inicializa
-        try {
-            ClienteSocket socketCliente = new ClienteSocket("localhost", 5000);
-        } catch (IOException e) {
-            System.err.println("No se pudo conectar al servidor de sockets: " + e.getMessage());
+        ClienteSocket socketCliente=null;
+        while (socketCliente==null){
+            try {
+                socketCliente = new ClienteSocket("localhost", 5000);
+                break;
+           } catch (IOException e) {
+               System.err.println("No se pudo conectar al servidor de sockets: " + e.getMessage());
+               try {
+                   Thread.sleep(1000);
+               } catch (InterruptedException ignored) {
+               }
+           }
+
         }
+        this.socketCliente=socketCliente;
     }
     
     public UserDTO createUser(RegisterRequestDTO userDTO) {    
