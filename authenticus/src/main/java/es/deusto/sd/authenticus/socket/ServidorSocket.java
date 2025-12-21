@@ -15,7 +15,7 @@ public class ServidorSocket  {
 
     
    
-    public ServidorSocket()throws IOException{
+    public ServidorSocket() throws IOException{
         ServerSocket serverSocket=new ServerSocket(puerto);
         System.out.println("Server en el socket 5000");//abre puerto 5000 y se queda esperandoa cliente
 

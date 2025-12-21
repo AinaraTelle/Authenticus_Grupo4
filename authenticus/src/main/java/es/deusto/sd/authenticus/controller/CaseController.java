@@ -70,64 +70,71 @@ public class CaseController{
     }
 
 
-//     //* GET: Buscar caso por fechas*/
-//     @Operation(
-//         summary = "Busca casos que solo están entre las 2 fechas que pasamos por parámetro. Acceder a documentación para ver cómo indicar las fechas"
-//     )
-//     @ApiResponse(responseCode = "200", description = "OK")
-//     @GetMapping("/mis-casos-fechas")
-//     public ResponseEntity<ArrayList<CasoDTO>> obtenerMisCasos(
-//         @RequestHeader("Authorization") String token,
-//         @RequestParam("inicio") LocalDateTime fechaInicio,
-//         @RequestParam("fin") LocalDateTime fechaFin) {
-//         try {
-//            ArrayList<CasoDTO>casosporfecha=caseService.obtenerCasosDeUsuarioEntreFechas(token, fechaInicio, fechaFin);
-//             return new ResponseEntity<>(casosporfecha, HttpStatus.OK);
+    //* GET: Buscar caso por fechas*/
+    @Operation(
+        summary = "Busca casos que solo están entre las 2 fechas que pasamos por parámetro. Acceder a documentación para ver cómo indicar las fechas"
+    )
+    @ApiResponse(responseCode = "200", description = "OK")
+    @GetMapping("/mis-casos-fechas")
+    public ResponseEntity<List<CasoDTO>> obtenerMisCasos(
+        @RequestHeader("Authorization") String token,
+        @RequestParam("inicio") LocalDateTime fechaInicio,
+        @RequestParam("fin") LocalDateTime fechaFin) {
+        try {
+           List<CasoDTO>casosporfecha=caseService.obtenerCasosDeUsuarioEntreFechas(token, fechaInicio, fechaFin);
+            return new ResponseEntity<>(casosporfecha, HttpStatus.OK);
             
-//         } catch (RuntimeException e) {
-//             // Por ejemplo, token inválido
-//             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//         }
-//     }
+        } catch (RuntimeException e) {
+            // Por ejemplo, token inválido
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (IllegalAccessException e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     
-//     //* PUT: Añadir archivos */
-//     @Operation(
-//     summary = "Añade archivos adicionales a un caso del usuario autenticado"
-//     )
-//     @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
-//     @ApiResponse(responseCode = "401", description = "Token inválido o no autorizado")
-//     @ApiResponse(responseCode = "404", description = "Caso no encontrado")
-//     @PutMapping("/add-files")
-//     public ResponseEntity<String> addFilesToCase(
-//             @RequestHeader("Authorization") String token,
-//             @RequestParam("idCaso") int idCaso,
-//             @RequestBody ArrayList<Archivo> nuevosArchivos) {
-//         try {
-//             caseService.addFilesToCase(token, idCaso, nuevosArchivos);
-//             return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
+    //* PUT: Añadir archivos */
+    @Operation(
+    summary = "Añade archivos adicionales a un caso del usuario autenticado"
+    )
+    @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
+    @ApiResponse(responseCode = "401", description = "Token inválido o no autorizado")
+    @ApiResponse(responseCode = "404", description = "Caso no encontrado")
+    @PutMapping("/add-files")
+    public ResponseEntity<String> addFilesToCase(
+            @RequestHeader("Authorization") String token,
+            @RequestParam("idCaso") Long idCaso,
+            @RequestBody ArrayList<Archivo> nuevosArchivos) {
+        try {
+            caseService.addFilesToCase(token, idCaso, nuevosArchivos);
+            return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
 
-//         } catch (IllegalAccessException e) {
-//             return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
+        } catch (IllegalAccessException e) {
+            return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
 
-//         } catch (IllegalArgumentException e) {
-//             return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
-//         }
-//     }
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
+        }
+    }
 
-//     //* DELETE: Eliminar casos */
-//     @Operation(summary = "Elimina un caso de un usuario. Para ello, se debe proporcionar el token del usario y el id del caso que se quiera eliminar")
-//     @ApiResponse(responseCode = "200", description = "Caso eliminado correctamente")
-//     @ApiResponse(responseCode = "404", description = "Caso no encontrado")
-//     @DeleteMapping("/eliminar/{idCaso}")
-//     public ResponseEntity<String> eliminarCaso(@RequestHeader("Authorization") String token,@PathVariable int idCaso) {
-//         boolean exito = caseService.eliminarCaso(token, idCaso);
-//         if(exito){
-//             return new ResponseEntity<>("Caso eliminado correctamente", HttpStatus.OK);
-//         } else {
-//             return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
-//         }
-//     }
+    //* DELETE: Eliminar casos */
+    @Operation(summary = "Elimina un caso de un usuario. Para ello, se debe proporcionar el token del usario y el id del caso que se quiera eliminar")
+    @ApiResponse(responseCode = "200", description = "Caso eliminado correctamente")
+    @ApiResponse(responseCode = "404", description = "Caso no encontrado")
+    @DeleteMapping("/eliminar/{idCaso}")
+    public ResponseEntity<String> eliminarCaso(@RequestHeader("Authorization") String token,@PathVariable Long idCaso) {
+        try{
+            boolean exito = caseService.eliminarCaso(token, idCaso);
+       
+            if(exito){
+                return new ResponseEntity<>("Caso eliminado correctamente", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
+            }
+        }catch (IllegalAccessException e) {
+            return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
+        }
+    }
 
     
 //         //* GET: Mostrar resultados*/

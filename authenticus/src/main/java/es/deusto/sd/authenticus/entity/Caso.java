@@ -18,28 +18,22 @@ public class Caso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long IDCaso;
-    
-    //private int IDCaso;
 
     private String titulo;
 
     @Enumerated(EnumType.STRING)
     private TipoAnalisis tipoAnalisis;
-    //private Caso.TipoAnalisis tipoAnalisis;
 
     private LocalDateTime fechaCreacion;
 
     @OneToMany(mappedBy = "caso", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Archivo> archivos = new ArrayList<>();
 
-    //RELACION CON EL USUARIO
     @ManyToOne
     @JoinColumn(name = "IDUsuario")
     private User usuario;
 
-    //OBLIGATORIO
     public Caso(){
-
     }
 
     public Caso(String titulo, Caso.TipoAnalisis tipoAnalisis,LocalDateTime fechaCreacion, User usuario){
@@ -48,8 +42,6 @@ public class Caso {
         this.fechaCreacion=fechaCreacion;
         this.usuario = usuario;
     }
-    
-
     
 
     public Long getIDCaso() {
@@ -100,14 +92,14 @@ public class Caso {
         this.usuario = usuario;
     }
 
-    public void addArchivo(Archivo archivo) {
-        archivos.add(archivo);
-        archivo.setCaso(this);
-    }
+    // public void addArchivo(Archivo archivo) {
+    //     archivos.add(archivo);
+    //     archivo.setCaso(this);
+    // }
 
-    public void removeArchivo(Archivo archivo) {
-        archivos.remove(archivo);
-        archivo.setCaso(null);
-    }
+    // public void removeArchivo(Archivo archivo) {
+    //     archivos.remove(archivo);
+    //     archivo.setCaso(null);
+    // }
 }
 
