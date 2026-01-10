@@ -30,7 +30,7 @@ public class CaseService {
     }
       
     @Transactional
-    public CasoDTO crearCaso(String token, CreateCasoDTO casoDTO){
+    public CasoDTO crearCaso(String token, CreateCasoDTO createcasoDTO){
         if(token.startsWith("Bearer ")) {
             token = token.substring(7);
         }
@@ -42,24 +42,40 @@ public class CaseService {
 
         Optional<User> userO = userRepository.findById(userToken.get().getId());
         User user = userO.get();
-        Caso caso= new Caso(casoDTO.getTitulo(),casoDTO.getTipoAnalisis(), casoDTO.getFechaCreacion(),user);
+       
+        Caso caso= new Caso(createcasoDTO.getTitulo(), createcasoDTO.getFechaCreacion(),user);
         
+        caso.setTipoAnalisis(TipoAnalisis.valueOf(createcasoDTO.getTipoAnalisis().toString()));
+
         casoRepository.save(caso);
         
         //ANADIR ARCHIVOS
-        if (casoDTO.getArchivos() != null) {
-            for (Archivo arch1 : casoDTO.getArchivos()) {
-                arch1.setCaso(caso);
-                archivoRepository.save(arch1);
-                caso.getArchivos().add(arch1);
+        if (createcasoDTO.getArchivoDTOs() != null) {
+            for (ArchivoDTO archDTO : createcasoDTO.getArchivoDTOs()) {
+                Archivo archivo=new Archivo(archDTO.getNombre(),archDTO.getRuta());
+                archivo.setCaso(caso);
+                
+                archivoRepository.save(archivo);
+                caso.getArchivos().add(archivo);
                 
                 // arch1.setIDArchivo(idGenerator.incrementAndGet());
             }
         }
         
         user.getCasos().add(caso);
+
+        ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
+
+        for(Archivo a1:caso.getArchivos()){
+            archivosDTO.add(new ArchivoDTO(a1.getId(),a1.getNombre(),a1.getRuta()));
+        }
         
-        return new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion(),caso.getArchivos());
+        CasoDTO casoDTO =  new CasoDTO(caso.getIDCaso(),caso.getTitulo(),
+        caso.getFechaCreacion(),archivosDTO);
+
+        casoDTO.setTipoAnalisis(TipoAnalisisDTO.valueOf(casoDTO.getTipoAnalisis().toString()));
+        
+        return  casoDTO;
     }
 
     @Transactional
@@ -77,9 +93,15 @@ public class CaseService {
         List<Caso> casosDelUsuario = casoRepository.findByUsuario(user);
         ArrayList<CasoDTO> casosDTO = new ArrayList<CasoDTO>();
         
+
+
         for (Caso caso : casosDelUsuario) {
-            casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),
-            caso.getFechaCreacion(), caso.getArchivos()));
+            ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
+            for(Archivo a1:caso.getArchivos()){
+                archivosDTO.add(new ArchivoDTO(a1.getId(),a1.getNombre(),a1.getRuta()));
+            }
+            casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),
+            caso.getFechaCreacion(), archivosDTO));
         }
     
         return casosDTO;
@@ -108,7 +130,14 @@ public class CaseService {
 
         ArrayList<CasoDTO> casosDTO= new ArrayList<>();
         for (Caso caso : filtrados) {
-            casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),caso.getTipoAnalisis(),caso.getFechaCreacion(), caso.getArchivos()));
+            ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
+            for(Archivo a1:caso.getArchivos()){
+                archivosDTO.add(new ArchivoDTO(a1.getId(),
+                a1.getNombre(),a1.getRuta()));
+            }
+
+            casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),
+            caso.getFechaCreacion(), archivosDTO));
         }
     
         

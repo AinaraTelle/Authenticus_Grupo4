@@ -10,10 +10,7 @@ import jakarta.persistence.*;
 @Table(name = "casos")
 
 public class Caso {
-    public enum TipoAnalisis{
-        ALTERAC_CONT, VERACID_CONT
-    }
-
+    
     //Autogeneramos el ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,9 +33,9 @@ public class Caso {
     public Caso(){
     }
 
-    public Caso(String titulo, Caso.TipoAnalisis tipoAnalisis,LocalDateTime fechaCreacion, User usuario){
+    public Caso(String titulo,
+        LocalDateTime fechaCreacion, User usuario){
         this.titulo= titulo;
-        this.tipoAnalisis=tipoAnalisis;
         this.fechaCreacion=fechaCreacion;
         this.usuario = usuario;
     }
@@ -92,14 +89,5 @@ public class Caso {
         this.usuario = usuario;
     }
 
-    // public void addArchivo(Archivo archivo) {
-    //     archivos.add(archivo);
-    //     archivo.setCaso(this);
-    // }
-
-    // public void removeArchivo(Archivo archivo) {
-    //     archivos.remove(archivo);
-    //     archivo.setCaso(null);
-    // }
 }
 
