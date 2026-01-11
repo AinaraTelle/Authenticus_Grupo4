@@ -2,7 +2,6 @@ package es.deusto.sd.authenticus.dto;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -13,16 +12,18 @@ public class CreateCasoDTO {
     private TipoAnalisisDTO tipoAnalisis;
     @Schema(description = "creation date of case", example = "2019-04-23T15:00:00")//IMPORTANTE: RESPETAR EL FORMATO DE LA FECHA 
     private LocalDateTime fechaCreacion;
-    @Schema(description = "List of attached files")
-    private ArrayList<ArchivoDTO> ArchivoDTOs = new ArrayList<>();
+    @Schema(description = "ArrayList of attached files")
+    private ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
 
     public CreateCasoDTO(){
     }
-    public CreateCasoDTO( String titulo, TipoAnalisisDTO tipoAnalisis,LocalDateTime fechaCreacion,List<ArchivoDTO> ArchivoDTOs){
+    public CreateCasoDTO( String titulo, TipoAnalisisDTO tipoAnalisis,
+        LocalDateTime fechaCreacion,ArrayList<ArchivoDTO> archivosDTO){
         this.titulo= titulo;
         this.tipoAnalisis=tipoAnalisis;
         this.fechaCreacion=fechaCreacion;
-        this.ArchivoDTOs = ArchivoDTOs != null ? new ArrayList<>(ArchivoDTOs) : new ArrayList<>();
+        // this.archivosDTO = archivosDTO != null ? new ArrayArrayList<>(archivosDTO) : new ArrayArrayList<>();
+        this.archivosDTO = archivosDTO;
     }
 
     
@@ -47,11 +48,11 @@ public class CreateCasoDTO {
         return fechaCreacion;
     }
 
-    public ArrayList<ArchivoDTO> getArchivoDTOs() {
-        return ArchivoDTOs;
+    public ArrayList<ArchivoDTO> getArchivosDTO() {
+        return archivosDTO;
     }
 
-    public void setArchivoDTOs(ArrayList<ArchivoDTO> ArchivoDTOs) {
-        this.ArchivoDTOs = ArchivoDTOs;
+    public void setArchivosDTO(ArrayList<ArchivoDTO> archivosDTO) {
+        this.archivosDTO = archivosDTO;
     }
 }

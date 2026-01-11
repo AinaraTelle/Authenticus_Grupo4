@@ -6,7 +6,6 @@ import java.util.HashMap;
 
 
 import es.deusto.sd.authenticus.entity.Archivo;
-import es.deusto.sd.authenticus.entity.Caso;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class ResultadosDTO {
@@ -15,7 +14,7 @@ public class ResultadosDTO {
     @Schema(description = "name of the Case", example = "Caso 1")
     private String titulo;
     @Schema(description = "type of case", example = "ALTERAC_CONT")
-    private TipoAnalisis tipoAnalisis;
+    private TipoAnalisisDTO tipoAnalisis;
     @Schema(description = "creation date of case", example = "2019-04-23T15:00:00")//IMPORTANTE: RESPETAR EL FORMATO DE LA FECHA 
     private LocalDateTime fechaCreacion;
     @Schema(description = "List of attached files")
@@ -23,17 +22,17 @@ public class ResultadosDTO {
 
 
     
-    public ResultadosDTO(int iDCaso, String titulo, TipoAnalisisDTO tipoAnalisis, LocalDateTime fechaCreacion,
+    public ResultadosDTO(int iDCaso, String titulo, TipoAnalisisDTO tipoAnalisisDTO, LocalDateTime fechaCreacion,
         List<Archivo> archivos) {
         IDCaso = iDCaso;
         this.titulo = titulo;
-        this.tipoAnalisis = tipoAnalisis;
+        this.tipoAnalisis = tipoAnalisisDTO;
         this.fechaCreacion = fechaCreacion;
         for(Archivo ar1:archivos){
-            if(tipoAnalisis.toString()==TipoAnalisis.ALTERAC_CONT.toString()){
+            if(tipoAnalisis.toString()==TipoAnalisisDTO.ALTERAC_CONT.toString()){
                 this.mapArchivos.put(ar1.getNombre(),0);
             }
-            else if(tipoAnalisis.toString()==TipoAnalisis.VERACID_CONT.toString()){
+            else if(tipoAnalisis.toString()==TipoAnalisisDTO.VERACID_CONT.toString()){
                 this.mapArchivos.put(ar1.getNombre(),1);
             }
         }
@@ -55,11 +54,11 @@ public class ResultadosDTO {
         this.titulo = titulo;
     }
 
-    public TipoAnalisis getTipoAnalisis() {
+    public TipoAnalisisDTO getTipoAnalisis() {
         return tipoAnalisis;
     }
 
-    public void setTipoAnalisis(TipoAnalisis tipoAnalisis) {
+    public void setTipoAnalisis(TipoAnalisisDTO tipoAnalisis) {
         this.tipoAnalisis = tipoAnalisis;
     }
 

@@ -1,13 +1,9 @@
-package es.deusto.sd.authenticus.dto;
+package es.deusto.sd.user_interface.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 
 public class LoginRequestDTO {
 
-    @Schema(description  = "El email es obligatorio")
     private String userEmail;
-
-    @Schema(description = "La contraseña es obligatoria")
     private String password;
 
     public LoginRequestDTO() {

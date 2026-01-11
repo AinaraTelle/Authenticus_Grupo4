@@ -46,8 +46,8 @@ public class CasoDTO {
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
-    public void setTipoAnalisis(TipoAnalisisDTO tipoAnalisis) {
-        this.tipoAnalisisDTO = tipoAnalisis;
+    public void setTipoAnalisisDTO(TipoAnalisisDTO tipoAnalisisDTO) {
+        this.tipoAnalisisDTO = tipoAnalisisDTO;
     }
 
     public void setFechaCreacion(LocalDateTime fechaCreacion){

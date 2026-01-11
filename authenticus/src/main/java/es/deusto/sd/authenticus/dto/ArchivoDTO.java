@@ -13,7 +13,10 @@ public class ArchivoDTO {
         IDArchivo = iDArchivo;
         this.nombre = nombre;
         this.ruta = ruta;
-       ;
+    }
+    public ArchivoDTO(String nombre, String ruta) {
+        this.nombre = nombre;
+        this.ruta = ruta;
     }
     public Long getIDArchivo() {
         return IDArchivo;

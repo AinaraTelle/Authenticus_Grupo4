@@ -1,10 +1,7 @@
-package es.deusto.sd.authenticus.dto;
-import io.swagger.v3.oas.annotations.media.Schema;
+package es.deusto.sd.user_interface.dto;
 
 public class LoginResponseDTO {
-    @Schema(description  = "Devuelve el email del usuario logeado")
     private String email;
-    @Schema(description  = "devuelve el token correspondiente, lo importante de esta clase")
     private String token;
 
     public LoginResponseDTO() {

@@ -1,5 +1,4 @@
-package es.deusto.sd.authenticus.dto;
-
+package es.deusto.sd.user_interface.dto;
 
 public class ArchivoDTO {
     private Long IDArchivo;
@@ -13,7 +12,10 @@ public class ArchivoDTO {
         IDArchivo = iDArchivo;
         this.nombre = nombre;
         this.ruta = ruta;
-       ;
+    }
+    public ArchivoDTO(String nombre, String ruta) {
+        this.nombre = nombre;
+        this.ruta = ruta;
     }
     public Long getIDArchivo() {
         return IDArchivo;

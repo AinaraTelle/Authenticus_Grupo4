@@ -1,16 +1,11 @@
-package es.deusto.sd.authenticus.dto;
+package es.deusto.sd.user_interface.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 
 public class RegisterRequestDTO {
 
-    @Schema(description = "name of the User", example = "Jose")
     private String nombre;
-    @Schema(description = "email of the User", example = "jose02@gmail.com")
     private String email;
-    @Schema(description = "passowrd of the User", example = "contraseña")
     private String password;
-    @Schema(description = "phone number of the User", example = "613458245")
     private int tel;
 
     public RegisterRequestDTO(){

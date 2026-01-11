@@ -58,7 +58,7 @@ public class CaseController{
     @GetMapping("/mis-casos")
     public ResponseEntity<List<CasoDTO>> obtenerMisCasos(
         @RequestHeader("Authorization") String token,
-        @RequestParam(defaultValue = "5") int limite) {
+        @RequestParam(name = "limite",defaultValue = "5") int limite) {
         try {
             List<CasoDTO> casos =caseService.obtenerCasosDeUsuario(token).stream().limit(limite).toList();
             
@@ -122,7 +122,8 @@ public class CaseController{
     @ApiResponse(responseCode = "200", description = "Caso eliminado correctamente")
     @ApiResponse(responseCode = "404", description = "Caso no encontrado")
     @DeleteMapping("/eliminar/{idCaso}")
-    public ResponseEntity<String> eliminarCaso(@RequestHeader("Authorization") String token,@PathVariable Long idCaso) {
+    public ResponseEntity<String> eliminarCaso(@RequestHeader("Authorization") String token,
+    @PathVariable("idCaso") Long idCaso) {
         try{
             boolean exito = caseService.eliminarCaso(token, idCaso);
        

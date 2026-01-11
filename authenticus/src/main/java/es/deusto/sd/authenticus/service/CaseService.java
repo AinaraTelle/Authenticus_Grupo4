@@ -40,18 +40,17 @@ public class CaseService {
             throw new RuntimeException("Usuario no autenticado o token inválido.");
         }
 
-        Optional<User> userO = userRepository.findById(userToken.get().getId());
-        User user = userO.get();
+        User user = (userRepository.findById(userToken.get().getId())).get();
        
-        Caso caso= new Caso(createcasoDTO.getTitulo(), createcasoDTO.getFechaCreacion(),user);
+        Caso caso = new Caso(createcasoDTO.getTitulo(), createcasoDTO.getFechaCreacion(),user);
         
         caso.setTipoAnalisis(TipoAnalisis.valueOf(createcasoDTO.getTipoAnalisis().toString()));
 
         casoRepository.save(caso);
         
         //ANADIR ARCHIVOS
-        if (createcasoDTO.getArchivoDTOs() != null) {
-            for (ArchivoDTO archDTO : createcasoDTO.getArchivoDTOs()) {
+        if (createcasoDTO.getArchivosDTO() != null) {
+            for (ArchivoDTO archDTO : createcasoDTO.getArchivosDTO()) {
                 Archivo archivo=new Archivo(archDTO.getNombre(),archDTO.getRuta());
                 archivo.setCaso(caso);
                 
@@ -73,7 +72,7 @@ public class CaseService {
         CasoDTO casoDTO =  new CasoDTO(caso.getIDCaso(),caso.getTitulo(),
         caso.getFechaCreacion(),archivosDTO);
 
-        casoDTO.setTipoAnalisis(TipoAnalisisDTO.valueOf(casoDTO.getTipoAnalisis().toString()));
+        casoDTO.setTipoAnalisisDTO(TipoAnalisisDTO.valueOf(caso.getTipoAnalisis().toString()));
         
         return  casoDTO;
     }
@@ -91,20 +90,22 @@ public class CaseService {
         User user =userRepository.findById(userToken.get().getId()).get();
         
         List<Caso> casosDelUsuario = casoRepository.findByUsuario(user);
-        ArrayList<CasoDTO> casosDTO = new ArrayList<CasoDTO>();
-        
-
+        ArrayList<CasoDTO> arrCasosDTO = new ArrayList<CasoDTO>();
 
         for (Caso caso : casosDelUsuario) {
             ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
             for(Archivo a1:caso.getArchivos()){
                 archivosDTO.add(new ArchivoDTO(a1.getId(),a1.getNombre(),a1.getRuta()));
             }
-            casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),
-            caso.getFechaCreacion(), archivosDTO));
+            CasoDTO casoDTO =new CasoDTO(caso.getIDCaso(),caso.getTitulo(),
+            caso.getFechaCreacion(), archivosDTO);
+
+            casoDTO.setTipoAnalisisDTO(TipoAnalisisDTO.valueOf(caso.getTipoAnalisis().toString()));
+            
+            arrCasosDTO.add(casoDTO);
         }
     
-        return casosDTO;
+        return arrCasosDTO;
     }
 
     @Transactional
@@ -187,12 +188,12 @@ public class CaseService {
 
         Optional<User> user = userRepository.findById(userToken.get().getId());
 
-        List <Caso> casosDelUsuario =user.get().getCasos();
+        List<Caso> casosDelUsuario =user.get().getCasos();
         
         Optional<Caso> casoAEliminar = casoRepository.findById(idCaso);
 
         if(casoAEliminar.isPresent()) {
-            casosDelUsuario.remove(casoAEliminar);
+            casosDelUsuario.remove(casoAEliminar.get());
             casoRepository.deleteById(casoAEliminar.get().getIDCaso());
             return true;
         } else {

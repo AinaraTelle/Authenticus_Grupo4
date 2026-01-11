@@ -1,17 +1,10 @@
-package es.deusto.sd.authenticus.dto;
+package es.deusto.sd.user_interface.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-@Schema(description = "Data Transfer Object representing a User")
 public class UserDTO{
-    @Schema(description = "Unique identifier of the User", example = "1")
     private Long IDUser;
-    @Schema(description = "name of the User", example = "Jose")
     private String nombre;
-    @Schema(description = "email of the User", example = "jose02@gmail.com")
     private String email;
-    @Schema(description = "passowrd of the User", example = "contraseña")
     private String password;
-    @Schema(description = "phone number of the User", example = "613458245")
     private int tel;
 
     public UserDTO(){

@@ -1,8 +1,6 @@
-package es.deusto.sd.authenticus.dto;
-import io.swagger.v3.oas.annotations.media.Schema;
+package es.deusto.sd.user_interface.dto;
 
 public class LogoutRequestDTO {
-    @Schema(description  = "El token es necesario para el logout")
     private String token;
     
     public String getToken(){
