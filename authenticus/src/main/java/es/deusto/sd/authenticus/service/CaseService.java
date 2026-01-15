@@ -42,22 +42,22 @@ public class CaseService {
 
         User user = (userRepository.findById(userToken.get().getId())).get();
        
-        Caso caso = new Caso(createcasoDTO.getTitulo(), createcasoDTO.getFechaCreacion(),user);
+        Caso caso = new Caso(createcasoDTO.getTitulo(), createcasoDTO.getFechaCreacion(), user);
         
         caso.setTipoAnalisis(TipoAnalisis.valueOf(createcasoDTO.getTipoAnalisis().toString()));
 
         casoRepository.save(caso);
         
         //ANADIR ARCHIVOS
-        if (createcasoDTO.getArchivosDTO() != null) {
-            for (ArchivoDTO archDTO : createcasoDTO.getArchivosDTO()) {
-                Archivo archivo=new Archivo(archDTO.getNombre(),archDTO.getRuta());
+        if (createcasoDTO.getCreateArchivosDTO() != null) {
+            for (CreateArchivoDTO createArchDTO : createcasoDTO.getCreateArchivosDTO()) {
+                Archivo archivo=new Archivo(createArchDTO.getNombre(),
+                createArchDTO.getRuta());
+
                 archivo.setCaso(caso);
                 
                 archivoRepository.save(archivo);
                 caso.getArchivos().add(archivo);
-                
-                // arch1.setIDArchivo(idGenerator.incrementAndGet());
             }
         }
         
@@ -69,7 +69,7 @@ public class CaseService {
             archivosDTO.add(new ArchivoDTO(a1.getId(),a1.getNombre(),a1.getRuta()));
         }
         
-        CasoDTO casoDTO =  new CasoDTO(caso.getIDCaso(),caso.getTitulo(),
+        CasoDTO casoDTO =  new CasoDTO(caso.getIDCaso(),caso.getTitulo(), 
         caso.getFechaCreacion(),archivosDTO);
 
         casoDTO.setTipoAnalisisDTO(TipoAnalisisDTO.valueOf(caso.getTipoAnalisis().toString()));
@@ -148,7 +148,7 @@ public class CaseService {
 
 //     //  ANADIR ARCHIVOS
     @Transactional
-    public void addFilesToCase(String token, Long idCaso, ArrayList<Archivo> nuevosArchivos)
+    public void addFilesToCase(String token, Long idCaso, ArrayList<ArchivoDTO> nuevosArchivos)
         throws IllegalAccessException, IllegalArgumentException {
 
         if (token.startsWith("Bearer ")) {
@@ -166,12 +166,11 @@ public class CaseService {
             throw new IllegalArgumentException("Caso no encontrado para este usuario.");
         }
 
-        for (Archivo arch1 : nuevosArchivos) {
+        for (ArchivoDTO archDTO1 : nuevosArchivos) {
+            Archivo arch1 = new Archivo(archDTO1.getNombre(), archDTO1.getRuta());
             arch1.setCaso(casoEncontrado.get());
             archivoRepository.save(arch1);
             casoEncontrado.get().getArchivos().add(arch1);
-            
-
         }
     }
 

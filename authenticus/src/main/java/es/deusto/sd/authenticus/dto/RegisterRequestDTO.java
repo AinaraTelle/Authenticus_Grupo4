@@ -1,5 +1,6 @@
 package es.deusto.sd.authenticus.dto;
 
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public class RegisterRequestDTO {
@@ -61,6 +62,5 @@ public class RegisterRequestDTO {
         return "RegisterRequestDTO [nombre=" + nombre + ", email=" + email + ", password=" + password
                 + ", tel=" + tel + "]";
     }
-
-    
 }
+

@@ -10,8 +10,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import es.deusto.sd.authenticus.dao.*;
 import es.deusto.sd.authenticus.dto.LoginRequestDTO;
-import es.deusto.sd.authenticus.dto.UserDTO;
 import es.deusto.sd.authenticus.dto.RegisterRequestDTO;
+import es.deusto.sd.authenticus.dto.UserDTO;
 import es.deusto.sd.authenticus.entity.User;
 import es.deusto.sd.authenticus.entity.UserToken;
 import es.deusto.sd.authenticus.socket.ClienteSocket;
@@ -51,16 +51,16 @@ public class UserService {
         this.socketCliente=socketCliente;
     }
     
-    public UserDTO createUser(RegisterRequestDTO userDTO) {    
-        boolean passwordValida=validacionPassword(userDTO.getPassword());
+    public UserDTO createUser(RegisterRequestDTO createUserDTO) {    
+        boolean passwordValida=validacionPassword(createUserDTO.getPassword());
 
         if(passwordValida==true){
 
             User user = new User(idGenerator.incrementAndGet(),
-            userDTO.getNombre(),userDTO.getEmail(), 
-            userDTO.getPassword(), userDTO.getTel());
+            createUserDTO.getNombre(),createUserDTO.getEmail(), 
+            createUserDTO.getPassword(), createUserDTO.getTel());
 
-           if (userRepository.existsByEmailIgnoreCase(userDTO.getEmail())) {
+           if (userRepository.existsByEmailIgnoreCase(createUserDTO.getEmail())) {
                 return null; // O lanza una excepción personalizada
             }
 

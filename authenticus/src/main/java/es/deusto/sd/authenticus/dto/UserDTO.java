@@ -1,5 +1,6 @@
 package es.deusto.sd.authenticus.dto;
 
+
 import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Data Transfer Object representing a User")
 public class UserDTO{
@@ -24,8 +25,8 @@ public class UserDTO{
         this.tel = tel;
     }
 
-    public UserDTO(Long iDUser, String nombre, String email, String password, int tel) {
-        this.IDUser = iDUser;
+    public UserDTO(Long IDUser, String nombre, String email, String password, int tel) {
+        this.IDUser = IDUser;
         this.email = email;
         this.password = password;
         this.nombre = nombre;

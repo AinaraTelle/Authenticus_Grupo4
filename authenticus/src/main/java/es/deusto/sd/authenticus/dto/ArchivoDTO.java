@@ -1,6 +1,5 @@
 package es.deusto.sd.authenticus.dto;
 
-
 public class ArchivoDTO {
     private Long IDArchivo;
     private String nombre;
@@ -35,7 +34,5 @@ public class ArchivoDTO {
     }
     public void setRuta(String ruta) {
         this.ruta = ruta;
-    }
-
-    
+    }   
 }

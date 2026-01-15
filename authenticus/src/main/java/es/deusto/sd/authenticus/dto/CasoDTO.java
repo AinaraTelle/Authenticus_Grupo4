@@ -3,12 +3,15 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Data Transfer Object representing a Case")
 
 public class CasoDTO {
     
     @Schema(description = "Unique identifier of the Case", example = "1")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long IDCaso;
     @Schema(description = "name of the Case", example = "Caso 1")
     private String titulo;
@@ -21,15 +24,22 @@ public class CasoDTO {
 
     public CasoDTO(){
     }
-    public CasoDTO(Long IdCaso, String titulo, 
-        LocalDateTime fechaCreacion,
+    public CasoDTO(Long IDCaso, String titulo, 
+        LocalDateTime fechaCreacion, 
         List<ArchivoDTO> archivosDTO){
-        IDCaso=IdCaso;
+        this.IDCaso = IDCaso;
         this.titulo= titulo;
         this.fechaCreacion=fechaCreacion;
         this.archivosDTO = archivosDTO != null ? new ArrayList<>(archivosDTO) : new ArrayList<>();
     }
 
+    public CasoDTO(String titulo, 
+        LocalDateTime fechaCreacion,
+        List<ArchivoDTO> archivosDTO){
+        this.titulo= titulo;
+        this.fechaCreacion=fechaCreacion;
+        this.archivosDTO = archivosDTO != null ? new ArrayList<>(archivosDTO) : new ArrayList<>();
+    }
     
     public Long getIDCaso() {
         return IDCaso;
@@ -58,11 +68,11 @@ public class CasoDTO {
         return fechaCreacion;
     }
 
-    public ArrayList<ArchivoDTO> getarchivosDTO() {
+    public ArrayList<ArchivoDTO> getArchivosDTO() {
         return archivosDTO;
     }
 
-    public void setarchivosDTO(ArrayList<ArchivoDTO> archivosDTO) {
+    public void setArchivosDTO(ArrayList<ArchivoDTO> archivosDTO) {
         this.archivosDTO = archivosDTO;
     }
 }

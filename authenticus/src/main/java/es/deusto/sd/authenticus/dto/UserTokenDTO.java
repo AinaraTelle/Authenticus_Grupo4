@@ -1,16 +1,16 @@
 package es.deusto.sd.authenticus.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public class LoginResponseDTO {
+public class UserTokenDTO {
     @Schema(description  = "Devuelve el email del usuario logeado")
     private String email;
     @Schema(description  = "devuelve el token correspondiente, lo importante de esta clase")
     private String token;
 
-    public LoginResponseDTO() {
+    public UserTokenDTO() {
     }
 
-    public LoginResponseDTO(String email, String token) {
+    public UserTokenDTO(String email, String token) {
         this.email = email;
         this.token = token;
     }

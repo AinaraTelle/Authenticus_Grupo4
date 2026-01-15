@@ -1,4 +1,4 @@
-package es.deusto.sd.authenticus.entity;
+package es.deusto.sd.persistencia.entity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,14 +29,6 @@ public class User {
     }
     public User(Long iDUsuario, String nombre, String email, String password, int tel) {
         IDUsuario = iDUsuario;
-        this.nombre = nombre;
-        this.email = email;
-        this.password = password;
-        this.tel = tel;
-    }
-
-    public User(String nombre, String email, String password, int tel) {
-        IDUsuario=null;
         this.nombre = nombre;
         this.email = email;
         this.password = password;

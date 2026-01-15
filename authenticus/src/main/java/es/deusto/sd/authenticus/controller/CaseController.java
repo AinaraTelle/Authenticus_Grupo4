@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import es.deusto.sd.authenticus.dto.*;
 import es.deusto.sd.authenticus.service.CaseService;
-import es.deusto.sd.authenticus.entity.Archivo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -104,7 +103,7 @@ public class CaseController{
     public ResponseEntity<String> addFilesToCase(
             @RequestHeader("Authorization") String token,
             @RequestParam("idCaso") Long idCaso,
-            @RequestBody ArrayList<Archivo> nuevosArchivos) {
+            @RequestBody ArrayList<ArchivoDTO> nuevosArchivos) {
         try {
             caseService.addFilesToCase(token, idCaso, nuevosArchivos);
             return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);

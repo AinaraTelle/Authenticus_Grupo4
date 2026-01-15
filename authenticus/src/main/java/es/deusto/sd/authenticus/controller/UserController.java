@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.deusto.sd.authenticus.dto.*;
-import es.deusto.sd.authenticus.entity.User;
-import es.deusto.sd.authenticus.entity.UserToken;
+import es.deusto.sd.authenticus.entity.*;
 import es.deusto.sd.authenticus.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,21 +30,7 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
 
     public UserController(UserService userService){
         this.userService = userService;
-    }
-
-    
-    //* GET: Usuarios registrados */
-    @Operation(
-        summary = "Devuelve todos los usuarios registrados",
-        description = "Te da la info de todos lo usuaios"
-    )
-    @ApiResponse(responseCode = "200", description = "Successful operation")
-    @GetMapping
-    public ResponseEntity <List<UserDTO>> getAllUsers(){
-        List<UserDTO> usuarios =userService.getAllUsersRegistrados();
-        return new ResponseEntity<>(usuarios,HttpStatus.OK);
-    }
-
+    }   
 
     //* POST: Registra usuario nuevo */
     @Operation(
@@ -71,7 +56,7 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     )
     @ApiResponse(responseCode = "201", description = "Usuario loggeado correctamente")
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> userLogIn(
+    public ResponseEntity<UserTokenDTO> userLogIn(
         @RequestBody LoginRequestDTO userLogin) {
 
             User userLoginEncontrado=userService.busquedaEmailPassword(userLogin);
@@ -82,8 +67,8 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
 
             UserToken userToken= userService.generacionAsignacionToken(userLoginEncontrado);
 
-            LoginResponseDTO response = 
-            new LoginResponseDTO(userLoginEncontrado.getEmail(), userToken.getToken());
+            UserTokenDTO response = 
+            new UserTokenDTO(userLoginEncontrado.getEmail(), userToken.getToken());
 
             return new ResponseEntity<>(response, HttpStatus.OK);
             }
@@ -127,4 +112,17 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
             return new ResponseEntity<>("Token no válido", HttpStatus.NOT_FOUND);
         }
     }
+
+    //* GET: Usuarios registrados */
+    @Operation(
+        summary = "Devuelve todos los usuarios registrados",
+        description = "Te da la info de todos lo usuaios"
+    )
+    @ApiResponse(responseCode = "200", description = "Successful operation")
+    @GetMapping
+    public ResponseEntity <List<UserDTO>> getAllUsers(){
+        List<UserDTO> usuarios =userService.getAllUsersRegistrados();
+        return new ResponseEntity<>(usuarios,HttpStatus.OK);
+    }
+
 }
