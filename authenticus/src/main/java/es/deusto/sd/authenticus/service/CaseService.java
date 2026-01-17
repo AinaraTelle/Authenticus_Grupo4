@@ -2,203 +2,200 @@ package es.deusto.sd.authenticus.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
-import es.deusto.sd.authenticus.dao.*;
 import es.deusto.sd.authenticus.dto.*;
-import es.deusto.sd.authenticus.entity.*;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
 
 @Service
 public class CaseService {
-    private final CasoRepository casoRepository;
-    private final AtomicLong idGenerator = new AtomicLong(0);
+//     private final CasoRepository casoRepository;
+//     private final AtomicLong idGenerator = new AtomicLong(0);
 
-    private final UserTokenRepository userTokenRepository;
-    private final UserRepository userRepository;
-    private final ArchivoRepository archivoRepository;
+//     private final UserTokenRepository userTokenRepository;
+//     private final UserRepository userRepository;
+//     private final ArchivoRepository archivoRepository;
 
-    public CaseService(ArchivoRepository archivoRepository,CasoRepository casoRepository, UserTokenRepository userTokenRepository,UserRepository userRepository) {
-        this.casoRepository=casoRepository;
-        this.userTokenRepository=userTokenRepository;
-        this.userRepository=userRepository;
-        this.archivoRepository=archivoRepository;
-    }
+//     public CaseService(ArchivoRepository archivoRepository,CasoRepository casoRepository, UserTokenRepository userTokenRepository,UserRepository userRepository) {
+//         this.casoRepository=casoRepository;
+//         this.userTokenRepository=userTokenRepository;
+//         this.userRepository=userRepository;
+//         this.archivoRepository=archivoRepository;
+//     }
       
-    @Transactional
-    public CasoDTO crearCaso(String token, CreateCasoDTO createcasoDTO){
-        if(token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
+//     @Transactional
+//     public CasoDTO crearCaso(String token, CreateCasoDTO createcasoDTO){
+//         if(token.startsWith("Bearer ")) {
+//             token = token.substring(7);
+//         }
 
-        Optional<UserToken> userToken = userTokenRepository.findByToken(token);
-        if(!userToken.isPresent()){
-            throw new RuntimeException("Usuario no autenticado o token inválido.");
-        }
+//         Optional<UserToken> userToken = userTokenRepository.findByToken(token);
+//         if(!userToken.isPresent()){
+//             throw new RuntimeException("Usuario no autenticado o token inválido.");
+//         }
 
-        User user = (userRepository.findById(userToken.get().getId())).get();
+//         User user = (userRepository.findById(userToken.get().getId())).get();
        
-        Caso caso = new Caso(createcasoDTO.getTitulo(), createcasoDTO.getFechaCreacion(), user);
+//         Caso caso = new Caso(createcasoDTO.getTitulo(), createcasoDTO.getFechaCreacion(), user);
         
-        caso.setTipoAnalisis(TipoAnalisis.valueOf(createcasoDTO.getTipoAnalisis().toString()));
+//         caso.setTipoAnalisis(TipoAnalisis.valueOf(createcasoDTO.getTipoAnalisis().toString()));
 
-        casoRepository.save(caso);
+//         casoRepository.save(caso);
         
-        //ANADIR ARCHIVOS
-        if (createcasoDTO.getCreateArchivosDTO() != null) {
-            for (CreateArchivoDTO createArchDTO : createcasoDTO.getCreateArchivosDTO()) {
-                Archivo archivo=new Archivo(createArchDTO.getNombre(),
-                createArchDTO.getRuta());
+//         //ANADIR ARCHIVOS
+//         if (createcasoDTO.getCreateArchivosDTO() != null) {
+//             for (CreateArchivoDTO createArchDTO : createcasoDTO.getCreateArchivosDTO()) {
+//                 Archivo archivo=new Archivo(createArchDTO.getNombre(),
+//                 createArchDTO.getRuta());
 
-                archivo.setCaso(caso);
+//                 archivo.setCaso(caso);
                 
-                archivoRepository.save(archivo);
-                caso.getArchivos().add(archivo);
-            }
-        }
+//                 archivoRepository.save(archivo);
+//                 caso.getArchivos().add(archivo);
+//             }
+//         }
         
-        user.getCasos().add(caso);
+//         user.getCasos().add(caso);
 
-        ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
+//         ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
 
-        for(Archivo a1:caso.getArchivos()){
-            archivosDTO.add(new ArchivoDTO(a1.getId(),a1.getNombre(),a1.getRuta()));
-        }
+//         for(Archivo a1:caso.getArchivos()){
+//             archivosDTO.add(new ArchivoDTO(a1.getId(),a1.getNombre(),a1.getRuta()));
+//         }
         
-        CasoDTO casoDTO =  new CasoDTO(caso.getIDCaso(),caso.getTitulo(), 
-        caso.getFechaCreacion(),archivosDTO);
+//         CasoDTO casoDTO =  new CasoDTO(caso.getIDCaso(),caso.getTitulo(), 
+//         caso.getFechaCreacion(),archivosDTO);
 
-        casoDTO.setTipoAnalisisDTO(TipoAnalisisDTO.valueOf(caso.getTipoAnalisis().toString()));
+//         casoDTO.setTipoAnalisisDTO(TipoAnalisisDTO.valueOf(caso.getTipoAnalisis().toString()));
         
-        return  casoDTO;
-    }
+//         return  casoDTO;
+//     }
 
-    @Transactional
-    public ArrayList<CasoDTO> obtenerCasosDeUsuario(String token) {
-        if(token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-        Optional<UserToken> userToken = userTokenRepository.findByToken(token);
+//     @Transactional
+//     public ArrayList<CasoDTO> obtenerCasosDeUsuario(String token) {
+//         if(token.startsWith("Bearer ")) {
+//             token = token.substring(7);
+//         }
+//         Optional<UserToken> userToken = userTokenRepository.findByToken(token);
     
-        if (!userToken.isPresent()) {
-            throw new RuntimeException("Usuario no autenticado o token inválido.");
-        }
-        User user =userRepository.findById(userToken.get().getId()).get();
+//         if (!userToken.isPresent()) {
+//             throw new RuntimeException("Usuario no autenticado o token inválido.");
+//         }
+//         User user =userRepository.findById(userToken.get().getId()).get();
         
-        List<Caso> casosDelUsuario = casoRepository.findByUsuario(user);
-        ArrayList<CasoDTO> arrCasosDTO = new ArrayList<CasoDTO>();
+//         List<Caso> casosDelUsuario = casoRepository.findByUsuario(user);
+//         ArrayList<CasoDTO> arrCasosDTO = new ArrayList<CasoDTO>();
 
-        for (Caso caso : casosDelUsuario) {
-            ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
-            for(Archivo a1:caso.getArchivos()){
-                archivosDTO.add(new ArchivoDTO(a1.getId(),a1.getNombre(),a1.getRuta()));
-            }
-            CasoDTO casoDTO =new CasoDTO(caso.getIDCaso(),caso.getTitulo(),
-            caso.getFechaCreacion(), archivosDTO);
+//         for (Caso caso : casosDelUsuario) {
+//             ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
+//             for(Archivo a1:caso.getArchivos()){
+//                 archivosDTO.add(new ArchivoDTO(a1.getId(),a1.getNombre(),a1.getRuta()));
+//             }
+//             CasoDTO casoDTO =new CasoDTO(caso.getIDCaso(),caso.getTitulo(),
+//             caso.getFechaCreacion(), archivosDTO);
 
-            casoDTO.setTipoAnalisisDTO(TipoAnalisisDTO.valueOf(caso.getTipoAnalisis().toString()));
+//             casoDTO.setTipoAnalisisDTO(TipoAnalisisDTO.valueOf(caso.getTipoAnalisis().toString()));
             
-            arrCasosDTO.add(casoDTO);
-        }
+//             arrCasosDTO.add(casoDTO);
+//         }
     
-        return arrCasosDTO;
-    }
+//         return arrCasosDTO;
+//     }
 
-    @Transactional
-    public ArrayList<CasoDTO> obtenerCasosDeUsuarioEntreFechas(String token, LocalDateTime FechaInicio, LocalDateTime FechaFin) throws IllegalAccessException{
-        if(token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
+//     @Transactional
+//     public ArrayList<CasoDTO> obtenerCasosDeUsuarioEntreFechas(String token, LocalDateTime FechaInicio, LocalDateTime FechaFin) throws IllegalAccessException{
+//         if(token.startsWith("Bearer ")) {
+//             token = token.substring(7);
+//         }
 
-        Optional<UserToken> userToken = userTokenRepository.findByToken(token);
-        if (!userToken.isPresent()) {
-            throw new IllegalAccessException("Usuario no autenticado o token inválido.");
-        }
+//         Optional<UserToken> userToken = userTokenRepository.findByToken(token);
+//         if (!userToken.isPresent()) {
+//             throw new IllegalAccessException("Usuario no autenticado o token inválido.");
+//         }
     
-        Optional<User> user = userRepository.findById(userToken.get().getId());
-        List <Caso> casosDelUsuario =user.get().getCasos();
+//         Optional<User> user = userRepository.findById(userToken.get().getId());
+//         List <Caso> casosDelUsuario =user.get().getCasos();
 
-        // ArrayList<Caso> casosDelUsuario = estado.getMap_UserCases().getOrDefault(usuario, new ArrayList<>());
-        List<Caso> filtrados = casosDelUsuario.stream()
-        .filter(c -> c.getFechaCreacion() != null)
-        .filter(c -> !c.getFechaCreacion().isBefore(FechaInicio)) 
-        .filter(c -> !c.getFechaCreacion().isAfter(FechaFin))     
-        .toList();
+//         // ArrayList<Caso> casosDelUsuario = estado.getMap_UserCases().getOrDefault(usuario, new ArrayList<>());
+//         List<Caso> filtrados = casosDelUsuario.stream()
+//         .filter(c -> c.getFechaCreacion() != null)
+//         .filter(c -> !c.getFechaCreacion().isBefore(FechaInicio)) 
+//         .filter(c -> !c.getFechaCreacion().isAfter(FechaFin))     
+//         .toList();
 
-        ArrayList<CasoDTO> casosDTO= new ArrayList<>();
-        for (Caso caso : filtrados) {
-            ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
-            for(Archivo a1:caso.getArchivos()){
-                archivosDTO.add(new ArchivoDTO(a1.getId(),
-                a1.getNombre(),a1.getRuta()));
-            }
+//         ArrayList<CasoDTO> casosDTO= new ArrayList<>();
+//         for (Caso caso : filtrados) {
+//             ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
+//             for(Archivo a1:caso.getArchivos()){
+//                 archivosDTO.add(new ArchivoDTO(a1.getId(),
+//                 a1.getNombre(),a1.getRuta()));
+//             }
 
-            casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),
-            caso.getFechaCreacion(), archivosDTO));
-        }
+//             casosDTO.add(new CasoDTO(caso.getIDCaso(),caso.getTitulo(),
+//             caso.getFechaCreacion(), archivosDTO));
+//         }
     
         
-        return casosDTO;
-    }
+//         return casosDTO;
+//     }
 
 
-//     //  ANADIR ARCHIVOS
-    @Transactional
-    public void addFilesToCase(String token, Long idCaso, ArrayList<ArchivoDTO> nuevosArchivos)
-        throws IllegalAccessException, IllegalArgumentException {
+// //     //  ANADIR ARCHIVOS
+//     @Transactional
+//     public void addFilesToCase(String token, Long idCaso, ArrayList<ArchivoDTO> nuevosArchivos)
+//         throws IllegalAccessException, IllegalArgumentException {
 
-        if (token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
+//         if (token.startsWith("Bearer ")) {
+//             token = token.substring(7);
+//         }
 
-        Optional<UserToken> userToken = userTokenRepository.findByToken(token);
-        if (!userToken.isPresent()) {
-            throw new IllegalAccessException("Usuario no autenticado o token inválido.");
-        }
+//         Optional<UserToken> userToken = userTokenRepository.findByToken(token);
+//         if (!userToken.isPresent()) {
+//             throw new IllegalAccessException("Usuario no autenticado o token inválido.");
+//         }
 
-        Optional <Caso> casoEncontrado = casoRepository.findById(idCaso);
+//         Optional <Caso> casoEncontrado = casoRepository.findById(idCaso);
 
-        if (!casoEncontrado.isPresent()) {
-            throw new IllegalArgumentException("Caso no encontrado para este usuario.");
-        }
+//         if (!casoEncontrado.isPresent()) {
+//             throw new IllegalArgumentException("Caso no encontrado para este usuario.");
+//         }
 
-        for (ArchivoDTO archDTO1 : nuevosArchivos) {
-            Archivo arch1 = new Archivo(archDTO1.getNombre(), archDTO1.getRuta());
-            arch1.setCaso(casoEncontrado.get());
-            archivoRepository.save(arch1);
-            casoEncontrado.get().getArchivos().add(arch1);
-        }
-    }
+//         for (ArchivoDTO archDTO1 : nuevosArchivos) {
+//             Archivo arch1 = new Archivo(archDTO1.getNombre(), archDTO1.getRuta());
+//             arch1.setCaso(casoEncontrado.get());
+//             archivoRepository.save(arch1);
+//             casoEncontrado.get().getArchivos().add(arch1);
+//         }
+//     }
 
-//     //Eliminar caso
-    @Transactional
-    public boolean eliminarCaso(String token, Long idCaso) throws IllegalAccessException { 
-        if(token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-        Optional<UserToken> userToken = userTokenRepository.findByToken(token);
-        if (!userToken.isPresent()) {
-            throw new IllegalAccessException("Usuario no autenticado o token inválido.");
-        }
+// //     //Eliminar caso
+//     @Transactional
+//     public boolean eliminarCaso(String token, Long idCaso) throws IllegalAccessException { 
+//         if(token.startsWith("Bearer ")) {
+//             token = token.substring(7);
+//         }
+//         Optional<UserToken> userToken = userTokenRepository.findByToken(token);
+//         if (!userToken.isPresent()) {
+//             throw new IllegalAccessException("Usuario no autenticado o token inválido.");
+//         }
 
-        Optional<User> user = userRepository.findById(userToken.get().getId());
+//         Optional<User> user = userRepository.findById(userToken.get().getId());
 
-        List<Caso> casosDelUsuario =user.get().getCasos();
+//         List<Caso> casosDelUsuario =user.get().getCasos();
         
-        Optional<Caso> casoAEliminar = casoRepository.findById(idCaso);
+//         Optional<Caso> casoAEliminar = casoRepository.findById(idCaso);
 
-        if(casoAEliminar.isPresent()) {
-            casosDelUsuario.remove(casoAEliminar.get());
-            casoRepository.deleteById(casoAEliminar.get().getIDCaso());
-            return true;
-        } else {
-            return false;
-        }
-    }
+//         if(casoAEliminar.isPresent()) {
+//             casosDelUsuario.remove(casoAEliminar.get());
+//             casoRepository.deleteById(casoAEliminar.get().getIDCaso());
+//             return true;
+//         } else {
+//             return false;
+//         }
+//     }
 
 //     public ResultadosDTO mostrarResultados(int idUsuario, int idCaso){
 //         Caso caso=buscaCaso(idUsuario, idCaso);

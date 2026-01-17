@@ -1,4 +1,4 @@
- package es.deusto.sd.authenticus.dto;
+package es.deusto.sd.gestionbd.dto;
 
 public class ArchivoDTO {
     private Long IDArchivo;

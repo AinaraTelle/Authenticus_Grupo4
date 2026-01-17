@@ -34,124 +34,124 @@ public class CaseController{
         this.caseService=caseService;
     }
 
-    //* POST: Crear caso */
-    @Operation(
-        summary = "Crea un caso a un usuario. Para ello, se debe hacer los siguiente: en PostMan, acceder a 'Authorization'."+
-        " Ahí, pulsando 'Bearer token', añadir el token del usuario proporcionado en login"
-    )
-    @ApiResponse(responseCode = "201", description = "Caso creado correctamente")
-    @PostMapping("/crear")
-    public ResponseEntity<CasoDTO> crearCaso(
-        @RequestHeader("Authorization") String token,
-        @RequestBody CreateCasoDTO casoDTO) {
-            CasoDTO casoCreado = caseService.crearCaso(token, casoDTO);
-            return new ResponseEntity<>(casoCreado, HttpStatus.CREATED);
-    }
-
-
-    //* GET: Buscar caso por limite*/
-    @Operation(
-        summary = "Buscar casos asignados a un usuario. Por defecto se buscarán 5 casos, aunque, este valor se puede cambiar proporcinando este parámetro: en key la palabra 'limit', y, en su valor la cantidad de archivos que queramos observar"
-    )
-    @ApiResponse(responseCode = "200", description = "OK")
-    @GetMapping("/mis-casos")
-    public ResponseEntity<List<CasoDTO>> obtenerMisCasos(
-        @RequestHeader("Authorization") String token,
-        @RequestParam(name = "limite",defaultValue = "5") int limite) {
-        try {
-            List<CasoDTO> casos =caseService.obtenerCasosDeUsuario(token).stream().limit(limite).toList();
-            
-            return new ResponseEntity<>(casos, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            // Por ejemplo, token inválido
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-
-    //* GET: Buscar caso por fechas*/
-    @Operation(
-        summary = "Busca casos que solo están entre las 2 fechas que pasamos por parámetro. Acceder a documentación para ver cómo indicar las fechas"
-    )
-    @ApiResponse(responseCode = "200", description = "OK")
-    @GetMapping("/mis-casos-fechas")
-    public ResponseEntity<List<CasoDTO>> obtenerMisCasos(
-        @RequestHeader("Authorization") String token,
-        @RequestParam("inicio") LocalDateTime fechaInicio,
-        @RequestParam("fin") LocalDateTime fechaFin) {
-        try {
-           List<CasoDTO>casosporfecha=caseService.obtenerCasosDeUsuarioEntreFechas(token, fechaInicio, fechaFin);
-            return new ResponseEntity<>(casosporfecha, HttpStatus.OK);
-            
-        } catch (RuntimeException e) {
-            // Por ejemplo, token inválido
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (IllegalAccessException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    
-    //* PUT: Añadir archivos */
-    @Operation(
-    summary = "Añade archivos adicionales a un caso del usuario autenticado"
-    )
-    @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
-    @ApiResponse(responseCode = "401", description = "Token inválido o no autorizado")
-    @ApiResponse(responseCode = "404", description = "Caso no encontrado")
-    @PutMapping("/add-files")
-    public ResponseEntity<String> addFilesToCase(
-            @RequestHeader("Authorization") String token,
-            @RequestParam("idCaso") Long idCaso,
-            @RequestBody ArrayList<ArchivoDTO> nuevosArchivos) {
-        try {
-            caseService.addFilesToCase(token, idCaso, nuevosArchivos);
-            return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
-
-        } catch (IllegalAccessException e) {
-            return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
-
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
-        }
-    }
-
-    //* DELETE: Eliminar casos */
-    @Operation(summary = "Elimina un caso de un usuario. Para ello, se debe proporcionar el token del usario y el id del caso que se quiera eliminar")
-    @ApiResponse(responseCode = "200", description = "Caso eliminado correctamente")
-    @ApiResponse(responseCode = "404", description = "Caso no encontrado")
-    @DeleteMapping("/eliminar/{idCaso}")
-    public ResponseEntity<String> eliminarCaso(@RequestHeader("Authorization") String token,
-    @PathVariable("idCaso") Long idCaso) {
-        try{
-            boolean exito = caseService.eliminarCaso(token, idCaso);
-       
-            if(exito){
-                return new ResponseEntity<>("Caso eliminado correctamente", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
-            }
-        }catch (IllegalAccessException e) {
-            return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
-        }
-    }
-
-    
-//         //* GET: Mostrar resultados*/
+//     //* POST: Crear caso */
 //     @Operation(
-//     summary = "Muestra los resultados de un caso"
+//         summary = "Crea un caso a un usuario. Para ello, se debe hacer los siguiente: en PostMan, acceder a 'Authorization'."+
+//         " Ahí, pulsando 'Bearer token', añadir el token del usuario proporcionado en login"
 //     )
-//     @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
-//     @GetMapping("/resultados")
-//     public ResponseEntity<ResultadosDTO> mostrarResultados(
-//         @RequestParam("idUsuario") int idUsuario,
-//         @RequestParam("idCaso") int idCaso) {
+//     @ApiResponse(responseCode = "201", description = "Caso creado correctamente")
+//     @PostMapping("/crear")
+//     public ResponseEntity<CasoDTO> crearCaso(
+//         @RequestHeader("Authorization") String token,
+//         @RequestBody CreateCasoDTO casoDTO) {
+//             CasoDTO casoCreado = caseService.crearCaso(token, casoDTO);
+//             return new ResponseEntity<>(casoCreado, HttpStatus.CREATED);
+//     }
+
+
+//     //* GET: Buscar caso por limite*/
+//     @Operation(
+//         summary = "Buscar casos asignados a un usuario. Por defecto se buscarán 5 casos, aunque, este valor se puede cambiar proporcinando este parámetro: en key la palabra 'limit', y, en su valor la cantidad de archivos que queramos observar"
+//     )
+//     @ApiResponse(responseCode = "200", description = "OK")
+//     @GetMapping("/mis-casos")
+//     public ResponseEntity<List<CasoDTO>> obtenerMisCasos(
+//         @RequestHeader("Authorization") String token,
+//         @RequestParam(name = "limite",defaultValue = "5") int limite) {
 //         try {
-//             ResultadosDTO reul = caseService.mostrarResultados(idUsuario,idCaso);
-//             return new ResponseEntity<>(reul, HttpStatus.OK);
+//             List<CasoDTO> casos =caseService.obtenerCasosDeUsuario(token).stream().limit(limite).toList();
+            
+//             return new ResponseEntity<>(casos, HttpStatus.OK);
 //         } catch (RuntimeException e) {
 //             // Por ejemplo, token inválido
 //             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 //         }
 //     }
+
+
+//     //* GET: Buscar caso por fechas*/
+//     @Operation(
+//         summary = "Busca casos que solo están entre las 2 fechas que pasamos por parámetro. Acceder a documentación para ver cómo indicar las fechas"
+//     )
+//     @ApiResponse(responseCode = "200", description = "OK")
+//     @GetMapping("/mis-casos-fechas")
+//     public ResponseEntity<List<CasoDTO>> obtenerMisCasos(
+//         @RequestHeader("Authorization") String token,
+//         @RequestParam("inicio") LocalDateTime fechaInicio,
+//         @RequestParam("fin") LocalDateTime fechaFin) {
+//         try {
+//            List<CasoDTO>casosporfecha=caseService.obtenerCasosDeUsuarioEntreFechas(token, fechaInicio, fechaFin);
+//             return new ResponseEntity<>(casosporfecha, HttpStatus.OK);
+            
+//         } catch (RuntimeException e) {
+//             // Por ejemplo, token inválido
+//             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//         } catch (IllegalAccessException e) {
+//             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//         }
+//     }
+
+    
+//     //* PUT: Añadir archivos */
+//     @Operation(
+//     summary = "Añade archivos adicionales a un caso del usuario autenticado"
+//     )
+//     @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
+//     @ApiResponse(responseCode = "401", description = "Token inválido o no autorizado")
+//     @ApiResponse(responseCode = "404", description = "Caso no encontrado")
+//     @PutMapping("/add-files")
+//     public ResponseEntity<String> addFilesToCase(
+//             @RequestHeader("Authorization") String token,
+//             @RequestParam("idCaso") Long idCaso,
+//             @RequestBody ArrayList<ArchivoDTO> nuevosArchivos) {
+//         try {
+//             caseService.addFilesToCase(token, idCaso, nuevosArchivos);
+//             return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
+
+//         } catch (IllegalAccessException e) {
+//             return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
+
+//         } catch (IllegalArgumentException e) {
+//             return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
+//         }
+//     }
+
+//     //* DELETE: Eliminar casos */
+//     @Operation(summary = "Elimina un caso de un usuario. Para ello, se debe proporcionar el token del usario y el id del caso que se quiera eliminar")
+//     @ApiResponse(responseCode = "200", description = "Caso eliminado correctamente")
+//     @ApiResponse(responseCode = "404", description = "Caso no encontrado")
+//     @DeleteMapping("/eliminar/{idCaso}")
+//     public ResponseEntity<String> eliminarCaso(@RequestHeader("Authorization") String token,
+//     @PathVariable("idCaso") Long idCaso) {
+//         try{
+//             boolean exito = caseService.eliminarCaso(token, idCaso);
+       
+//             if(exito){
+//                 return new ResponseEntity<>("Caso eliminado correctamente", HttpStatus.OK);
+//             } else {
+//                 return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
+//             }
+//         }catch (IllegalAccessException e) {
+//             return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
+//         }
+//     }
+
+    
+// //         //* GET: Mostrar resultados*/
+// //     @Operation(
+// //     summary = "Muestra los resultados de un caso"
+// //     )
+// //     @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
+// //     @GetMapping("/resultados")
+// //     public ResponseEntity<ResultadosDTO> mostrarResultados(
+// //         @RequestParam("idUsuario") int idUsuario,
+// //         @RequestParam("idCaso") int idCaso) {
+// //         try {
+// //             ResultadosDTO reul = caseService.mostrarResultados(idUsuario,idCaso);
+// //             return new ResponseEntity<>(reul, HttpStatus.OK);
+// //         } catch (RuntimeException e) {
+// //             // Por ejemplo, token inválido
+// //             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+// //         }
+// //     }
 }
