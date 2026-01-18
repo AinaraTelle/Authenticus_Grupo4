@@ -6,12 +6,14 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 import es.deusto.sd.authenticus.dto.*;
+import es.deusto.sd.authenticus.external.DataStorageGateway;
 import jakarta.transaction.Transactional;
 
 import java.time.LocalDateTime;
 
 @Service
 public class CaseService {
+    private final DataStorageGateway dataStorageGateway;
 //     private final CasoRepository casoRepository;
 //     private final AtomicLong idGenerator = new AtomicLong(0);
 
@@ -25,54 +27,20 @@ public class CaseService {
 //         this.userRepository=userRepository;
 //         this.archivoRepository=archivoRepository;
 //     }
+    public CaseService(DataStorageGateway dataStorageGateway) {
+        this.dataStorageGateway=dataStorageGateway;
+    }
       
-//     @Transactional
-//     public CasoDTO crearCaso(String token, CreateCasoDTO createcasoDTO){
-//         if(token.startsWith("Bearer ")) {
-//             token = token.substring(7);
-//         }
-
-//         Optional<UserToken> userToken = userTokenRepository.findByToken(token);
-//         if(!userToken.isPresent()){
-//             throw new RuntimeException("Usuario no autenticado o token inválido.");
-//         }
-
-//         User user = (userRepository.findById(userToken.get().getId())).get();
-       
-//         Caso caso = new Caso(createcasoDTO.getTitulo(), createcasoDTO.getFechaCreacion(), user);
+    @Transactional
+    public CasoDTO crearCaso(String token, CreateCasoDTO createcasoDTO){
         
-//         caso.setTipoAnalisis(TipoAnalisis.valueOf(createcasoDTO.getTipoAnalisis().toString()));
-
-//         casoRepository.save(caso);
-        
-//         //ANADIR ARCHIVOS
-//         if (createcasoDTO.getCreateArchivosDTO() != null) {
-//             for (CreateArchivoDTO createArchDTO : createcasoDTO.getCreateArchivosDTO()) {
-//                 Archivo archivo=new Archivo(createArchDTO.getNombre(),
-//                 createArchDTO.getRuta());
-
-//                 archivo.setCaso(caso);
-                
-//                 archivoRepository.save(archivo);
-//                 caso.getArchivos().add(archivo);
-//             }
-//         }
-        
-//         user.getCasos().add(caso);
-
-//         ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
-
-//         for(Archivo a1:caso.getArchivos()){
-//             archivosDTO.add(new ArchivoDTO(a1.getId(),a1.getNombre(),a1.getRuta()));
-//         }
-        
-//         CasoDTO casoDTO =  new CasoDTO(caso.getIDCaso(),caso.getTitulo(), 
-//         caso.getFechaCreacion(),archivosDTO);
-
-//         casoDTO.setTipoAnalisisDTO(TipoAnalisisDTO.valueOf(caso.getTipoAnalisis().toString()));
-        
-//         return  casoDTO;
-//     }
+        CasoDTO casoDTO = dataStorageGateway.crearCaso(token, createcasoDTO);
+        if(casoDTO!=null){
+            return casoDTO;
+        }else{
+            return null;
+        }
+    }
 
 //     @Transactional
 //     public ArrayList<CasoDTO> obtenerCasosDeUsuario(String token) {

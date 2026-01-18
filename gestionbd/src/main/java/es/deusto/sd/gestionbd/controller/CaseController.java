@@ -36,7 +36,11 @@ public class CaseController{
         @RequestHeader("Authorization") String token,
         @RequestBody CreateCasoDTO casoDTO) {
             CasoDTO casoCreado = caseService.crearCaso(token, casoDTO);
-            return new ResponseEntity<>(casoCreado, HttpStatus.CREATED);
+            if(casoCreado!=null){
+                return new ResponseEntity<>(casoCreado, HttpStatus.CREATED);
+            }else{
+                return null;
+            }
     }
 
 

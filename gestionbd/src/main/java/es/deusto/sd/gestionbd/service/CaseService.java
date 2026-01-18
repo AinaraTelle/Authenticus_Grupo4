@@ -36,15 +36,13 @@ public class CaseService {
 
         Optional<UserToken> userToken = userTokenRepository.findByToken(token);
         if(!userToken.isPresent()){
-            throw new RuntimeException("Usuario no autenticado o token inválido.");
+            return null;
         }
 
         User user = (userRepository.findById(userToken.get().getId())).get();
-       
         Caso caso = new Caso(createcasoDTO.getTitulo(), createcasoDTO.getFechaCreacion(), user);
         
         caso.setTipoAnalisis(TipoAnalisis.valueOf(createcasoDTO.getTipoAnalisis().toString()));
-
         casoRepository.save(caso);
         
         //ANADIR ARCHIVOS
@@ -61,7 +59,6 @@ public class CaseService {
         }
         
         user.getCasos().add(caso);
-
         ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
 
         for(Archivo a1:caso.getArchivos()){
@@ -73,7 +70,7 @@ public class CaseService {
 
         casoDTO.setTipoAnalisisDTO(TipoAnalisisDTO.valueOf(caso.getTipoAnalisis().toString()));
         
-        return  casoDTO;
+        return casoDTO;
     }
 
     @Transactional

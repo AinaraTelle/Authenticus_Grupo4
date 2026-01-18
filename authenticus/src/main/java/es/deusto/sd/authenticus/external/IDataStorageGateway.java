@@ -6,4 +6,5 @@ public interface IDataStorageGateway {
 
     public UserDTO registerUser(RegisterRequestDTO userRegisterDTO);
     public UserTokenDTO loginUser(LoginRequestDTO userLogin);
+    public CasoDTO crearCaso(String token, CreateCasoDTO createcasoDTO);
 }

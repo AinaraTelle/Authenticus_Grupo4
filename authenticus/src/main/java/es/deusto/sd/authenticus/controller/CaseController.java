@@ -34,19 +34,23 @@ public class CaseController{
         this.caseService=caseService;
     }
 
-    // //* POST: Crear caso */
-    // @Operation(
-    //     summary = "Crea un caso a un usuario. Para ello, se debe hacer los siguiente: en PostMan, acceder a 'Authorization'."+
-    //     " Ahí, pulsando 'Bearer token', añadir el token del usuario proporcionado en login"
-    // )
-    // @ApiResponse(responseCode = "201", description = "Caso creado correctamente")
-    // @PostMapping("/crear")
-    // public ResponseEntity<CasoDTO> crearCaso(
-    //     @RequestHeader("Authorization") String token,
-    //     @RequestBody CreateCasoDTO casoDTO) {
-    //         CasoDTO casoCreado = caseService.crearCaso(token, casoDTO);
-    //         return new ResponseEntity<>(casoCreado, HttpStatus.CREATED);
-    // }
+    //* POST: Crear caso */
+    @Operation(
+        summary = "Crea un caso a un usuario. Para ello, se debe hacer los siguiente: en PostMan, acceder a 'Authorization'."+
+        " Ahí, pulsando 'Bearer token', añadir el token del usuario proporcionado en login"
+    )
+    @ApiResponse(responseCode = "201", description = "Caso creado correctamente")
+    @PostMapping("/crear")
+    public ResponseEntity<CasoDTO> crearCaso(
+        @RequestHeader("Authorization") String token,
+        @RequestBody CreateCasoDTO casoDTO) {
+            CasoDTO casoCreado = caseService.crearCaso(token, casoDTO);
+            if(casoCreado!=null){
+                return new ResponseEntity<>(casoCreado, HttpStatus.CREATED);
+            }else{
+                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
 
 
 //     //* GET: Buscar caso por limite*/
