@@ -8,9 +8,11 @@ import org.springframework.stereotype.Service;
 // import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+import es.deusto.sd.authenticus.dto.LoginRequestDTO;
 // import es.deusto.sd.authenticus.dto.LoginRequestDTO;
 import es.deusto.sd.authenticus.dto.RegisterRequestDTO;
 import es.deusto.sd.authenticus.dto.UserDTO;
+import es.deusto.sd.authenticus.dto.UserTokenDTO;
 import es.deusto.sd.authenticus.external.*;
 // import es.deusto.sd.authenticus.socket.ClienteSocket;
 // import io.jsonwebtoken.io.IOException;
@@ -27,11 +29,6 @@ public class UserService {
     private final AtomicLong idGenerator = new AtomicLong(0);
     // private ClienteSocket socketCliente; //Atributo del socket
 
-    // public UserService(UserRepository userRepository, 
-    //     UserTokenRepository userTokenRepository) {
-    //     this.userRepository = userRepository;
-    //     this.userTokenRepository = userTokenRepository;
-    // }
     public UserService(DataStorageGateway dataStorageGateway) {
         this.dataStorageGateway = dataStorageGateway;
     }
@@ -56,42 +53,24 @@ public class UserService {
     // }
     
     public UserDTO createUser(RegisterRequestDTO createUserDTO) {
-            
         boolean passwordValida=validacionPassword(createUserDTO.getPassword());
-        
         if(passwordValida==true){
             UserDTO userDTO = dataStorageGateway.registerUser(createUserDTO);
-        
             return userDTO;
+
         }else{
             return null;
         }
+    }
 
-        //boolean passwordValida=validacionPassword(createUserDTO.getPassword());
-        // if(passwordValida==true){
-
-        //     User user = new User(idGenerator.incrementAndGet(),
-        //     createUserDTO.getNombre(),createUserDTO.getEmail(), 
-        //     createUserDTO.getPassword(), createUserDTO.getTel());
-
-        //    if (userRepository.existsByEmailIgnoreCase(createUserDTO.getEmail())) {
-        //         return null; // O lanza una excepción personalizada
-        //     }
-
-        //     user.setIDUsuario(null);
-        //     userRepository.save(user);
-        //     // NOTA: no se puede ejecutar, no tenemos el user aquí
-        //     if(socketCliente!=null){
-        //         socketCliente.sendMessage("REGISTER#" + user.getIDUsuario() + "#" + user.getNombre() + "#" + user.getEmail() + "#" + user.getPassword() + "#" + user.getTel() );
-        //     }
-        //     return convertToDTO(user);
-            
-        // }else{
-        //     if(socketCliente!=null){
-        //         socketCliente.sendMessage("REGISTER#"  );
-        //     }
-        //     return null;
-        // }
+    public UserTokenDTO login(LoginRequestDTO userLogin){
+        UserTokenDTO user = dataStorageGateway.loginUser(userLogin);
+        if(user!=null){
+            return user;
+        }else{
+            return null;
+        }
+        
     }
 
     boolean validacionPassword(String password){

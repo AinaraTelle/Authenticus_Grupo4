@@ -50,27 +50,21 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
 
 
     //* POST: login */
-    // @Operation(
-    //     summary = "Hace login de un usuario"
-    // )
-    // @ApiResponse(responseCode = "201", description = "Usuario loggeado correctamente")
-    // @PostMapping("/login")
-    // public ResponseEntity<UserTokenDTO> userLogIn(
-    //     @RequestBody LoginRequestDTO userLogin) {
-    //         // User userLoginEncontrado=userService.busquedaEmailPassword(userLogin);
-            
-    //         // if (userLoginEncontrado==null){
-    //         //     return new ResponseEntity<>( HttpStatus.NOT_FOUND);
-    //         // }else{
+    @Operation(
+        summary = "Hace login de un usuario"
+    )
+    @ApiResponse(responseCode = "201", description = "Usuario loggeado correctamente")
+    @PostMapping("/login")
+    public ResponseEntity<UserTokenDTO> userLogIn(
+        @RequestBody LoginRequestDTO userLogin) {
 
-    //         // UserToken userToken= userService.generacionAsignacionToken(userLoginEncontrado);
-
-    //         // UserTokenDTO response = 
-    //         // new UserTokenDTO(userLoginEncontrado.getEmail(), userToken.getToken());
-
-    //         // return new ResponseEntity<>(response, HttpStatus.OK);
-    //         // }
-    //     }
+            UserTokenDTO userTokenDTO=userService.login(userLogin);
+            if(userTokenDTO!=null){
+                return new ResponseEntity<>(userTokenDTO, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>( HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
     
 
     // //* DELETE: Usuario */

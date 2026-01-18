@@ -35,7 +35,7 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
         if(newUser!=null){
             return new ResponseEntity<>(newUser, HttpStatus.CREATED);
         }else{
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            return null;
         }
     }
 
@@ -48,7 +48,7 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
             User userLoginEncontrado=userService.busquedaEmailPassword(userLogin);
             
             if (userLoginEncontrado==null){
-                return new ResponseEntity<>( HttpStatus.NOT_FOUND);
+                return null;
             }else{
 
             UserToken userToken= userService.generacionAsignacionToken(userLoginEncontrado);
