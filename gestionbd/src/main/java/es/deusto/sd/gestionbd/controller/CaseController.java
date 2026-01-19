@@ -59,6 +59,19 @@ public class CaseController{
         }
     }
 
+    //* GET: Buscar archivos de caso*/
+    @GetMapping("/buscarArchivos/{idCaso}")
+    public ResponseEntity<List<ArchivoDTO>> obtenerArchivos(
+        @PathVariable("idCaso") Long idCaso) {
+        try {
+           List<ArchivoDTO> listArchivosDTO = caseService.obtenerArchivos(idCaso);
+            return new ResponseEntity<>(listArchivosDTO, HttpStatus.OK);
+            
+        } catch (Exception e) {
+            // Por ejemplo, token inválido
+            return null;
+        }
+    }
 
     //* GET: Buscar caso por fechas*/
     @GetMapping("/mis-casos-fechas")

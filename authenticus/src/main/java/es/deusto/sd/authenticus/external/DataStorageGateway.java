@@ -1,6 +1,9 @@
 
 package es.deusto.sd.authenticus.external;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -60,6 +63,24 @@ public class DataStorageGateway implements IDataStorageGateway {
         }
     };
     
+    @Override
+    public List<ArchivoDTO> obtenerArchivosCaso(Long idCaso){
+
+        try{        
+            ResponseEntity<ArchivoDTO[]> response = restTemplate.exchange(
+                URL_case+"/buscarArchivos/{idCaso}",
+                HttpMethod.GET, // O POST, según tu controlador de BD
+                null,
+                ArchivoDTO[].class,
+                idCaso );// <--- Aquí es donde se asigna el valor al {id} de la URL
+
+            return Arrays.asList(response.getBody());
+
+        }catch (Exception e) {
+            System.out.println("Error al cargar los archivos");
+            return null;
+        }
+    }
 }
 
 

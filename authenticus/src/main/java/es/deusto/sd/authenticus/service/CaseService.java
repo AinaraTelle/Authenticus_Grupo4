@@ -165,12 +165,21 @@ public class CaseService {
 //         }
 //     }
 
-//     public ResultadosDTO mostrarResultados(int idUsuario, int idCaso){
-//         Caso caso=buscaCaso(idUsuario, idCaso);
+    public List<ResultadosDTO> mostrarResultados(Long idCaso){
+        List<ArchivoDTO> listArchivos = dataStorageGateway.obtenerArchivosCaso(idCaso);
+        List<ResultadosDTO> listResultados = new ArrayList<>();
 
-//         return new ResultadosDTO(caso.getIDCaso(), caso.getTitulo(),
-//         caso.getTipoAnalisis() , caso.getFechaCreacion(), caso.getArchivos());
-//     };
+        //empezar bucle for de archivos
+        //inicializar sockets
+        //por cada archivo, ejecutar "enviar analisis" de ProccessSocketClient
+        // aignar valor aletario
+        //generar un resustadosDTO y añadir a la lista de listResultados
+
+        //al acabar, devolver listResultados
+
+        
+
+    };
 
 
 //     public Caso buscaCaso(int idUsuario, int idCaso){

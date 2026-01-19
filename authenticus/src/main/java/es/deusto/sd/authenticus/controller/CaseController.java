@@ -141,21 +141,21 @@ public class CaseController{
 //     }
 
     
-// //         //* GET: Mostrar resultados*/
-// //     @Operation(
-// //     summary = "Muestra los resultados de un caso"
-// //     )
-// //     @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
-// //     @GetMapping("/resultados")
-// //     public ResponseEntity<ResultadosDTO> mostrarResultados(
-// //         @RequestParam("idUsuario") int idUsuario,
-// //         @RequestParam("idCaso") int idCaso) {
-// //         try {
-// //             ResultadosDTO reul = caseService.mostrarResultados(idUsuario,idCaso);
-// //             return new ResponseEntity<>(reul, HttpStatus.OK);
-// //         } catch (RuntimeException e) {
-// //             // Por ejemplo, token inválido
-// //             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-// //         }
-// //     }
+        //* GET: Mostrar resultados*/
+    @Operation(
+    summary = "Muestra los resultados de un caso"
+    )
+    @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
+    @GetMapping("/resultados")
+    public ResponseEntity<List<ResultadosDTO>> mostrarResultados(
+        @RequestParam("idCaso") Long idCaso) {
+        try {
+            List<ResultadosDTO> resul = caseService.mostrarResultados(idCaso);
+            return new ResponseEntity< List<ResultadosDTO> >(resul, HttpStatus.OK);
+        
+        } catch (RuntimeException e) {
+            // Por ejemplo, token inválido
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
 }
