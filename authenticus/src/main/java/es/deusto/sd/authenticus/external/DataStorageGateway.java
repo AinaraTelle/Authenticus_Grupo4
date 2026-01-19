@@ -12,7 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import es.deusto.sd.authenticus.dto.*;
+import es.deusto.sd.authenticus.dto.ArchivoDTO;
+import es.deusto.sd.authenticus.dto.CasoDTO;
+import es.deusto.sd.authenticus.dto.CreateCasoDTO;
+import es.deusto.sd.authenticus.dto.LoginRequestDTO;
+import es.deusto.sd.authenticus.dto.RegisterRequestDTO;
+import es.deusto.sd.authenticus.dto.UserDTO;
+import es.deusto.sd.authenticus.dto.UserTokenDTO;
 
 @Component
 public class DataStorageGateway implements IDataStorageGateway {
@@ -81,6 +87,22 @@ public class DataStorageGateway implements IDataStorageGateway {
             return null;
         }
     }
+    @Override
+    public CasoDTO obtenerCaso(Long idCaso) {
+        try {
+            ResponseEntity<CasoDTO> response = restTemplate.exchange(
+                    URL_case + "/{idCaso}",
+                    HttpMethod.GET,
+                    null,
+                    CasoDTO.class,
+                    idCaso
+            );
+            return response.getBody();
+        } catch (Exception e) {
+            System.out.println("Error al obtener el caso con id " + idCaso + ": " + e.getMessage());
+            return null;
+        }
+}
 }
 
 
