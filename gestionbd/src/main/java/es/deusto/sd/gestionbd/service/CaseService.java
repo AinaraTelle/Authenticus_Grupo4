@@ -255,14 +255,15 @@ public class CaseService {
     }
 
     @Transactional
-    public List<ArchivoDTO> obtenerArchivos(Long idCaso){
+    public CasoDTO obtenerCaso(Long idCaso){
         Caso caso= casoRepository.findById(idCaso).get();
-        List <ArchivoDTO> archivoDTOs= new ArrayList<ArchivoDTO>();
-
+        CasoDTO casoDTO=new CasoDTO(caso.getIDCaso(),caso.getTitulo(), caso.getFechaCreacion());
+        casoDTO.setTipoAnalisisDTO(TipoAnalisisDTO.valueOf( caso.getTipoAnalisis().name()));
+        
         for(Archivo a1: caso.getArchivos()){
-            archivoDTOs.add(new ArchivoDTO(a1.getId(),a1.getNombre(),a1.getRuta()));
+            casoDTO.getArchivosDTO().add(new ArchivoDTO(a1.getId(),a1.getNombre(),a1.getRuta()));
         }
-        return archivoDTOs;
+        return casoDTO;
     }
 
 //     public ResultadosDTO mostrarResultados(int idUsuario, int idCaso){

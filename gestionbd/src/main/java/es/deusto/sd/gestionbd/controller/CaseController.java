@@ -59,13 +59,13 @@ public class CaseController{
         }
     }
 
-    //* GET: Buscar archivos de caso*/
-    @GetMapping("/buscarArchivos/{idCaso}")
-    public ResponseEntity<List<ArchivoDTO>> obtenerArchivos(
+    //* GET: Buscar caso*/
+    @GetMapping("/buscarCaso/{idCaso}")
+    public ResponseEntity<CasoDTO> obtenerArchivos(
         @PathVariable("idCaso") Long idCaso) {
         try {
-           List<ArchivoDTO> listArchivosDTO = caseService.obtenerArchivos(idCaso);
-            return new ResponseEntity<>(listArchivosDTO, HttpStatus.OK);
+            CasoDTO casoDTO = caseService.obtenerCaso(idCaso);
+            return new ResponseEntity<>(casoDTO, HttpStatus.OK);
             
         } catch (Exception e) {
             // Por ejemplo, token inválido
@@ -106,16 +106,16 @@ public class CaseController{
             @RequestBody ArrayList<ArchivoDTO> nuevosArchivos) {
         try {
             caseService.addFilesToCase(token, idCaso, nuevosArchivos);
-//          return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
-            return ResponseEntity.ok(true);
+         return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
+            // return ResponseEntity.ok(true);
 
         } catch (IllegalAccessException e) {
-//          return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
-            return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
+         return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
+            // return new ResponseEntity<>( HttpStatus.UNAUTHORIZED);
         
         } catch (/*IllegalArgumentException*/ Exception e) {
-//          return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
-            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
+         return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
+            // return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -108,7 +108,7 @@ public class DataStorageGateway implements IDataStorageGateway {
     public CasoDTO obtenerCaso(Long idCaso) {
         try {
             ResponseEntity<CasoDTO> response = restTemplate.exchange(
-                    URL_case + "/{idCaso}",
+                    URL_case + "/buscarCaso/{idCaso}",
                     HttpMethod.GET,
                     null,
                     CasoDTO.class,

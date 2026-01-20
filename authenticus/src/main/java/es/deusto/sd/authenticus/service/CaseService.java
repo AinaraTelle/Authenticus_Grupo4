@@ -180,9 +180,10 @@ public class CaseService {
     }
 
     public List<ResultadosDTO> mostrarResultados(Long idCaso){
-        List<ArchivoDTO> listArchivos = dataStorageGateway.obtenerArchivosCaso(idCaso);
+       
         List<ResultadosDTO> listResultados = new ArrayList<>();
         CasoDTO caso_archivos= dataStorageGateway.obtenerCaso(idCaso);
+        List<ArchivoDTO> listArchivos =caso_archivos.getArchivosDTO();
 
         //empezar bucle for de archivos
         ProccesSocketClient socketcliente = new ProccesSocketClient("127.0.0.1", 5000);

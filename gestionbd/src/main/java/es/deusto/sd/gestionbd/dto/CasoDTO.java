@@ -26,6 +26,13 @@ public class CasoDTO {
         this.archivosDTO = archivosDTO != null ? new ArrayList<>(archivosDTO) : new ArrayList<>();
     }
 
+    public CasoDTO(Long IDCaso, String titulo, 
+        LocalDateTime fechaCreacion){
+        this.IDCaso = IDCaso;
+        this.titulo= titulo;
+        this.fechaCreacion=fechaCreacion;
+    }
+
     public CasoDTO(String titulo, 
         LocalDateTime fechaCreacion,
         List<ArchivoDTO> archivosDTO){
