@@ -11,6 +11,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -212,13 +213,13 @@ public class DataStorageGateway implements IDataStorageGateway {
     @Override
     public boolean deleteUser(String email) {
         try {
-            ResponseEntity<Boolean> response = restTemplate.exchange(
+            ResponseEntity<String> response = restTemplate.exchange(
                 URL_user + "/remove/" + email,
                 HttpMethod.DELETE,
                 null,
-                Boolean.class
+                String.class
             );
-            return response.getBody() != null && response.getBody();
+            return response.getStatusCode() == HttpStatus.OK;
         } catch (Exception e) {
             System.out.println("Error al eliminar usuario en el gateway: " + e.getMessage());
             return false;
@@ -237,13 +238,8 @@ public class DataStorageGateway implements IDataStorageGateway {
             String.class
         );
 
-        if (response.getStatusCode() == HttpStatus.OK) {
-            String mensaje = response.getBody();
-            return mensaje != null && mensaje.contains("desloggeado correctamente");
-        } else {
-            System.out.println("Logout fallido: " + response.getStatusCode());
-            return false;
-        }
+        return response.getStatusCode() == HttpStatus.OK;
+        
     } catch (Exception e) {
         System.out.println("Error al hacer logout en el gateway: " + e.getMessage());
         return false;
