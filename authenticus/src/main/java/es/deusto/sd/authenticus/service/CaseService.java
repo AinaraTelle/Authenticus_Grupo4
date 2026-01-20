@@ -38,6 +38,7 @@ public class CaseService {
         
         CasoDTO casoDTO = dataStorageGateway.crearCaso(token, createcasoDTO);
         if(casoDTO!=null){
+            mostrarResultados(casoDTO.getIDCaso());
             return casoDTO;
         }else{
             return null;
@@ -184,8 +185,8 @@ public class CaseService {
         CasoDTO caso_archivos= dataStorageGateway.obtenerCaso(idCaso);
 
         //empezar bucle for de archivos
+        ProccesSocketClient socketcliente = new ProccesSocketClient("127.0.0.1", 5000);
         for (ArchivoDTO archivo : listArchivos) {
-            ProccesSocketClient socketcliente = new ProccesSocketClient("127.0.0.1", 5000);
             String resultado_string=socketcliente.enviarAnalisis(caso_archivos.getTipoAnalisis().name(), idCaso);
             int id_archivo_int=archivo.getIDArchivo().intValue();// Se nos pide un int en parametro resultados y tenemos long
             ResultadosDTO resultado= new ResultadosDTO(id_archivo_int,Double.parseDouble(resultado_string),caso_archivos.getTipoAnalisis());
