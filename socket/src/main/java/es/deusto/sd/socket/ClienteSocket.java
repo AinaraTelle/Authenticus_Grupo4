@@ -1,4 +1,4 @@
-package es.deusto.sd.authenticus.socket;
+package es.deusto.sd.socket;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

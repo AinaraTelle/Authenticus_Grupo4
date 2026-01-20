@@ -94,13 +94,18 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     @ApiResponse(responseCode = "404", description = "Usuario no eliminado")
     @PostMapping("/logout")
     public ResponseEntity<String> userLogout(@RequestBody LogoutRequestDTO logoutRequest){
-        String tokenE= logoutRequest.getToken();
+        try {
+            String tokenE= logoutRequest.getToken();
 
-        boolean logoutE = userService.logoutUser(tokenE);
+            boolean logoutE = userService.logoutUser(tokenE);
 
-        if(logoutE==true){
-            return new ResponseEntity<>("Usuario desloggeado correctamente", HttpStatus.OK);
-        } else {
+            if(logoutE==true){
+                return new ResponseEntity<>("Usuario desloggeado correctamente", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Token no válido", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
             return new ResponseEntity<>("Token no válido", HttpStatus.NOT_FOUND);
         }
     }

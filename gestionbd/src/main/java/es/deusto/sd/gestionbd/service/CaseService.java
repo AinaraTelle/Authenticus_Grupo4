@@ -62,7 +62,7 @@ public class CaseService {
         ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
 
         for(Archivo a1:caso.getArchivos()){
-            archivosDTO.add(new ArchivoDTO(a1.getId(),a1.getNombre(),a1.getRuta()));
+            archivosDTO.add(new ArchivoDTO(a1.getID(),a1.getNombre(),a1.getRuta()));
         }
         
         CasoDTO casoDTO =  new CasoDTO(caso.getIDCaso(),caso.getTitulo(), 
@@ -90,7 +90,7 @@ public class CaseService {
         .limit(limite)
         .map(caso -> {
             List<ArchivoDTO> archivos = caso.getArchivos().stream()
-                .map(a -> new ArchivoDTO(a.getId(), a.getNombre(), a.getRuta()))
+                .map(a -> new ArchivoDTO(a.getID(), a.getNombre(), a.getRuta()))
                 .toList();
 
             CasoDTO dto = new CasoDTO(
@@ -133,7 +133,7 @@ public class CaseService {
         for (Caso caso : filtrados) {
             ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
             for(Archivo a1:caso.getArchivos()){
-                archivosDTO.add(new ArchivoDTO(a1.getId(),
+                archivosDTO.add(new ArchivoDTO(a1.getID(),
                 a1.getNombre(),a1.getRuta()));
             }
 
@@ -207,30 +207,9 @@ public class CaseService {
         }
     }
 
-//     //Eliminar caso
+//     Eliminar caso
     @Transactional
     public boolean eliminarCaso(String token, Long idCaso) throws IllegalAccessException { 
-        /*if(token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-        Optional<UserToken> userToken = userTokenRepository.findByToken(token);
-        if (!userToken.isPresent()) {
-            throw new IllegalAccessException("Usuario no autenticado o token inválido.");
-        }
-
-        Optional<User> user = userRepository.findById(userToken.get().getId());
-
-        List<Caso> casosDelUsuario =user.get().getCasos();
-        
-        Optional<Caso> casoAEliminar = casoRepository.findById(idCaso);
-
-        if(casoAEliminar.isPresent()) {
-            casosDelUsuario.remove(casoAEliminar.get());
-            casoRepository.deleteById(casoAEliminar.get().getIDCaso());
-            return true;
-        } else {
-            return false;
-        }*/
         if(token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
         }
@@ -265,7 +244,7 @@ public class CaseService {
         casoDTO.setTipoAnalisisDTO(TipoAnalisisDTO.valueOf( caso.getTipoAnalisis().name()));
         
         for(Archivo a1: caso.getArchivos()){
-            casoDTO.getArchivosDTO().add(new ArchivoDTO(a1.getId(),a1.getNombre(),a1.getRuta()));
+            casoDTO.getArchivosDTO().add(new ArchivoDTO(a1.getID(),a1.getNombre(),a1.getRuta()));
         }
         return casoDTO;
     }

@@ -1,5 +1,7 @@
 package es.deusto.sd.gestionbd.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.*;
 
 
@@ -10,6 +12,7 @@ public class Archivo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("idArchivo")
     private Long IDArchivo;
 
     @Column(name = "nombre")
@@ -30,8 +33,8 @@ public class Archivo {
         this.nombre = nombre;
         this.ruta = ruta;
     }
-
-    public Long getId() {
+    @JsonProperty("idArchivo")
+    public Long getID() {
         return IDArchivo;
     }
 
@@ -53,8 +56,8 @@ public class Archivo {
         this.caso = caso;
     }
 
-    public void setIDArchivo(Long iDArchivo) {
-        IDArchivo = iDArchivo;
+    public void setIDArchivo(Long IDArchivo) {
+        this.IDArchivo = IDArchivo;
     }
     
 }

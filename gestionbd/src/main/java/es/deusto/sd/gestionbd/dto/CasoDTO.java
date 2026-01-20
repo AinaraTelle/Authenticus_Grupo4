@@ -47,11 +47,11 @@ public class CasoDTO {
     public String getTitulo() {
         return titulo;
     }
-    public TipoAnalisisDTO getTipoAnalisis() {
+    public TipoAnalisisDTO getTipoAnalisisDTO() {
         return tipoAnalisisDTO;
     }
-    public void setIDCaso(Long iDCaso) {
-        IDCaso = iDCaso;
+    public void setIDCaso(Long IDCaso) {
+        this.IDCaso = IDCaso;
     }
     public void setTitulo(String titulo) {
         this.titulo = titulo;

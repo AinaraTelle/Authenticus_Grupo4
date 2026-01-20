@@ -1,4 +1,4 @@
-package es.deusto.sd.authenticus.socket;
+package es.deusto.sd.socket;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import es.deusto.sd.authenticus.service.UserService;
+// import es.deusto.sd.authenticus.service.UserService;
 public class ServidorSocket  {
     
     private static final int puerto = 5000;
     private static final String DELIMITER = "#";
-    private UserService userService; //utilizamos este atributo para los mensajes de login
+    // private UserService userService; //utilizamos este atributo para los mensajes de login
 
     
    

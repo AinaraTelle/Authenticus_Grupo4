@@ -1,5 +1,7 @@
 package es.deusto.sd.gestionbd.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ArchivoDTO {
     private Long IDArchivo;
     private String nombre;
@@ -8,8 +10,8 @@ public class ArchivoDTO {
     public ArchivoDTO(){
     }
 
-    public ArchivoDTO(Long iDArchivo, String nombre, String ruta) {
-        IDArchivo = iDArchivo;
+    public ArchivoDTO(Long IDArchivo, String nombre, String ruta) {
+        this.IDArchivo = IDArchivo;
         this.nombre = nombre;
         this.ruta = ruta;
     }
@@ -17,11 +19,12 @@ public class ArchivoDTO {
         this.nombre = nombre;
         this.ruta = ruta;
     }
+    @JsonProperty("idArchivo")
     public Long getIDArchivo() {
         return IDArchivo;
     }
-    public void setIDArchivo(Long iDArchivo) {
-        IDArchivo = iDArchivo;
+    public void setIDArchivo(Long IDArchivo) {
+        this.IDArchivo = IDArchivo;
     }
     public String getNombre() {
         return nombre;
