@@ -53,24 +53,24 @@ public class CaseController{
         }
 
 
-//     //* GET: Buscar caso por limite*/
-//     @Operation(
-//         summary = "Buscar casos asignados a un usuario. Por defecto se buscarán 5 casos, aunque, este valor se puede cambiar proporcinando este parámetro: en key la palabra 'limit', y, en su valor la cantidad de archivos que queramos observar"
-//     )
-//     @ApiResponse(responseCode = "200", description = "OK")
-//     @GetMapping("/mis-casos")
-//     public ResponseEntity<List<CasoDTO>> obtenerMisCasos(
-//         @RequestHeader("Authorization") String token,
-//         @RequestParam(name = "limite",defaultValue = "5") int limite) {
-//         try {
-//             List<CasoDTO> casos =caseService.obtenerCasosDeUsuario(token).stream().limit(limite).toList();
+    //* GET: Buscar caso por limite*/
+    @Operation(
+        summary = "Buscar casos asignados a un usuario. Por defecto se buscarán 5 casos, aunque, este valor se puede cambiar proporcinando este parámetro: en key la palabra 'limit', y, en su valor la cantidad de archivos que queramos observar"
+    )
+    @ApiResponse(responseCode = "200", description = "OK")
+    @GetMapping("/mis-casos")
+    public ResponseEntity<List<CasoDTO>> obtenerMisCasos(
+        @RequestHeader("Authorization") String token,
+        @RequestParam(name = "limite",defaultValue = "5") int limite) {
+        try {
+            List<CasoDTO> casos =caseService.obtenerCasosDeUsuario(token,limite);
             
-//             return new ResponseEntity<>(casos, HttpStatus.OK);
-//         } catch (RuntimeException e) {
-//             // Por ejemplo, token inválido
-//             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//         }
-//     }
+            return new ResponseEntity<>(casos, HttpStatus.OK);
+        } catch (RuntimeException e) {
+          // Por ejemplo, token inválido
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
 
 
 /* GET: Buscar caso por fechas*/

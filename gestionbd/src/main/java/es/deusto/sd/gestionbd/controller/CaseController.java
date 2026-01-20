@@ -50,7 +50,7 @@ public class CaseController{
         @RequestHeader("Authorization") String token,
         @RequestParam(name = "limite",defaultValue = "5") int limite) {
         try {
-            List<CasoDTO> casos =caseService.obtenerCasosDeUsuario(token).stream().limit(limite).toList();
+            List<CasoDTO> casos =caseService.obtenerCasosDeUsuario(token, limite);
             
             return new ResponseEntity<>(casos, HttpStatus.OK);
         } catch (RuntimeException e) {

@@ -170,8 +170,8 @@ public class UserService {
         
     // }
     
-    // @Transactional
-    // public boolean removeUsuarioYCasos(String userEmailDTO) {
+    public boolean removeUsuarioYCasos(String userEmailDTO) {
+        return dataStorageGateway.deleteUser(userEmailDTO);
 
     //     Optional<User> usuarioAEliminar = userRepository.findByEmail(userEmailDTO);
 
@@ -190,10 +190,10 @@ public class UserService {
     //         socketCliente.sendMessage("REMOVE");
     //     }
     //     return true;
-    // }
+    }
 
-    // @Transactional
-    // public boolean logoutUser(String tokenE){
+    public boolean logoutUser(String tokenE){
+        return dataStorageGateway.logoutUser(tokenE);
 
     //     Optional<UserToken> usuarioE= userTokenRepository.findByToken(tokenE);
 
@@ -209,7 +209,7 @@ public class UserService {
     //     }
 
     //     return false;
-    // }
+    }
 
 
 }

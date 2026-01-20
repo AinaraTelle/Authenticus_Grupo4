@@ -20,6 +20,9 @@ public interface IDataStorageGateway {
     public CasoDTO obtenerCaso(Long idCaso);
     List<UserDTO> getAllUsers();
     boolean eliminarCaso(String token, Long idCaso);
+    public List<CasoDTO> obtenerCasosDeUsuario(String token, int limite);
     List<CasoDTO> obtenerCasosEntreFechas(String token, LocalDateTime inicio, LocalDateTime fin);
     void addFilesToCase(String token, Long idCaso, List<ArchivoDTO> nuevosArchivos);
+    public boolean deleteUser(String email);
+    public boolean logoutUser(String token);
 }

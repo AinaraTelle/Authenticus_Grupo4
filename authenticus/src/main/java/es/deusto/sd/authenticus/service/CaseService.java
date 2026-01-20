@@ -45,11 +45,12 @@ public class CaseService {
         }
     }
 
-//     @Transactional
-//     public ArrayList<CasoDTO> obtenerCasosDeUsuario(String token) {
-//         if(token.startsWith("Bearer ")) {
-//             token = token.substring(7);
-//         }
+    @Transactional
+    public List<CasoDTO> obtenerCasosDeUsuario(String token, int limite) {
+        if(token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        return dataStorageGateway.obtenerCasosDeUsuario(token, limite);
 //         Optional<UserToken> userToken = userTokenRepository.findByToken(token);
     
 //         if (!userToken.isPresent()) {
@@ -74,7 +75,7 @@ public class CaseService {
 //         }
     
 //         return arrCasosDTO;
-//     }
+    }
 
     @Transactional
         public List<CasoDTO> obtenerCasosDeUsuarioEntreFechas(String token, LocalDateTime fechaInicio, LocalDateTime fechaFin) {

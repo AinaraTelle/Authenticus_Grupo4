@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +20,7 @@ import es.deusto.sd.authenticus.dto.ArchivoDTO;
 import es.deusto.sd.authenticus.dto.CasoDTO;
 import es.deusto.sd.authenticus.dto.CreateCasoDTO;
 import es.deusto.sd.authenticus.dto.LoginRequestDTO;
+import es.deusto.sd.authenticus.dto.LogoutRequestDTO;
 import es.deusto.sd.authenticus.dto.RegisterRequestDTO;
 import es.deusto.sd.authenticus.dto.UserDTO;
 import es.deusto.sd.authenticus.dto.UserTokenDTO;
@@ -144,6 +146,25 @@ public class DataStorageGateway implements IDataStorageGateway {
     }
 
     @Override
+    public List<CasoDTO> obtenerCasosDeUsuario(String token, int limite) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", token);
+
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<CasoDTO[]> response = restTemplate.exchange(
+            URL_case + "/mis-casos?limite=" + limite,
+            HttpMethod.GET,
+            entity,
+            CasoDTO[].class
+        );
+
+        return Arrays.asList(response.getBody());
+    }
+
+
+    @Override
     public List<CasoDTO> obtenerCasosEntreFechas(String token, LocalDateTime inicio, LocalDateTime fin) {
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -177,10 +198,8 @@ public class DataStorageGateway implements IDataStorageGateway {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", token);
             
-            // El cuerpo de la petición contiene la lista de archivos
             HttpEntity<List<ArchivoDTO>> entidad = new HttpEntity<>(nuevosArchivos, headers);
 
-            // Construimos la URL con el parámetro idCaso (query param como en tu controller externo)
             String url = UriComponentsBuilder.fromHttpUrl(URL_case + "/add-files")
                     .queryParam("idCaso", idCaso)
                     .toUriString();
@@ -189,6 +208,46 @@ public class DataStorageGateway implements IDataStorageGateway {
         } catch (Exception e) {
             System.out.println("Error al añadir archivos externamente: " + e.getMessage());
         }
+    }
+    @Override
+    public boolean deleteUser(String email) {
+        try {
+            ResponseEntity<Boolean> response = restTemplate.exchange(
+                URL_user + "/remove/" + email,
+                HttpMethod.DELETE,
+                null,
+                Boolean.class
+            );
+            return response.getBody() != null && response.getBody();
+        } catch (Exception e) {
+            System.out.println("Error al eliminar usuario en el gateway: " + e.getMessage());
+            return false;
+        }
+    }
+    @Override
+    public boolean logoutUser(String token) {
+        try {
+        LogoutRequestDTO body = new LogoutRequestDTO(token);
+        HttpEntity<LogoutRequestDTO> entity = new HttpEntity<>(body);
+
+        ResponseEntity<String> response = restTemplate.exchange(
+            URL_user + "/logout",
+            HttpMethod.POST,
+            entity,
+            String.class
+        );
+
+        if (response.getStatusCode() == HttpStatus.OK) {
+            String mensaje = response.getBody();
+            return mensaje != null && mensaje.contains("desloggeado correctamente");
+        } else {
+            System.out.println("Logout fallido: " + response.getStatusCode());
+            return false;
+        }
+    } catch (Exception e) {
+        System.out.println("Error al hacer logout en el gateway: " + e.getMessage());
+        return false;
+    }
     }
 
 }
