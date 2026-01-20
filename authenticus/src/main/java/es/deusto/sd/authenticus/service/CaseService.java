@@ -38,6 +38,12 @@ public class CaseService {
         
         CasoDTO casoDTO = dataStorageGateway.crearCaso(token, createcasoDTO);
         if(casoDTO!=null){
+            if (createcasoDTO.getCreateArchivosDTO() != null) {
+                List<ArchivoDTO> archivos = createcasoDTO.getCreateArchivosDTO().stream()
+                    .map(a -> new ArchivoDTO(null, a.getNombre(), a.getRuta()))
+                    .toList();
+                casoDTO.setArchivosDTO(new ArrayList<>(archivos));
+            }
             mostrarResultados(casoDTO.getIDCaso());
             return casoDTO;
         }else{

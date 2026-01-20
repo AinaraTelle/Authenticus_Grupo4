@@ -16,9 +16,12 @@ public class ProccesSocketClient {
 
     public String enviarAnalisis(String tipo, Long idArchivo) {
         // Abrimos el socket, enviamos, recibimos y cerramos (try-with-resources)
+        System.out.println(" [CLIENTE] Intentando conectar a " + ip + ":" + port);
         try (Socket socket = new Socket(ip, port);
              DataOutputStream out = new DataOutputStream(socket.getOutputStream());
              DataInputStream in = new DataInputStream(socket.getInputStream())) {
+
+            System.out.println(" [CLIENTE] Conexión establecida");
             
             String mensaje = tipo + "#" + idArchivo;
             out.writeUTF(mensaje);
