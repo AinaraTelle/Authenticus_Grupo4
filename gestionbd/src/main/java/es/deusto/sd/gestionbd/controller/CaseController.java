@@ -77,17 +77,23 @@ public class CaseController{
     @GetMapping("/mis-casos-fechas")
     public ResponseEntity<List<CasoDTO>> obtenerMisCasos(
         @RequestHeader("Authorization") String token,
+    /***  
         @RequestParam("inicio") LocalDateTime fechaInicio,
         @RequestParam("fin") LocalDateTime fechaFin) {
+    ***/
+        @RequestParam("inicio") @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
+        @RequestParam("fin") @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin) {
+        
         try {
-           List<CasoDTO>casosporfecha=caseService.obtenerCasosDeUsuarioEntreFechas(token, fechaInicio, fechaFin);
-            return new ResponseEntity<>(casosporfecha, HttpStatus.OK);
+            List<CasoDTO> casosPorfecha = caseService.obtenerCasosDeUsuarioEntreFechas(token, fechaInicio, fechaFin);
+            return new ResponseEntity<>(casosPorfecha, HttpStatus.OK);
             
-        } catch (RuntimeException e) {
+        } catch (/*RuntimeException*/ IllegalAccessException e) {
             // Por ejemplo, token inválido
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (IllegalAccessException e) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (/*IllegalAccessException*/ Exception e) {
+            //return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -100,30 +106,40 @@ public class CaseController{
             @RequestBody ArrayList<ArchivoDTO> nuevosArchivos) {
         try {
             caseService.addFilesToCase(token, idCaso, nuevosArchivos);
-            return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
+//          return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
+            return ResponseEntity.ok(true);
 
         } catch (IllegalAccessException e) {
-            return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
-
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
+//          return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
+        
+        } catch (/*IllegalArgumentException*/ Exception e) {
+//          return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     //* DELETE: Eliminar casos */
     @DeleteMapping("/eliminar/{idCaso}")
-    public ResponseEntity<String> eliminarCaso(@RequestHeader("Authorization") String token,
-    @PathVariable("idCaso") Long idCaso) {
+    public ResponseEntity<Boolean> eliminarCaso(
+        @RequestHeader("Authorization") String token,
+        @PathVariable("idCaso") Long idCaso) {
         try{
             boolean exito = caseService.eliminarCaso(token, idCaso);
-       
-            if(exito){
+            /*if(exito){
                 return new ResponseEntity<>("Caso eliminado correctamente", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
-            }
-        }catch (IllegalAccessException e) {
+            }*/
+        /* }catch (IllegalAccessException e) {
             return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
+
+        }*/
+            return ResponseEntity.ok(exito);
+        } catch (IllegalAccessException e) {
+            return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

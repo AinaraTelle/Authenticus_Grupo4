@@ -142,7 +142,7 @@ public class CaseService {
     }
 
 
-//     //  ANADIR ARCHIVOS
+/*//  ANADIR ARCHIVOS
     @Transactional
     public void addFilesToCase(String token, Long idCaso, ArrayList<ArchivoDTO> nuevosArchivos)
         throws IllegalAccessException, IllegalArgumentException {
@@ -169,11 +169,44 @@ public class CaseService {
             casoEncontrado.get().getArchivos().add(arch1);
         }
     }
+*/
+
+    @Transactional
+    public void addFilesToCase(String token, Long idCaso, ArrayList<ArchivoDTO> nuevosArchivos)
+        throws IllegalAccessException, IllegalArgumentException {
+
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+
+        Optional<UserToken> userToken = userTokenRepository.findByToken(token);
+        if (!userToken.isPresent()) {
+            throw new IllegalAccessException("Usuario no autenticado o token inválido.");
+        }
+
+        User user = userRepository.findById(userToken.get().getId()).get();
+
+        Optional<Caso> casoEncontrado = casoRepository.findById(idCaso);
+        if (!casoEncontrado.isPresent()) {
+            throw new IllegalArgumentException("Caso no encontrado.");
+        }
+
+        if (!casoEncontrado.get().getUsuario().equals(user)) {
+            throw new IllegalAccessException("No tienes permiso para añadir archivos a este caso.");
+        }
+
+        for (ArchivoDTO archDTO1 : nuevosArchivos) {
+            Archivo arch1 = new Archivo(archDTO1.getNombre(), archDTO1.getRuta());
+            arch1.setCaso(casoEncontrado.get());
+            archivoRepository.save(arch1);
+            casoEncontrado.get().getArchivos().add(arch1);
+        }
+    }
 
 //     //Eliminar caso
     @Transactional
     public boolean eliminarCaso(String token, Long idCaso) throws IllegalAccessException { 
-        if(token.startsWith("Bearer ")) {
+        /*if(token.startsWith("Bearer ")) {
             token = token.substring(7);
         }
         Optional<UserToken> userToken = userTokenRepository.findByToken(token);
@@ -193,7 +226,32 @@ public class CaseService {
             return true;
         } else {
             return false;
+        }*/
+        if(token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
         }
+        
+        Optional<UserToken> userToken = userTokenRepository.findByToken(token);
+        if (!userToken.isPresent()) {
+            throw new IllegalAccessException("Usuario no autenticado o token inválido.");
+        }
+
+        User user = userRepository.findById(userToken.get().getId()).get();
+        
+        Optional<Caso> casoAEliminar = casoRepository.findById(idCaso);
+
+        if(casoAEliminar.isPresent()) {
+            
+            if (!casoAEliminar.get().getUsuario().equals(user)) {
+                throw new IllegalAccessException("No tienes permiso para eliminar este caso.");
+            }
+
+            user.getCasos().remove(casoAEliminar.get());
+            casoRepository.delete(casoAEliminar.get());
+            return true;
+        } 
+        
+        return false;
     }
 
     @Transactional

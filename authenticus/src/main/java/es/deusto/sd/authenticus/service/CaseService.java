@@ -1,4 +1,5 @@
 package es.deusto.sd.authenticus.service;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +75,11 @@ public class CaseService {
 //         return arrCasosDTO;
 //     }
 
-//     @Transactional
+    @Transactional
+        public List<CasoDTO> obtenerCasosDeUsuarioEntreFechas(String token, LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+        // Llamamos al gateway para pedir los datos al servidor 8081
+        return dataStorageGateway.obtenerCasosEntreFechas(token, fechaInicio, fechaFin);
+    }
 //     public ArrayList<CasoDTO> obtenerCasosDeUsuarioEntreFechas(String token, LocalDateTime FechaInicio, LocalDateTime FechaFin) throws IllegalAccessException{
 //         if(token.startsWith("Bearer ")) {
 //             token = token.substring(7);
@@ -112,10 +117,10 @@ public class CaseService {
 //     }
 
 
-// //     //  ANADIR ARCHIVOS
-//     @Transactional
-//     public void addFilesToCase(String token, Long idCaso, ArrayList<ArchivoDTO> nuevosArchivos)
-//         throws IllegalAccessException, IllegalArgumentException {
+//  ANADIR ARCHIVOS
+    @Transactional
+    public void addFilesToCase(String token, Long idCaso, ArrayList<ArchivoDTO> nuevosArchivos)
+        throws IllegalAccessException, IllegalArgumentException {
 
 //         if (token.startsWith("Bearer ")) {
 //             token = token.substring(7);
@@ -138,11 +143,12 @@ public class CaseService {
 //             archivoRepository.save(arch1);
 //             casoEncontrado.get().getArchivos().add(arch1);
 //         }
-//     }
+            dataStorageGateway.addFilesToCase(token, idCaso, nuevosArchivos);
+    }
 
 // //     //Eliminar caso
-//     @Transactional
-//     public boolean eliminarCaso(String token, Long idCaso) throws IllegalAccessException { 
+    @Transactional
+    public boolean eliminarCaso(String token, Long idCaso) throws IllegalAccessException { 
 //         if(token.startsWith("Bearer ")) {
 //             token = token.substring(7);
 //         }
@@ -164,7 +170,13 @@ public class CaseService {
 //         } else {
 //             return false;
 //         }
-//     }
+
+        boolean exito = dataStorageGateway.eliminarCaso(token, idCaso);
+        if (!exito) {
+            return false;
+        }
+        return true;
+    }
 
     public List<ResultadosDTO> mostrarResultados(Long idCaso){
         List<ArchivoDTO> listArchivos = dataStorageGateway.obtenerArchivosCaso(idCaso);

@@ -1,5 +1,6 @@
 package es.deusto.sd.authenticus.external;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import es.deusto.sd.authenticus.dto.ArchivoDTO;
@@ -17,4 +18,8 @@ public interface IDataStorageGateway {
     public CasoDTO crearCaso(String token, CreateCasoDTO createcasoDTO);
     public  List<ArchivoDTO> obtenerArchivosCaso(Long idCaso);
     public CasoDTO obtenerCaso(Long idCaso);
+    List<UserDTO> getAllUsers();
+    boolean eliminarCaso(String token, Long idCaso);
+    List<CasoDTO> obtenerCasosEntreFechas(String token, LocalDateTime inicio, LocalDateTime fin);
+    void addFilesToCase(String token, Long idCaso, List<ArchivoDTO> nuevosArchivos);
 }

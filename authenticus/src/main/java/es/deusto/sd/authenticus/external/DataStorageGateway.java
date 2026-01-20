@@ -1,6 +1,8 @@
 
 package es.deusto.sd.authenticus.external;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import es.deusto.sd.authenticus.dto.ArchivoDTO;
 import es.deusto.sd.authenticus.dto.CasoDTO;
@@ -46,6 +49,20 @@ public class DataStorageGateway implements IDataStorageGateway {
             return null;
         }
     };
+
+    @Override
+    public List<UserDTO> getAllUsers() {
+        try {
+            ResponseEntity<UserDTO[]> response = restTemplate.getForEntity(URL_user, UserDTO[].class);
+            if (response.getBody() != null) {
+                return Arrays.asList(response.getBody());
+            }
+            return null;
+        } catch (Exception e) {
+            System.out.println("Error al conectar con GestionBD para obtener usuarios: " + e.getMessage());
+            return null;
+        }
+    }
 
     @Override
     public CasoDTO crearCaso(String token, CreateCasoDTO createcasoDTO){
@@ -102,8 +119,80 @@ public class DataStorageGateway implements IDataStorageGateway {
             System.out.println("Error al obtener el caso con id " + idCaso + ": " + e.getMessage());
             return null;
         }
+    }
+
+    @Override
+    public boolean eliminarCaso(String token, Long idCaso) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token);
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            // Llamamos a GestionBD (puerto 8081)
+            ResponseEntity<Boolean> response = restTemplate.exchange(
+                URL_case + "/eliminar/" + idCaso,
+                HttpMethod.DELETE,
+                entity,
+                Boolean.class
+            );
+
+            return response.getBody() != null && response.getBody();
+        } catch (Exception e) {
+            System.out.println("Error al eliminar caso en el gateway: " + e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
+    public List<CasoDTO> obtenerCasosEntreFechas(String token, LocalDateTime inicio, LocalDateTime fin) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token);
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            // Construimos la URL con los parámetros: ?inicio=...&fin=...
+            String urlTemplate = UriComponentsBuilder.fromHttpUrl(URL_case + "/mis-casos-fechas")
+                    .queryParam("inicio", inicio.toString())
+                    .queryParam("fin", fin.toString())
+                    .encode()
+                    .toUriString();
+
+            ResponseEntity<CasoDTO[]> response = restTemplate.exchange(
+                urlTemplate,
+                HttpMethod.GET,
+                entity,
+                CasoDTO[].class
+            );
+
+            return response.getBody() != null ? Arrays.asList(response.getBody()) : new ArrayList<>();
+        } catch (Exception e) {
+            System.out.println("Error al buscar casos por fecha: " + e.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public void addFilesToCase(String token, Long idCaso, List<ArchivoDTO> nuevosArchivos) {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token);
+            
+            // El cuerpo de la petición contiene la lista de archivos
+            HttpEntity<List<ArchivoDTO>> entidad = new HttpEntity<>(nuevosArchivos, headers);
+
+            // Construimos la URL con el parámetro idCaso (query param como en tu controller externo)
+            String url = UriComponentsBuilder.fromHttpUrl(URL_case + "/add-files")
+                    .queryParam("idCaso", idCaso)
+                    .toUriString();
+
+            restTemplate.exchange(url, HttpMethod.PUT, entidad, String.class);
+        } catch (Exception e) {
+            System.out.println("Error al añadir archivos externamente: " + e.getMessage());
+        }
+    }
+
 }
-}
+
 
 
 

@@ -106,15 +106,22 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     // }
 
     // //* GET: Usuarios registrados */
-    // @Operation(
-    //     summary = "Devuelve todos los usuarios registrados",
-    //     description = "Te da la info de todos lo usuaios"
-    // )
-    // @ApiResponse(responseCode = "200", description = "Successful operation")
-    // @GetMapping
-    // public ResponseEntity <List<UserDTO>> getAllUsers(){
-    //     List<UserDTO> usuarios =userService.getAllUsersRegistrados();
-    //     return new ResponseEntity<>(usuarios,HttpStatus.OK);
-    // }
+    @Operation(
+         summary = "Devuelve todos los usuarios registrados",
+         description = "Obtiene la información de todos los usuarios desde el almacenamiento externo"
+     )
+    @ApiResponse(responseCode = "200", description = "Successful operation")
+    @GetMapping
+    public ResponseEntity <List<UserDTO>> getAllUsers(){     
+        List<UserDTO> usuarios =userService.getAllUsersRegistrados();
+
+        if (usuarios != null) {
+            return new ResponseEntity<>(usuarios, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    //  return new ResponseEntity<>(usuarios,HttpStatus.OK);
+    }
 
 }

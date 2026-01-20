@@ -135,7 +135,7 @@ public class UserService {
     //     User.getEmail(), User.getPassword(),User.getTel());
     // }
 
-    // public List<UserDTO> getAllUsersRegistrados(){
+    public List<UserDTO> getAllUsersRegistrados(){
     //     List<User> listUsers = userRepository.findAll();
         
     //     List<UserDTO> listUsersDTO = new ArrayList<UserDTO>() ;
@@ -144,7 +144,8 @@ public class UserService {
     //         listUsersDTO.add(convertToDTO(User1));
     //     }
     //     return listUsersDTO;
-    // }
+        return dataStorageGateway.getAllUsers();
+    }
 
     // @Transactional
     // public UserToken generacionAsignacionToken(User usuarioLogIn){
