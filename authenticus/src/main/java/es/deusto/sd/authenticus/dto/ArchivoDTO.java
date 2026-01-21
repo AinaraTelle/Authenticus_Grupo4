@@ -3,16 +3,15 @@
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ArchivoDTO {
-    @JsonProperty("idArchivo")
-    private Long IDArchivo;
+    private Long idArchivo;
     private String nombre;
     private String ruta;
 
     public ArchivoDTO(){
     }
 
-    public ArchivoDTO(Long IDArchivo, String nombre, String ruta) {
-        this.IDArchivo = IDArchivo;
+    public ArchivoDTO(Long idArchivo, String nombre, String ruta) {
+        this.idArchivo = idArchivo;
         this.nombre = nombre;
         this.ruta = ruta;
     }
@@ -20,23 +19,32 @@ public class ArchivoDTO {
         this.nombre = nombre;
         this.ruta = ruta;
     }
+
     @JsonProperty("idArchivo")
-    public Long getIDArchivo() {
-        return IDArchivo;
+    public Long getIdArchivo() {
+        return idArchivo;
     }
-    public void setIDArchivo(Long IDArchivo) {
-        this.IDArchivo = IDArchivo;
+
+    @JsonProperty("idArchivo")
+    public void setIdArchivo(Long idArchivo) {
+        this.idArchivo = idArchivo;
     }
+
     public String getNombre() {
         return nombre;
     }
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
     public String getRuta() {
         return ruta;
     }
+
     public void setRuta(String ruta) {
         this.ruta = ruta;
-    }   
+    }
+
+    
 }

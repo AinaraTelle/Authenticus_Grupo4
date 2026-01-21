@@ -5,6 +5,8 @@ public class LogoutRequestDTO {
     @Schema(description  = "El token es necesario para el logout")
     private String token;
     
+    public LogoutRequestDTO() {
+    }
     public LogoutRequestDTO(String token) {
         this.token = token;
     }

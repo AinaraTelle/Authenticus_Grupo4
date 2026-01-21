@@ -10,5 +10,6 @@ import java.util.List;
 @Repository
 public interface CasoRepository extends JpaRepository<Caso, Long> {
     List<Caso> findByUsuario(User usuario);
+    void deleteById(Long idCaso);
 
 }

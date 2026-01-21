@@ -8,10 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class CasoDTO {
     
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long IDCaso;
     private String titulo;
-    // @JsonProperty("tipoAnalisisDTO")
     private TipoAnalisisDTO tipoAnalisisDTO;
     private LocalDateTime fechaCreacion;
     private ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();

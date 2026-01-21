@@ -13,7 +13,7 @@ public class Archivo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty("idArchivo")
-    private Long IDArchivo;
+    private Long idArchivo;
 
     @Column(name = "nombre")
     private String nombre;
@@ -33,31 +33,38 @@ public class Archivo {
         this.nombre = nombre;
         this.ruta = ruta;
     }
-    @JsonProperty("idArchivo")
-    public Long getID() {
-        return IDArchivo;
+
+    public Long getIdArchivo() {
+        return idArchivo;
     }
 
-    public String getNombre() { 
-        return nombre; 
-    }
-    public void setNombre(String nombre) { 
-        this.nombre = nombre; 
+    public void setIdArchivo(Long idArchivo) {
+        this.idArchivo = idArchivo;
     }
 
-    public String getRuta() { 
-        return ruta; 
-    }
-    public void setRuta(String ruta) { 
-        this.ruta = ruta; 
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setCaso(Caso caso){
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getRuta() {
+        return ruta;
+    }
+
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
+    }
+
+    public Caso getCaso() {
+        return caso;
+    }
+
+    public void setCaso(Caso caso) {
         this.caso = caso;
     }
 
-    public void setIDArchivo(Long IDArchivo) {
-        this.IDArchivo = IDArchivo;
-    }
     
 }

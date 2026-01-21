@@ -111,12 +111,11 @@ public class DataStorageGateway implements IDataStorageGateway {
     public CasoDTO obtenerCaso(Long idCaso) {
         try {
             ResponseEntity<CasoDTO> response = restTemplate.exchange(
-                    URL_case + "/buscarCaso/{idCaso}",
-                    HttpMethod.GET,
-                    null,
-                    CasoDTO.class,
-                    idCaso
-            );
+                URL_case + "/buscarCaso/{idCaso}",
+                HttpMethod.GET,
+                null,
+                CasoDTO.class,
+                idCaso);
             return response.getBody();
         } catch (Exception e) {
             System.out.println("Error al obtener el caso con id " + idCaso + ": " + e.getMessage());

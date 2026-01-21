@@ -62,7 +62,7 @@ public class CaseService {
         ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
 
         for(Archivo a1:caso.getArchivos()){
-            archivosDTO.add(new ArchivoDTO(a1.getID(),a1.getNombre(),a1.getRuta()));
+            archivosDTO.add(new ArchivoDTO(a1.getIdArchivo(),a1.getNombre(),a1.getRuta()));
         }
         
         CasoDTO casoDTO =  new CasoDTO(caso.getIDCaso(),caso.getTitulo(), 
@@ -90,7 +90,7 @@ public class CaseService {
         .limit(limite)
         .map(caso -> {
             List<ArchivoDTO> archivos = caso.getArchivos().stream()
-                .map(a -> new ArchivoDTO(a.getID(), a.getNombre(), a.getRuta()))
+                .map(a -> new ArchivoDTO(a.getIdArchivo(), a.getNombre(), a.getRuta()))
                 .toList();
 
             CasoDTO dto = new CasoDTO(
@@ -133,7 +133,7 @@ public class CaseService {
         for (Caso caso : filtrados) {
             ArrayList<ArchivoDTO> archivosDTO = new ArrayList<>();
             for(Archivo a1:caso.getArchivos()){
-                archivosDTO.add(new ArchivoDTO(a1.getID(),
+                archivosDTO.add(new ArchivoDTO(a1.getIdArchivo(),
                 a1.getNombre(),a1.getRuta()));
             }
 
@@ -229,7 +229,11 @@ public class CaseService {
                 throw new IllegalAccessException("No tienes permiso para eliminar este caso.");
             }
 
+            casoAEliminar.get().getArchivos().clear(); 
+            casoRepository.saveAndFlush(casoAEliminar.get()); // Sincroniza la "limpieza"
+
             user.getCasos().remove(casoAEliminar.get());
+            // casoRepository.deleteById(casoAEliminar.get().getIDCaso());
             casoRepository.delete(casoAEliminar.get());
             return true;
         } 
@@ -239,14 +243,19 @@ public class CaseService {
 
     @Transactional
     public CasoDTO obtenerCaso(Long idCaso){
-        Caso caso= casoRepository.findById(idCaso).get();
-        CasoDTO casoDTO=new CasoDTO(caso.getIDCaso(),caso.getTitulo(), caso.getFechaCreacion());
-        casoDTO.setTipoAnalisisDTO(TipoAnalisisDTO.valueOf( caso.getTipoAnalisis().name()));
-        
-        for(Archivo a1: caso.getArchivos()){
-            casoDTO.getArchivosDTO().add(new ArchivoDTO(a1.getID(),a1.getNombre(),a1.getRuta()));
+        Optional<Caso> casoOp= casoRepository.findById(idCaso);
+        if(casoOp.isPresent()){
+            Caso caso=casoOp.get();
+            CasoDTO casoDTO=new CasoDTO(caso.getIDCaso(),caso.getTitulo(), caso.getFechaCreacion());
+            casoDTO.setTipoAnalisisDTO(TipoAnalisisDTO.valueOf( caso.getTipoAnalisis().name()));
+            
+            for(Archivo a1: caso.getArchivos()){
+                casoDTO.getArchivosDTO().add(new ArchivoDTO(a1.getIdArchivo(),a1.getNombre(),a1.getRuta()));
+            }
+            return casoDTO;
+        }else{
+            return null;
         }
-        return casoDTO;
     }
 
 //     public ResultadosDTO mostrarResultados(int idUsuario, int idCaso){

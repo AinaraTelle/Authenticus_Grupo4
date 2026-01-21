@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Random;
 
 import org.springframework.stereotype.Component;
 
@@ -49,7 +50,9 @@ public class ProccesServerSocket {
             Thread.sleep(tiempo);
 
             // Resultado aleatorio
-            double resultado = Math.random();
+            double[] opciones ={0,1};
+            Random random = new Random();
+            double resultado = opciones[random.nextInt(opciones.length)];
             out.writeUTF(String.valueOf(resultado));
 
             System.out.println("Resultado enviado: " + resultado);

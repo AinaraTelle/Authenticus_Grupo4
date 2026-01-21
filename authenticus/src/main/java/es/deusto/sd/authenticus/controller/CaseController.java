@@ -83,16 +83,6 @@ public class CaseController{
         @RequestHeader("Authorization") String token,
         @RequestParam("inicio") LocalDateTime fechaInicio,
         @RequestParam("fin") LocalDateTime fechaFin) {
-//         try {
-//            List<CasoDTO>casosporfecha=caseService.obtenerCasosDeUsuarioEntreFechas(token, fechaInicio, fechaFin);
-//             return new ResponseEntity<>(casosporfecha, HttpStatus.OK);
-            
-//         } catch (RuntimeException e) {
-//             // Por ejemplo, token inválido
-//             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//         } catch (IllegalAccessException e) {
-//             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//         }
         List<CasoDTO> casos = caseService.obtenerCasosDeUsuarioEntreFechas(token, fechaInicio, fechaFin);
         return new ResponseEntity<>(casos, HttpStatus.OK);
     }
@@ -100,11 +90,7 @@ public class CaseController{
     
 /* PUT: Añadir archivos */
     @Operation(summary = "Anyade archivos adicionales a un caso")
-//     summary = "Añade archivos adicionales a un caso del usuario autenticado"
-//     )
     @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
-//     @ApiResponse(responseCode = "401", description = "Token inválido o no autorizado")
-//     @ApiResponse(responseCode = "404", description = "Caso no encontrado")
     @PutMapping("/add-files")
     public ResponseEntity<String> addFilesToCase(
             @RequestHeader("Authorization") String token,
@@ -116,12 +102,6 @@ public class CaseController{
         } catch(Exception e){
             return new ResponseEntity<>("Error al añadir archivos", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-//         } catch (IllegalAccessException e) {
-//             return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
-
-//         } catch (IllegalArgumentException e) {
-//             return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
-//         }
     }
 
 /* DELETE: Eliminar casos */
@@ -149,12 +129,12 @@ public class CaseController{
     summary = "Muestra los resultados de un caso"
     )
     @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
-    @GetMapping("/resultados")
+    @GetMapping("/resultados/{idCaso}")
     public ResponseEntity<List<ResultadosDTO>> mostrarResultados(
-        @RequestParam("idCaso") Long idCaso) {
+        @PathVariable("idCaso") Long idCaso) {
         try {
-            List<ResultadosDTO> resul = caseService.mostrarResultados(idCaso);
-            return new ResponseEntity< List<ResultadosDTO> >(resul, HttpStatus.OK);
+            List<ResultadosDTO> listResults = caseService.mostrarResultados(idCaso);
+            return new ResponseEntity< List<ResultadosDTO> >(listResults, HttpStatus.OK);
         
         } catch (RuntimeException e) {
             // Por ejemplo, token inválido

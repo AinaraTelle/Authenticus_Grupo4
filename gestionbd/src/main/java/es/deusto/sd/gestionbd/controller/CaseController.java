@@ -69,6 +69,7 @@ public class CaseController{
             
         } catch (Exception e) {
             // Por ejemplo, token inválido
+            e.printStackTrace();
             return null;
         }
     }
@@ -77,10 +78,6 @@ public class CaseController{
     @GetMapping("/mis-casos-fechas")
     public ResponseEntity<List<CasoDTO>> obtenerMisCasos(
         @RequestHeader("Authorization") String token,
-    /***  
-        @RequestParam("inicio") LocalDateTime fechaInicio,
-        @RequestParam("fin") LocalDateTime fechaFin) {
-    ***/
         @RequestParam("inicio") @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
         @RequestParam("fin") @org.springframework.format.annotation.DateTimeFormat(iso = org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin) {
         
@@ -126,19 +123,11 @@ public class CaseController{
         @PathVariable("idCaso") Long idCaso) {
         try{
             boolean exito = caseService.eliminarCaso(token, idCaso);
-            /*if(exito){
-                return new ResponseEntity<>("Caso eliminado correctamente", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Caso no encontrado", HttpStatus.NOT_FOUND);
-            }*/
-        /* }catch (IllegalAccessException e) {
-            return new ResponseEntity<>("No tienes permiso o el token no es válido", HttpStatus.UNAUTHORIZED);
-
-        }*/
             return ResponseEntity.ok(exito);
         } catch (IllegalAccessException e) {
             return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

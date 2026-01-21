@@ -23,7 +23,6 @@ public class UserService {
     private final UserTokenRepository userTokenRepository;
 
     private final AtomicLong idGenerator = new AtomicLong(0);
-    // private ClienteSocket socketCliente; //Atributo del socket
 
     public UserService(UserRepository userRepository, 
         UserTokenRepository userTokenRepository) {
@@ -31,25 +30,6 @@ public class UserService {
         this.userTokenRepository = userTokenRepository;
     }
 
-    // @PostConstruct
-    // public void init() throws Exception { // aqui se inicializa
-    //     ClienteSocket socketCliente=null;
-    //     while (socketCliente==null){
-    //         try {
-    //             socketCliente = new ClienteSocket("localhost", 5000);
-    //             break;
-    //        } catch (IOException e) {
-    //            System.err.println("No se pudo conectar al servidor de sockets: " + e.getMessage());
-    //            try {
-    //                Thread.sleep(1000);
-    //            } catch (InterruptedException ignored) {
-    //            }
-    //        }
-
-    //     }
-    //     this.socketCliente=socketCliente;
-    // }
-    
     public UserDTO createUser(RegisterRequestDTO createUserDTO) {
         
         User user = new User(idGenerator.incrementAndGet(),
@@ -113,15 +93,19 @@ public class UserService {
         String password = miUser.getPassword();
         Optional<User> user = userRepository.findByEmailAndPassword(email,password);
         if (user.isPresent()) {
-            // if(socketCliente!=null){
-            //     socketCliente.sendMessage("LOGIN#"+ "OK#" + user.get().getNombre()+ "#" +user.get().getPassword());
-            // }
             return user.get();
         } else {
-            // if(socketCliente!=null){
-            //     socketCliente.sendMessage("LOGIN#NO#ERROR#ERROR");
-            // }
             return null; 
+        }
+    }
+
+    public boolean esNuevoLogin(User userLoginEncontrado){
+        Optional<UserToken> userToken = (userTokenRepository.findById(userLoginEncontrado.getIDUsuario()));
+        
+        if(!userToken.isPresent()){
+            return true;
+        }else{
+            return false;
         }
     }
 

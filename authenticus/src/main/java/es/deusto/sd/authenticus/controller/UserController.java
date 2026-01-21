@@ -95,9 +95,9 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     @PostMapping("/logout")
     public ResponseEntity<String> userLogout(@RequestBody LogoutRequestDTO logoutRequest){
         try {
-            String tokenE= logoutRequest.getToken();
+            String token= logoutRequest.getToken();
 
-            boolean logoutE = userService.logoutUser(tokenE);
+            boolean logoutE = userService.logoutUser(token);
 
             if(logoutE==true){
                 return new ResponseEntity<>("Usuario desloggeado correctamente", HttpStatus.OK);

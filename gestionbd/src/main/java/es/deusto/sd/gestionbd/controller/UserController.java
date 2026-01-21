@@ -51,12 +51,17 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
                 return null;
             }else{
 
-            UserToken userToken= userService.generacionAsignacionToken(userLoginEncontrado);
+                boolean nuevoLogin = userService.esNuevoLogin(userLoginEncontrado); 
+                if(nuevoLogin){
+                    UserToken userToken= userService.generacionAsignacionToken(userLoginEncontrado);
 
-            UserTokenDTO response = 
-            new UserTokenDTO(userLoginEncontrado.getEmail(), userToken.getToken());
+                    UserTokenDTO response = new UserTokenDTO(userLoginEncontrado.getEmail(), 
+                    userToken.getToken());
 
-            return new ResponseEntity<>(response, HttpStatus.OK);
+                    return new ResponseEntity<>(response, HttpStatus.OK);
+                }else{
+                    return null;
+                }
             }
         }
     

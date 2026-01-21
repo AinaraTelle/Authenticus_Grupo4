@@ -13,4 +13,5 @@ import es.deusto.sd.gestionbd.entity.UserToken;
 public interface UserTokenRepository extends JpaRepository<UserToken, Long> {
     Optional<UserToken> findByToken(String token);
     void deleteByToken(String token);
+    Optional<UserToken> findById(Long id);
 }

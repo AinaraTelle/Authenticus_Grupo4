@@ -4,29 +4,28 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public class ResultadosDTO {
     @Schema(description = "Unique identifier of the Archivo", example = "1")
-    private int IDArchivo;
+    private Long idArchivo;
     @Schema(description = "value of the results", example = "Caso 1")
     private double valor;
     @Schema(description = "type of case", example = "ALTERAC_CONT")
     private TipoAnalisisDTO tipoAnalisis;
 
-
     public ResultadosDTO() {
     }
 
-    public ResultadosDTO(int iDArchivo, double valor,
+    public ResultadosDTO(Long idArchivo, double valor,
     TipoAnalisisDTO tipoAnalisis) {
-        IDArchivo = iDArchivo;
+        this.idArchivo = idArchivo;
         this.valor = valor;
         this.tipoAnalisis = tipoAnalisis;
     }
 
-    public int getIDArchivo() {
-        return IDArchivo;
+    public Long getIdArchivo() {
+        return idArchivo;
     }
 
-    public void setIDArchivo(int iDArchivo) {
-        IDArchivo = iDArchivo;
+    public void setIdArchivo(Long idArchivo) {
+        this.idArchivo = idArchivo;
     }
 
     public double getValor() {
@@ -44,5 +43,7 @@ public class ResultadosDTO {
     public void setTipoAnalisis(TipoAnalisisDTO tipoAnalisis) {
         this.tipoAnalisis = tipoAnalisis;
     }
+
+    
 }
 
