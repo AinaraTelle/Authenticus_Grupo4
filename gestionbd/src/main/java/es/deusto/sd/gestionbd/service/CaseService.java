@@ -146,34 +146,6 @@ public class CaseService {
     }
 
 
-/*//  ANADIR ARCHIVOS
-    @Transactional
-    public void addFilesToCase(String token, Long idCaso, ArrayList<ArchivoDTO> nuevosArchivos)
-        throws IllegalAccessException, IllegalArgumentException {
-
-        if (token.startsWith("Bearer ")) {
-            token = token.substring(7);
-        }
-
-        Optional<UserToken> userToken = userTokenRepository.findByToken(token);
-        if (!userToken.isPresent()) {
-            throw new IllegalAccessException("Usuario no autenticado o token inválido.");
-        }
-
-        Optional <Caso> casoEncontrado = casoRepository.findById(idCaso);
-
-        if (!casoEncontrado.isPresent()) {
-            throw new IllegalArgumentException("Caso no encontrado para este usuario.");
-        }
-
-        for (ArchivoDTO archDTO1 : nuevosArchivos) {
-            Archivo arch1 = new Archivo(archDTO1.getNombre(), archDTO1.getRuta());
-            arch1.setCaso(casoEncontrado.get());
-            archivoRepository.save(arch1);
-            casoEncontrado.get().getArchivos().add(arch1);
-        }
-    }
-*/
 
     @Transactional
     public void addFilesToCase(String token, Long idCaso, ArrayList<ArchivoDTO> nuevosArchivos)
@@ -258,33 +230,5 @@ public class CaseService {
         }
     }
 
-//     public ResultadosDTO mostrarResultados(int idUsuario, int idCaso){
-//         Caso caso=buscaCaso(idUsuario, idCaso);
-
-//         return new ResultadosDTO(caso.getIDCaso(), caso.getTitulo(),
-//         caso.getTipoAnalisis() , caso.getFechaCreacion(), caso.getArchivos());
-//     };
-
-
-//     public Caso buscaCaso(int idUsuario, int idCaso){
-//         User usuario = null;
-
-//         for(User us1:estado.getListUsersLogIn()){
-//             if(us1.getIDUsuario()==idUsuario){
-//                 usuario=us1;
-//             }
-//         }
-        
-
-//         ArrayList<Caso> casosDelUsuario = estado.getMap_UserCases().getOrDefault(usuario, new ArrayList<>());
-//         Caso casoEncontrado = null;
-//         for(Caso c : casosDelUsuario) {
-//             if(c.getIDCaso() == idCaso) {
-//                 casoEncontrado = c;
-//                 break;
-//             }
-//         }
-//         return casoEncontrado;
-//     }
 
 }

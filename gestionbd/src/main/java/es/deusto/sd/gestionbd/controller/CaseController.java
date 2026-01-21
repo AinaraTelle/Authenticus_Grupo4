@@ -103,7 +103,7 @@ public class CaseController{
             @RequestBody ArrayList<ArchivoDTO> nuevosArchivos) {
         try {
             caseService.addFilesToCase(token, idCaso, nuevosArchivos);
-         return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
+            return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
             // return ResponseEntity.ok(true);
 
         } catch (IllegalAccessException e) {
@@ -131,23 +131,4 @@ public class CaseController{
             return new ResponseEntity<>(false, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    
-//         //* GET: Mostrar resultados*/
-//     @Operation(
-//     summary = "Muestra los resultados de un caso"
-//     )
-//     @ApiResponse(responseCode = "200", description = "Archivos añadidos correctamente")
-//     @GetMapping("/resultados")
-//     public ResponseEntity<ResultadosDTO> mostrarResultados(
-//         @RequestParam("idUsuario") int idUsuario,
-//         @RequestParam("idCaso") int idCaso) {
-//         try {
-//             ResultadosDTO reul = caseService.mostrarResultados(idUsuario,idCaso);
-//             return new ResponseEntity<>(reul, HttpStatus.OK);
-//         } catch (RuntimeException e) {
-//             // Por ejemplo, token inválido
-//             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//         }
-//     }
 }

@@ -205,6 +205,7 @@ public class DataStorageGateway implements IDataStorageGateway {
                     .toUriString();
 
             restTemplate.exchange(url, HttpMethod.PUT, entidad, String.class);
+        
         } catch (Exception e) {
             System.out.println("Error al añadir archivos externamente: " + e.getMessage());
         }
