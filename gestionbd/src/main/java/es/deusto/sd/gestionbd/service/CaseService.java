@@ -177,6 +177,7 @@ public class CaseService {
             archivoRepository.save(arch1);
             casoEncontrado.get().getArchivos().add(arch1);
         }
+        
     }
 
 //     Eliminar caso

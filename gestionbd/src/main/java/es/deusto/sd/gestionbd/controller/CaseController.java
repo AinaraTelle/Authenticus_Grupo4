@@ -96,7 +96,7 @@ public class CaseController{
 
     
     //* PUT: Añadir archivos */
-    @PutMapping("/add-files")
+    @PutMapping("/add-archivos")
     public ResponseEntity<String> addFilesToCase(
             @RequestHeader("Authorization") String token,
             @RequestParam("idCaso") Long idCaso,

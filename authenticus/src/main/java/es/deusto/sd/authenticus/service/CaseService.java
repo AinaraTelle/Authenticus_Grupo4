@@ -51,10 +51,11 @@ public class CaseService {
 
 //  ANADIR ARCHIVOS
     @Transactional
-    public void addFilesToCase(String token, Long idCaso, ArrayList<ArchivoDTO> nuevosArchivos)
+    public boolean addFilesToCase(String token, Long idCaso, ArrayList<ArchivoDTO> nuevosArchivos)
         throws IllegalAccessException, IllegalArgumentException {
 
-            dataStorageGateway.addFilesToCase(token, idCaso, nuevosArchivos);
+         boolean a =dataStorageGateway.addFilesToCase(token, idCaso, nuevosArchivos);
+        return a;
     }
 
     //Eliminar caso

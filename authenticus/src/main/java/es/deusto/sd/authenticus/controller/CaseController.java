@@ -97,8 +97,14 @@ public class CaseController{
             @RequestParam("idCaso") Long idCaso,
             @RequestBody ArrayList<ArchivoDTO> nuevosArchivos) {
         try {
-            caseService.addFilesToCase(token, idCaso, nuevosArchivos);
-            return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
+            boolean a = caseService.addFilesToCase(token, idCaso, nuevosArchivos);
+            System.out.println(a);
+            if(a){
+                return new ResponseEntity<>("Archivos añadidos correctamente", HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>("Ha habido un error. Puede que el caso no exista o que el token sea incorrecto.",
+                HttpStatus.NOT_ACCEPTABLE);
+            }
         } catch(Exception e){
             return new ResponseEntity<>("Error al añadir archivos", HttpStatus.INTERNAL_SERVER_ERROR);
         }

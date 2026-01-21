@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -193,21 +194,36 @@ public class DataStorageGateway implements IDataStorageGateway {
     }
 
     @Override
-    public void addFilesToCase(String token, Long idCaso, List<ArchivoDTO> nuevosArchivos) {
+    public boolean addFilesToCase(String token, Long idCaso, List<ArchivoDTO> nuevosArchivos) {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Authorization", token);
             
             HttpEntity<List<ArchivoDTO>> entidad = new HttpEntity<>(nuevosArchivos, headers);
 
-            String url = UriComponentsBuilder.fromHttpUrl(URL_case + "/add-files")
-                    .queryParam("idCaso", idCaso)
-                    .toUriString();
+            String urlConParametros = UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host("localhost")
+                .port(8081) // El puerto de gestionbd
+                .path("/casos/add-archivos") // Asegúrate de incluir la barra inicial /
+                .queryParam("idCaso", idCaso)
+                .build()
+                .toUriString();
 
-            restTemplate.exchange(url, HttpMethod.PUT, entidad, String.class);
+    // 4. Realizar la llamada esperando un String
+            restTemplate.exchange(
+                urlConParametros, 
+                HttpMethod.PUT, 
+                entidad, 
+                String.class // Debe ser String porque el Controller devuelve String
+            );
+
+            return true;
         
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             System.out.println("Error al añadir archivos externamente: " + e.getMessage());
+            return false;
         }
     }
     @Override
