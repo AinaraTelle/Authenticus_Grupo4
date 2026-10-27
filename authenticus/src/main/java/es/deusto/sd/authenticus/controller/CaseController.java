@@ -42,8 +42,7 @@ public class CaseController{
     @ApiResponse(responseCode = "201", description = "Caso creado correctamente")
     @PostMapping("/crear")
     public ResponseEntity<CasoDTO> crearCaso(
-        @RequestHeader("Authorization") String token,
-        @RequestBody CreateCasoDTO casoDTO) {
+        @RequestHeader("Authorization") String token, @RequestBody CreateCasoDTO casoDTO) {
             CasoDTO casoCreado = caseService.crearCaso(token, casoDTO);
             if(casoCreado!=null){
                 return new ResponseEntity<>(casoCreado, HttpStatus.CREATED);
@@ -59,13 +58,13 @@ public class CaseController{
     )
     @ApiResponse(responseCode = "200", description = "OK")
     @GetMapping("/mis-casos")
-    public ResponseEntity<List<CasoDTO>> obtenerMisCasos(
+    public ResponseEntity<String> obtenerMisCasos(
         @RequestHeader("Authorization") String token,
         @RequestParam(name = "limite",defaultValue = "5") int limite) {
         try {
             List<CasoDTO> casos =caseService.obtenerCasosDeUsuario(token,limite);
-            
-            return new ResponseEntity<>(casos, HttpStatus.OK);
+            String lista_casesSTR = caseService.fromListtoString(casos);
+            return new ResponseEntity<>(lista_casesSTR, HttpStatus.OK);
         } catch (RuntimeException e) {
           // Por ejemplo, token inválido
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

@@ -26,4 +26,5 @@ public interface IDataStorageGateway {
     public boolean addFilesToCase(String token, Long idCaso, List<ArchivoDTO> nuevosArchivos);
     public boolean deleteUser(String email);
     public boolean logoutUser(String token);
+    public String getToken(String userEmailDTO);
 }

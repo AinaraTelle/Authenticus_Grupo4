@@ -13,7 +13,6 @@ import es.deusto.sd.gestionbd.dto.RegisterRequestDTO;
 import es.deusto.sd.gestionbd.dto.UserDTO;
 import es.deusto.sd.gestionbd.dao.*;
 import es.deusto.sd.gestionbd.entity.*;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -126,6 +125,24 @@ public class UserService {
     }
 
     @Transactional
+    public String getToken(String email){
+        try {
+            Optional<User> user=userRepository.findByEmail(email);
+            if(!user.isPresent()){
+                return null;
+            }
+            UserToken ust=userTokenRepository.findById(user.get().getIDUsuario()).get();
+            return ust.getToken();
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
+
+    @Transactional
     public UserToken generacionAsignacionToken(User usuarioLogIn){
         UUID uuid = UUID.randomUUID();
         String token = uuid.toString();
@@ -172,12 +189,6 @@ public class UserService {
 
         if(usuarioE.isPresent()){
             userTokenRepository.deleteByToken(tokenE);
-            // if(socketCliente!=null){
-            //     socketCliente.sendMessage("LOGOUT#" + usuarioE.get().getUser().getNombre() );
-            // }
-            // if(socketCliente!=null){
-            //     socketCliente.sendMessage("LOGOUT");
-            // }
             return true;
         }
         return false;

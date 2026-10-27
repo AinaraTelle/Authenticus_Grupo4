@@ -11,10 +11,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -38,15 +37,15 @@ public class DataStorageGateway implements IDataStorageGateway {
 
     @Override
     public UserDTO registerUser(RegisterRequestDTO userRegisterDTO) {
-        return restTemplate.postForObject(URL_user+"/register", 
-        userRegisterDTO,
-         UserDTO.class);
+        UserDTO newUserDTO= restTemplate.postForObject(URL_user+"/register", userRegisterDTO,UserDTO.class);
+        return newUserDTO;
     };
 
     @Override
     public UserTokenDTO loginUser(LoginRequestDTO userLogin){
         UserTokenDTO userTokenDTO= restTemplate.postForObject(URL_user+"/login", 
         userLogin, UserTokenDTO.class);
+        
         if(userTokenDTO!=null){
             return userTokenDTO;
         }else{
@@ -70,22 +69,29 @@ public class DataStorageGateway implements IDataStorageGateway {
 
     @Override
     public CasoDTO crearCaso(String token, CreateCasoDTO createcasoDTO){
-        
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", token); // Aquí pasamos el token que recibimos
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", token); // Aquí pasamos el token que recibimos
+            headers.set("Content-Type", "application/json");
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<CreateCasoDTO> entidadObjetos = new HttpEntity<>(createcasoDTO, headers);
+            HttpEntity<CreateCasoDTO> entidadObjetos = new HttpEntity<>(createcasoDTO, headers);
 
-        ResponseEntity<CasoDTO> casoDTO = restTemplate.exchange(
-            URL_case + "/crear",
-            HttpMethod.POST,
-            entidadObjetos,
-            CasoDTO.class
-        );
+            ResponseEntity<CasoDTO> casoDTO = restTemplate.exchange(
+                URL_case + "/crear",
+                HttpMethod.POST,
+                entidadObjetos,
+                CasoDTO.class
+            );
 
-        if(casoDTO!=null){
-            return casoDTO.getBody();
-        }else{
+            if(casoDTO!=null){
+                return casoDTO.getBody();
+            }else{
+                return null;
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
             return null;
         }
     };
@@ -108,6 +114,7 @@ public class DataStorageGateway implements IDataStorageGateway {
             return null;
         }
     }
+    
     @Override
     public CasoDTO obtenerCaso(Long idCaso) {
         try {
@@ -163,7 +170,6 @@ public class DataStorageGateway implements IDataStorageGateway {
 
         return Arrays.asList(response.getBody());
     }
-
 
     @Override
     public List<CasoDTO> obtenerCasosEntreFechas(String token, LocalDateTime inicio, LocalDateTime fin) {
@@ -226,6 +232,7 @@ public class DataStorageGateway implements IDataStorageGateway {
             return false;
         }
     }
+    
     @Override
     public boolean deleteUser(String email) {
         try {
@@ -241,18 +248,19 @@ public class DataStorageGateway implements IDataStorageGateway {
             return false;
         }
     }
+    
     @Override
     public boolean logoutUser(String token) {
         try {
-        LogoutRequestDTO body = new LogoutRequestDTO(token);
-        HttpEntity<LogoutRequestDTO> entity = new HttpEntity<>(body);
+            LogoutRequestDTO body = new LogoutRequestDTO(token);
+            HttpEntity<LogoutRequestDTO> entity = new HttpEntity<>(body);
 
-        ResponseEntity<String> response = restTemplate.exchange(
-            URL_user + "/logout",
-            HttpMethod.POST,
-            entity,
-            String.class
-        );
+            ResponseEntity<String> response = restTemplate.exchange(
+                URL_user + "/logout",
+                HttpMethod.POST,
+                entity,
+                String.class
+            );
 
         return response.getStatusCode() == HttpStatus.OK;
         
@@ -262,6 +270,16 @@ public class DataStorageGateway implements IDataStorageGateway {
     }
     }
 
+    @Override
+    public String getToken(String email){
+
+        String token = restTemplate.getForObject(URL_user+"/getTokenDB/"+email, String.class);
+        if(token!=null){
+            return token;
+        }else{
+            return null;
+        }
+    }
 }
 
 

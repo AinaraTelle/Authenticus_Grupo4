@@ -82,8 +82,8 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     //* POST: logout */
     @PostMapping("/logout")
     public ResponseEntity<String> userLogout(@RequestBody LogoutRequestDTO logoutRequest){
+        
         String tokenE= logoutRequest.getToken();
-
         boolean logoutE = userService.logoutUser(tokenE);
 
         if(logoutE==true){
@@ -98,6 +98,16 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     public ResponseEntity <List<UserDTO>> getAllUsers(){
         List<UserDTO> usuarios =userService.getAllUsersRegistrados();
         return new ResponseEntity<>(usuarios,HttpStatus.OK);
+    }
+
+    @GetMapping("/getTokenDB/{email}")
+    public String getToken(@PathVariable("email") String email){
+        String token =userService.getToken(email);
+        if(token!=null){
+            return token;
+        }else{
+            return null;
+        }
     }
 
 }

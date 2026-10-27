@@ -46,5 +46,10 @@ public class ArchivoDTO {
         this.ruta = ruta;
     }
 
+    @Override
+    public String toString() {
+        return "idArchivo=" + idArchivo + ", nombre=" + nombre + ", ruta=" + ruta;
+    }
+
     
 }

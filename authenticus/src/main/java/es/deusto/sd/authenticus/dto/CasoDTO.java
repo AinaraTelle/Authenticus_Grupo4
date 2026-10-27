@@ -76,4 +76,17 @@ public class CasoDTO {
     public void setArchivosDTO(ArrayList<ArchivoDTO> archivosDTO) {
         this.archivosDTO = archivosDTO;
     }
+    @Override
+    public String toString() {
+        String texto= "IDCaso=" + IDCaso + ", titulo=" + titulo + ", tipoAnalisisDTO=" + tipoAnalisisDTO
+                + ", fechaCreacion=" + fechaCreacion + ", archivosDTO={";
+        
+        for(ArchivoDTO a1:archivosDTO){
+            texto+=a1.toString();
+        }
+        texto+="}";
+
+        return texto;
+    }
+    
 }

@@ -25,13 +25,7 @@ public class CaseService {
       
     @Transactional
     public CasoDTO crearCaso(String token, CreateCasoDTO createcasoDTO){
-        
-        CasoDTO casoDTO = dataStorageGateway.crearCaso(token, createcasoDTO);
-        if(casoDTO!=null){
-            return casoDTO;
-        }else{
-            return null;
-        }
+        return dataStorageGateway.crearCaso(token, createcasoDTO);
     }
 
     @Transactional
@@ -71,7 +65,6 @@ public class CaseService {
 
 
     public List<ResultadosDTO> mostrarResultados(Long idCaso){
-       
         List<ResultadosDTO> listResultados = new ArrayList<>();
         CasoDTO caso_archivos = dataStorageGateway.obtenerCaso(idCaso);
         List<ArchivoDTO> listArchivos = caso_archivos.getArchivosDTO();
@@ -97,12 +90,16 @@ public class CaseService {
         //generar un resustadosDTO y añadir a la lista de listResultados
 
         //al acabar, devolver listResultados
-
-        
-
     };
 
-
+    public String fromListtoString(List<CasoDTO> casos_str){
+        String texto="";
+        for(CasoDTO c1:casos_str){
+            texto+=c1.toString();
+            texto+="__";
+        }
+        return texto;
+    }
 
 
 }

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.deusto.sd.authenticus.dto.*;
-import es.deusto.sd.authenticus.external.*;
 import es.deusto.sd.authenticus.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -55,16 +54,15 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     )
     @ApiResponse(responseCode = "201", description = "Usuario loggeado correctamente")
     @PostMapping("/login")
-    public ResponseEntity<UserTokenDTO> userLogIn(
-        @RequestBody LoginRequestDTO userLogin) {
+    public ResponseEntity<UserTokenDTO> userLogIn(@RequestBody LoginRequestDTO userLogin) {
 
-            UserTokenDTO userTokenDTO=userService.login(userLogin);
-            if(userTokenDTO!=null){
-                return new ResponseEntity<>(userTokenDTO, HttpStatus.OK);
-            }else{
-                return new ResponseEntity<>( HttpStatus.NOT_ACCEPTABLE);
-            }
+        UserTokenDTO userTokenDTO=userService.login(userLogin);
+        if(userTokenDTO!=null){
+            return new ResponseEntity<>(userTokenDTO, HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>( HttpStatus.NOT_ACCEPTABLE);
         }
+    }
     
 
     // //* DELETE: Usuario */
@@ -95,8 +93,8 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
     @PostMapping("/logout")
     public ResponseEntity<String> userLogout(@RequestBody LogoutRequestDTO logoutRequest){
         try {
-            String token= logoutRequest.getToken();
 
+            String token = logoutRequest.getToken();
             boolean logoutE = userService.logoutUser(token);
 
             if(logoutE==true){
@@ -125,8 +123,16 @@ public class UserController { //maneja las peticiones HTTP de los usuarios
         } else {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-    //  return new ResponseEntity<>(usuarios,HttpStatus.OK);
     }
 
+    @GetMapping("/getToken/{email}")
+    public String getToken(@PathVariable("email") String email){     
+        String token =userService.getToken(email);
+
+        if (token != null) {
+            return token;
+        } else {
+            return null;
+        }
+    }
 }
